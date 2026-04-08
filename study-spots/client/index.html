@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudySpot</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Quicksand:wght@700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header class="header-principale">
+        <a href="index.html" class="logo">
+            <img src="assets/logo.png" alt="Logo StudySpot" class="img-logo">
+            <span class="nome-logo">StudySpot</span>
+        </a>
+        
+        <nav>
+            <ul>
+                <li><a href="index.html">Map</a></li>
+                <li><a href="pages/ranking.html">Ranking</a></li>
+                <li><a href="pages/lista.html">List</a></li>
+            </ul>
+        </nav>
+        <a href="login.html" class="bottone-login">Accedi</a>
+    </header>
+
+    <main>
+        <section class="principale">
+            <h1> Where do you want to study?</h1>
+
+            <form class="search-container">
+                <input type="text" id="search-input" placeholder="Cerca un luogo..." />
+                <button type="submit" id="search-button">Cerca</button>
+            </form>
+
+            <script src="js/search.js"></script>
+            <table class="results-table">
+                <tbody id="results-body">
+                    <!-- I risultati verranno aggiunti qui -->
+                </tbody>
+            </table>
+
+
+            
+            
+
+
+
+
+            <div class="categorie-container">  
+            </div>
+        
+        
+        
+        </section>
+    </main>
+
+   
+</body>
+</html>

@@ -1,0 +1,267 @@
+/* =========================================
+   1. RESET E REGOLE GENERALI
+   ========================================= */
+   * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Gestisce meglio larghezze e spazi interni */
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    background-color: #FFFFFF;
+    color: #112E51; /* Colore testo generale: Blu Notte */
+}
+
+/* Applica Quicksand a tutti i titoli e al logo */
+h1, h2, h3, h4, h5, h6, .nome-logo {
+    font-family: 'Quicksand', sans-serif;
+}
+
+/* Rimuove la sottolineatura da tutti i link */
+a {
+    text-decoration: none;
+}
+
+/* =========================================
+   2. HEADER E NAVBAR (Modificato)
+   ========================================= */
+.header-principale {
+    position: sticky; /* Rende la barra fissa in alto quando scorri */
+    top: 0;
+    display: flex;
+    justify-content: space-between; /* Logo a sinistra, Login a destra */
+    align-items: center;            /* Centra verticalmente gli elementi */
+    padding: 10px 10px;             /* Ridotto leggermente il padding verticale */
+    background-color: #FFFFFF;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Ombra per staccare la barra */
+    z-index: 1000; /* Assicura che l'header stia sopra il resto della pagina */
+}
+
+/* MODIFICATO: Ora è un contenitore flex per allineare immagine e testo */
+.logo {
+    display: flex;
+    align-items: center; /* Centra l'immagine e il testo verticalmente */
+    gap: 15px;           /* Spazio tra l'immagine del logo e il testo */
+}
+
+/* AGGIUNTO: Stile per l'immagine del logo */
+.img-logo {
+    height: 45px;  /* Controlla l'altezza del logo affinché stia bene nell'header */
+    width: auto;   /* Mantiene le proporzioni originali dell'immagine */
+}
+
+.nome-logo {
+    font-size: 1.8rem;
+    color: #112E51;
+    font-weight: 700;
+}
+
+.bottone-login {
+    font-weight: 700;
+    color: #112E51;
+    padding: 10px 30px;
+    border: 2px solid #112E51;
+    border-radius: 15px; /* Bottone leggermente arrotondato */
+    transition: all 0.3s ease;
+}
+
+.bottone-login:hover {
+    background-color: #112E51;
+    color: #FFFFFF;
+}
+
+/* =========================================
+   NAVBAR (Mappa, Classifica, Chi Siamo)
+   ========================================= */
+   nav ul {
+    display: flex;       /* Dispone i link in orizzontale */
+    list-style: none;    /* Rimuove i pallini classici delle liste */
+    gap: 40px;           /* Spazio tra un link e l'altro */
+}
+
+nav ul li a {
+    color: #112E51;
+    font-size: 1.1rem;
+    font-weight: 700;
+    position: relative;  /* Necessario per l'effetto della sottolineatura animata */
+    transition: color 0.3s ease;
+}
+
+/* Cambia colore al passaggio del mouse */
+nav ul li a:hover {
+    color: #FF6600;
+}
+
+/* Effetto sottolineatura animata al passaggio del mouse */
+nav ul li a::after {
+    content: '';
+    position: absolute;
+    width: 0;             /* Parte da larghezza 0 */
+    height: 2px;          /* Spessore della linea */
+    bottom: -5px;         /* Distanza della linea dal testo */
+    left: 0;
+    background-color: #FF6600;
+    transition: width 0.3s ease; /* Anima la larghezza */
+}
+
+nav ul li a:hover::after {
+    width: 100%;          /* Si espande per tutta la larghezza del testo */
+}
+
+/* =========================================
+   3. HERO SECTION (Sezione Centrale)
+   ========================================= */
+.principale {
+    /* Occupa l'intera altezza dello schermo, meno lo spazio occupato dall'header (circa 70px) */
+    min-height: auto;
+    display: flex;
+    flex-direction: column; /* Impila gli elementi in verticale */
+    justify-content: center; /* Li centra in altezza */
+    align-items: center;     /* Li centra in larghezza */
+    text-align: center;
+    padding: 20px;
+}
+
+.principale h1 {
+    font-size: 3.0rem; /* Dimensione del titolo */
+    color: #112E51;
+    
+}
+
+/* =========================================
+   4. LE PILLOLE DELLE CATEGORIE
+   ========================================= */
+/* TODO: sezione da cancellare*/
+
+   .categorie-container {
+    display: flex;
+    gap: 20px; /* Distanza tra una pillola e l'altra */
+}
+
+/* Stile di partenza della pillola */
+.pillola {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #112E51;
+    background-color: #FFFFFF;
+    padding: 12px 40px; /* Poco spazio sopra/sotto, tanto ai lati */
+    border: 2px solid #112E51;
+    border-radius: 50px; /* La regola magica per formare la pillola */
+    transition: all 0.3s ease; /* L'animazione per il passaggio del mouse */
+}
+
+/* Cosa succede quando l'utente ci passa sopra col mouse */
+.pillola:hover {
+    background-color: #FF6600; /* Sfondo Arancione */
+    border-color: #FF6600;     /* Bordo Arancione */
+    color: #FFFFFF;            /* Testo Bianco */
+    transform: translateY(-3px); /* Effetto di leggero sollevamento verso l'alto */
+    box-shadow: 0 8px 15px rgba(255, 102, 0, 0.2); /* Ombra arancione morbida */
+}
+
+/* =========================================
+   5. RESPONSIVE DESIGN (Smartphone e Tablet)
+   ========================================= */
+
+/* Regole per schermi grandi fino a 768px (tipico tablet/smartphone) */
+@media (max-width: 768px) {
+    
+    /* 1. Sistemiamo l'Header */
+    .header-principale {
+        flex-direction: column; /* Incolonna Logo, Nav e Bottone */
+        gap: 20px;              /* Spazio tra gli elementi incolonnati */
+        padding: 20px 15px;     /* Riduciamo lo spazio laterale */
+    }
+
+    nav ul {
+        flex-wrap: wrap;        /* Permette ai link di andare a capo se non c'è spazio */
+        justify-content: center;
+        gap: 20px;              /* Riduciamo lo spazio tra i link */
+    }
+
+    /* 2. Riduciamo il testo gigante della sezione centrale */
+    .principale h1 {
+        font-size: 2.2rem;      /* Da 3.5rem a 2.2rem per non sbordare */
+        
+    }
+
+    /* 3. Sistemiamo le pillole (bottoni) */
+    .categorie-container {
+        flex-direction: column; /* Incolonna le pillole una sotto l'altra */
+        width: 100%;            /* Prendono tutta la larghezza disponibile */
+        max-width: 300px;       /* Ma non diventano TROPPO larghe */
+    }
+
+    .pillola {
+        text-align: center;     /* Centra il testo dentro il bottone */
+    }
+
+    .results-table {
+        width: 70% !important;
+        border-collapse: collapse !important;
+        margin-top: 20px !important;
+    }
+}
+
+/* =========================================
+   6. SEARCH BAR
+   ========================================= */
+.search-container {
+    display: flex;
+    justify-content: center; /* Centra la barra e il pulsante */
+    align-items: center;
+    gap: 10px; /* Spazio tra la barra e il pulsante */
+    margin-top: 20px; /* Spazio sopra la barra */
+}
+
+#search-input {
+    width: 300px; /* Larghezza della barra di ricerca */
+    padding: 10px;
+    font-size: 1rem;
+    border: 2px solid #112E51;
+    border-radius: 15px;
+}
+
+#search-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #FFFFFF;
+    background-color: #112E51;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#search-button:hover {
+    background-color: #FF6600;
+}
+
+/* =========================================
+   7. TABELLA RISULTATI
+   ========================================= */
+.results-table {
+    width: 50%;            /* Occupa tutta la larghezza possibile */
+    border-collapse: collapse; /* Elimina gli spazi tra le celle */
+    margin-top: 20px;       /* Spazio sopra la tabella */
+}
+
+.results-table th, .results-table td {
+    border: 1px transparent #112E51; /* Bordo sottile e uniforme */
+    padding: 10px 15px;      /* Spazio interno alle celle */
+    text-align: left;        /* Testo allineato a sinistra */
+    
+}
+
+.results-table tr {
+    color: #112E51;
+    background-color: #f1f1f1;
+    transition: color 0.3s ease, background-color 0.3s ease; /* Aggiunge una transizione fluida */
+    
+}
+
+.results-table tr:hover {
+    color: #FF6600; /* Cambia il colore del testo */
+    background-color: #dad9d9; /* Cambia lo sfondo */
+}
