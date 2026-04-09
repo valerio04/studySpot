@@ -1,3 +1,6 @@
+const API_URL = 'https://nominatim.openstreetmap.org/search';
+//const API_URL = 'https://cors-anywhere.herokuapp.com/https://nominatim.openstreetmap.org/search';
+
 document.getElementById('search-input').addEventListener('input', handleInput);
 
 let debounceTimeout;
@@ -12,23 +15,28 @@ function handleInput() {
 async function fetchResults(query) {
     if (query.length < 3) return;
     try {
-        // Prova diverse API per aggirare i problemi di limitazione
-        const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=json`);
-        //const response = await fetch(`https://cors-anywhere.herokuapp.com/https://nominatim.openstreetmap.org/search?q=${query}&format=json`);
-        if (!response.ok) throw new Error(`Errore HTTP: ${response.status}`);
-        const results = await response.json();
-
-        // Mostra i risultati in una tabella
-        const tableBody = document.getElementById('results-body');
-        tableBody.innerHTML = ''; // Pulisce i risultati precedenti
-        results.forEach(function(result) {
-            var row = createTableRow(result.display_name);
-            tableBody.appendChild(row);
-        });
-
+        const results = await fetchFromAPI(query);
+        updateResultsTable(results);
     } catch (error) {
         console.error('Errore di rete:', error.message);
     }
+}
+
+async function fetchFromAPI(query) {
+    const url = `${API_URL}?q=${query}&format=json`;
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Errore HTTP: ${response.status}`);
+    return response.json();
+}
+
+
+function updateResultsTable(results) {
+    const tableBody = document.getElementById('results-body');
+    tableBody.innerHTML = ''; // Pulisce i risultati precedenti
+    results.forEach(function(result) {
+        var row = createTableRow(result.display_name);
+        tableBody.appendChild(row);
+    });
 }
 
 function createTableRow(displayName) {
@@ -36,7 +44,7 @@ function createTableRow(displayName) {
     row.innerHTML = '<td>' + displayName + '</td>';
     row.addEventListener('click', function() {
         document.getElementById('search-input').value = displayName;
-        tableBody.innerHTML = ''; // Pulisce i risultati dopo la selezione
+        document.getElementById('results-body').innerHTML = ''; // Pulisce i risultati dopo la selezione
     });
     return row;
 }

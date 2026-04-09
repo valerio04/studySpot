@@ -47,7 +47,7 @@ a {
 
 /* AGGIUNTO: Stile per l'immagine del logo */
 .img-logo {
-    height: 45px;  /* Controlla l'altezza del logo affinché stia bene nell'header */
+    height: 50px;  /* Controlla l'altezza del logo affinché stia bene nell'header */
     width: auto;   /* Mantiene le proporzioni originali dell'immagine */
 }
 
@@ -202,10 +202,20 @@ nav ul li a:hover::after {
         border-collapse: collapse !important;
         margin-top: 20px !important;
     }
+
+
+    #map {
+        height: 450px !important; /* Altezza della mappa */
+        width: 100% !important;   /* Larghezza della mappa */
+        margin-top: 20px !important; /* Spazio sopra la mappa */
+        border: 1px solid #ccc !important; /* Bordo sottile per distinguere la mappa */
+        
+}
+    }
 }
 
 /* =========================================
-   6. SEARCH BAR
+   6. SEARCH TOOL
    ========================================= */
 .search-container {
     display: flex;
@@ -221,22 +231,39 @@ nav ul li a:hover::after {
     font-size: 1rem;
     border: 2px solid #112E51;
     border-radius: 15px;
+    margin-top: 10px;
 }
 
-#search-button {
+.bottone1 {
     padding: 10px 20px;
     font-size: 1rem;
     color: #FFFFFF;
-    background-color: #112E51;
     border: none;
     border-radius: 15px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+     margin-top: 10px;
+    
+}
+
+#near-me-button{
+    background-color: #112e51c5;
+    border: 1px solid #112E51;
+
+}
+#near-me-button:hover {
+    background-color: #FF6600;
+}
+
+#search-button{
+    background-color: #112E51;
 }
 
 #search-button:hover {
     background-color: #FF6600;
 }
+
+
 
 /* =========================================
    7. TABELLA RISULTATI
@@ -264,4 +291,17 @@ nav ul li a:hover::after {
 .results-table tr:hover {
     color: #FF6600; /* Cambia il colore del testo */
     background-color: #dad9d9; /* Cambia lo sfondo */
+}
+
+
+/*===============================================
+   map
+================================================*/
+
+#map {
+    height: 600px; /* Altezza della mappa */
+    width: 80%;   /* Larghezza della mappa */
+    margin-top: 20px; /* Spazio sopra la mappa */
+    border: 1px solid #ccc; /* Bordo sottile per distinguere la mappa */
+    margin-left: auto;
 }

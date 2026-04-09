@@ -10,12 +10,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Quicksand:wght@700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="css/style.css">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
     <header class="header-principale">
         <a href="index.html" class="logo">
-            <img src="assets/logo.png" alt="Logo StudySpot" class="img-logo">
+            <img src="assets/img/logo.png" alt="Logo StudySpot" class="img-logo">
             <span class="nome-logo">StudySpot</span>
         </a>
         
@@ -35,7 +41,8 @@
 
             <form class="search-container">
                 <input type="text" id="search-input" placeholder="Cerca un luogo..." />
-                <button type="submit" id="search-button">Cerca</button>
+                <button class="bottone1" type="button" id="search-button">Search</button> 
+                <button class="bottone1" type="button" id="near-me-button">Near me</button> 
             </form>
 
             <script src="js/search.js"></script>
@@ -44,22 +51,22 @@
                     <!-- I risultati verranno aggiunti qui -->
                 </tbody>
             </table>
-
-
-            
-            
+        
+        
+            <div id="map"></div>
+            <script src="js/map.js"></script>
 
 
 
 
             <div class="categorie-container">  
             </div>
-        
-        
-        
+            
+            
+            
         </section>
     </main>
 
-   
+    
 </body>
 </html>
