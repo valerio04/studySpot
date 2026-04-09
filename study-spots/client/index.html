@@ -3,43 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SpotStudium</title>
+    <title>StudySpot</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Quicksand:wght@700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="css/style.css">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
     <header class="header-principale">
         <a href="index.html" class="logo">
-            <img src="assetts/logo.jpeg" alt="Logo SpotStudium" class="img-logo">
-            <span class="nome-logo">SpotStudium</span>
+            <img src="assets/img/logo.png" alt="Logo StudySpot" class="img-logo">
+            <span class="nome-logo">StudySpot</span>
         </a>
         
         <nav>
             <ul>
                 <li><a href="index.html">Map</a></li>
                 <li><a href="pages/ranking.html">Ranking</a></li>
-                <li><a href="pages/chisiamo.html">List</a></li>
+                <li><a href="pages/lista.html">List</a></li>
             </ul>
         </nav>
-        <a href="pages/login.html" class="bottone-login">Login</a>
+        <a href="login.html" class="bottone-login">Accedi</a>
     </header>
 
     <main>
         <section class="principale">
-            <h1>Dove vuoi andare?</h1>
-            
-            <div class="categorie-container">
-                <a href="mappa.html" class="pillola">Bar</a>
-                <a href="mappa.html" class="pillola">Aule Studio</a>
-                <a href="mappa.html" class="pillola">Biblioteche</a>
+            <h1> Where do you want to study?</h1>
+
+            <form class="search-container">
+                <input type="text" id="search-input" placeholder="Cerca un luogo..." />
+                <button class="bottone1" type="button" id="search-button">Search</button> 
+                <button class="bottone1" type="button" id="near-me-button">Near me</button> 
+            </form>
+
+            <script src="js/search.js"></script>
+            <table class="results-table">
+                <tbody id="results-body">
+                    <!-- I risultati verranno aggiunti qui -->
+                </tbody>
+            </table>
+        
+            <div class="map-tool-container">
+                
+                <!-- altri oggetti -->
+                <div class="tool">
+                    <h4>Filter: </h4>
+                    <label class="tool-item">
+                        <div class="src-span">
+                            <img src="assets/img/cafe-icon.png" alt="Cafe Icon" class="tool-icon">
+                            <span>Cafe</span>
+                        </div>
+                        <input type="checkbox" class="tool-checkbox" checked>
+                    </label>
+                    <label class="tool-item">
+                        <div class="src-span">
+                            <img src="assets/img/biblioteca-icon.png" alt="Library Icon" class="tool-icon">
+                            <span>Library</span>
+                        </div>
+                        <input type="checkbox" class="tool-checkbox" checked>
+                    </label>
+                    <label class="tool-item">
+                        <div class="src-span">
+                            <img src="assets/img/cafe-icon.png" alt="Library Icon" class="tool-icon">
+                            <span>Library</span>
+                        </div>
+                        <input type="checkbox" class="tool-checkbox" checked>
+                    </label>
+                     <label class="tool-item">
+                        <div class="src-span">
+                            <img src="assets/img/cafe-icon.png" alt="Library Icon" class="tool-icon">
+                            <span>Library</span>
+                        </div>
+                        <input type="checkbox" class="tool-checkbox" checked>
+                    </label>
+                    <label class="tool-item">
+                        <div class="src-span">
+                            <img src="assets/img/cafe-icon.png" alt="Library Icon" class="tool-icon">
+                            <span>Library</span>
+                        </div>
+                        <input type="checkbox" class="tool-checkbox" checked>
+                    </label>
+                     
+                </div>
+                
+                <div id="map"></div>
+                <script src="js/map.js"></script>
+                
+                
             </div>
+            
+
+
+            
+            
         </section>
     </main>
 
+    
 </body>
 </html>
