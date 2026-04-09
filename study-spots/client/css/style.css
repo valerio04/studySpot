@@ -129,36 +129,7 @@ nav ul li a:hover::after {
     
 }
 
-/* =========================================
-   4. LE PILLOLE DELLE CATEGORIE
-   ========================================= */
-/* TODO: sezione da cancellare*/
 
-   .categorie-container {
-    display: flex;
-    gap: 20px; /* Distanza tra una pillola e l'altra */
-}
-
-/* Stile di partenza della pillola */
-.pillola {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #112E51;
-    background-color: #FFFFFF;
-    padding: 12px 40px; /* Poco spazio sopra/sotto, tanto ai lati */
-    border: 2px solid #112E51;
-    border-radius: 50px; /* La regola magica per formare la pillola */
-    transition: all 0.3s ease; /* L'animazione per il passaggio del mouse */
-}
-
-/* Cosa succede quando l'utente ci passa sopra col mouse */
-.pillola:hover {
-    background-color: #FF6600; /* Sfondo Arancione */
-    border-color: #FF6600;     /* Bordo Arancione */
-    color: #FFFFFF;            /* Testo Bianco */
-    transform: translateY(-3px); /* Effetto di leggero sollevamento verso l'alto */
-    box-shadow: 0 8px 15px rgba(255, 102, 0, 0.2); /* Ombra arancione morbida */
-}
 
 /* =========================================
    5. RESPONSIVE DESIGN (Smartphone e Tablet)
@@ -203,17 +174,33 @@ nav ul li a:hover::after {
         margin-top: 20px !important;
     }
 
+    .map-tool-container {
+    
+        flex-direction: column !important; /* Dispone gli elementi in riga */
+    }
 
     #map {
         height: 450px !important; /* Altezza della mappa */
         width: 100% !important;   /* Larghezza della mappa */
-        margin-top: 20px !important; /* Spazio sopra la mappa */
-        border: 1px solid #ccc !important; /* Bordo sottile per distinguere la mappa */
-        
-}
+        margin-top: 20px !important; /* Spazio sopra la mappa */  
     }
-}
 
+    .tool{
+        flex-direction: row !important; /* Dispone gli elementi in fila orizzontale */
+        width: 100% !important;
+        flex-wrap: wrap; /* Permette agli elementi di andare a capo */
+        
+    }
+
+    .src-span {
+    display: flex;
+    align-items:flex-start;
+    gap: 0px; /* Spazio tra l'icona e il testo */
+    flex-direction: column !important; 
+}
+    
+
+}
 /* =========================================
    6. SEARCH TOOL
    ========================================= */
@@ -223,10 +210,14 @@ nav ul li a:hover::after {
     align-items: center;
     gap: 10px; /* Spazio tra la barra e il pulsante */
     margin-top: 20px; /* Spazio sopra la barra */
+    flex-direction: row;
+    flex-wrap: wrap; /* Permette agli elementi di andare a capo */
 }
 
 #search-input {
-    width: 300px; /* Larghezza della barra di ricerca */
+   
+    max-width: 300px; /* Larghezza massima della barra */
+    min-width: 150px; /* Larghezza minima per evitare che diventi troppo piccola */
     padding: 10px;
     font-size: 1rem;
     border: 2px solid #112E51;
@@ -298,10 +289,57 @@ nav ul li a:hover::after {
    map
 ================================================*/
 
+.map-tool-container {
+    display: flex;
+    flex-direction: row; /* Dispone gli elementi in colonna */
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    width: 100%; /* Assicura che il contenitore occupi tutta la larghezza */
+    height: auto; /* Permette al contenitore di adattarsi al contenuto */
+}
+
 #map {
     height: 600px; /* Altezza della mappa */
-    width: 80%;   /* Larghezza della mappa */
+    width: 70%;   /* Larghezza della mappa */
     margin-top: 20px; /* Spazio sopra la mappa */
+    margin-right: 40px;
     border: 1px solid #ccc; /* Bordo sottile per distinguere la mappa */
     margin-left: auto;
+}
+
+
+/*===============================================
+   filtri
+================================================*/
+.tool{
+    display: flex;
+    flex-direction: column; 
+    justify-content: center; /* Centra gli elementi orizzontalmente */
+    align-items: center; /* Centra gli elementi verticalmente */
+    gap: 20px; /* Spazio tra gli elementi */
+    margin-left: 2%;
+    background-color: #ecebea;
+    /*border: 1px solid #112E51;*/
+    border-radius: 15px;
+    padding: 20px;
+}
+
+.tool-item {
+    display: flex; /* Imposta il layout flessibile per immagine e checkbox */
+    align-items: center; /* Centra immagine e checkbox verticalmente */
+    gap: 10px; /* Spazio tra immagine e checkbox */
+    justify-content: space-between;
+   
+}
+
+.tool-icon {
+    height: 40px; /* Controlla l'altezza dell'icona */
+    width: auto;  /* Mantiene le proporzioni originali dell'immagine */
+}
+.src-span {
+    display: flex;
+    align-items:center;
+    gap: 0px; /* Spazio tra l'icona e il testo */
+    flex-direction: row; 
 }
