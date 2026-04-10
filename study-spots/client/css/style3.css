@@ -1,0 +1,348 @@
+/* =========================================
+   1. RESET E REGOLE GENERALI
+   ========================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Gestisce meglio larghezze e spazi interni */
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    background-color: #FFFFFF;
+    color: #112E51; /* Colore testo generale: Blu Notte */
+}
+
+/* Applica Quicksand a tutti i titoli e al logo */
+h1, h2, h3, h4, h5, h6, .nome-logo {
+    font-family: 'Quicksand', sans-serif;
+}
+
+/* Rimuove la sottolineatura da tutti i link */
+a {
+    text-decoration: none;
+}
+
+/* =========================================
+   2. HEADER E NAVBAR (Modificato)
+   ========================================= */
+.header-principale {
+    position: sticky; /* Rende la barra fissa in alto quando scorri */
+    top: 0;
+    display: flex;
+    justify-content: space-between; /* Logo a sinistra, Login a destra */
+    align-items: center;            /* Centra verticalmente gli elementi */
+    padding: 10px 10px;             /* Ridotto leggermente il padding verticale */
+    background-color: #FFFFFF;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Ombra per staccare la barra */
+    z-index: 1000; /* Assicura che l'header stia sopra il resto della pagina */
+}
+
+/* MODIFICATO: Ora è un contenitore flex per allineare immagine e testo */
+.logo {
+    display: flex;
+    align-items: center; /* Centra l'immagine e il testo verticalmente */
+    gap: 15px;           /* Spazio tra l'immagine del logo e il testo */
+}
+
+/* AGGIUNTO: Stile per l'immagine del logo */
+.img-logo {
+    height: 45px;  /* Controlla l'altezza del logo affinché stia bene nell'header */
+    width: auto;   /* Mantiene le proporzioni originali dell'immagine */
+}
+
+.nome-logo {
+    font-size: 1.8rem;
+    color: #112E51;
+    font-weight: 700;
+}
+
+.bottone-login {
+    font-weight: 700;
+    background-color: #112E51;
+    color:#FFFFFF;
+    padding: 10px 30px;
+    border: 2px solid #112E51;
+    border-radius: 8px; /* Bottone leggermente arrotondato */
+    transition: all 0.3s ease;
+}
+
+.bottone-login:hover {
+    color: #112E51;
+    background-color: #FFFFFF;
+}
+
+/* =========================================
+   NAVBAR (Mappa, Classifica, Chi Siamo)
+   ========================================= */
+   nav ul {
+    display: flex;       /* Dispone i link in orizzontale */
+    list-style: none;    /* Rimuove i pallini classici delle liste */
+    gap: 40px;           /* Spazio tra un link e l'altro */
+}
+
+nav ul li a {
+    color: #112E51;
+    font-size: 1.1rem;
+    font-weight: 700;
+    position: relative;  /* Necessario per l'effetto della sottolineatura animata */
+    transition: color 0.3s ease;
+}
+
+/* Cambia colore al passaggio del mouse */
+nav ul li a:hover {
+    color: #FF6600;
+}
+
+
+.principale {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 80px);
+    padding: 40px 20px;
+    background-color: #F7FBFF;
+}
+
+.principale h1 {
+    margin-bottom: 28px;
+    font-size: 2rem;
+    line-height: 1.2;
+    color: #112E51;
+}
+
+#login {
+    width: 100%;
+    max-width: 420px;
+    padding: 36px 32px;
+    border: 2px solid #112E51;
+    border-radius: 24px;
+    background-color: #FFFFFF;
+    box-shadow: 0 18px 50px rgba(17, 46, 81, 0.08);
+}
+
+
+#login input {
+    width: 100%;
+    padding: 14px 0 10px;
+    margin-bottom: 24px;
+    border: none;
+    border-bottom: 2px solid #D9E4F5;
+    background: transparent;
+    font-size: 1rem;
+    color: #112E51;
+    outline: none;
+    transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+#login input::placeholder {
+    color: #7B8AAB;
+}
+
+#login input:focus {
+    border-bottom-color: #112E51;
+}
+
+select {
+    width: 100%;
+    padding: 14px 0 10px;
+    margin-bottom: 24px;
+    border: none;
+    border-bottom: 2px solid #D9E4F5;
+    background: transparent;
+    font-size: 1rem;
+    color: #112E51;
+    outline: none;
+    transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+select:focus {
+    border-bottom-color: #112E51;
+}
+
+#login .bottoni {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+
+#login button[type="submit"] {
+    font-weight: 700;
+    background-color: #112E51;
+    color: #FFFFFF;
+    padding: 12px 34px;
+    border: 2px solid #112E51;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#login button[type="submit"]:hover {
+    color: #112E51;
+    background-color: #FFFFFF;
+}
+
+#registrati {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 70px;
+    font-weight: 700;
+    color: #112E51;
+    background-color: #FFFFFF;
+    border: 2px solid #112E51;
+    border-radius: 8px;
+    padding: 12px 24px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#registrati:hover {
+    background-color: #F0F6FF;
+}
+
+button[type="reset"],
+#Annulla {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #112E51;
+    background-color: #FFFFFF;
+    border: 2px solid #112E51;
+    border-radius: 8px;
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button[type="reset"]:hover,
+#Annulla:hover {
+    background-color: #F0F6FF;
+}
+
+/* =========================================
+   RESPONSIVENESS
+   ========================================= */
+
+/* Tablet (max-width: 768px) */
+@media (max-width: 768px) {
+    /* 1. Sistemiamo l'Header */
+    .header-principale {
+        flex-direction: column; /* Incolonna Logo, Nav e Bottone */
+        gap: 20px;              /* Spazio tra gli elementi incolonnati */
+        padding: 20px 15px;     /* Riduciamo lo spazio laterale */
+    }
+
+    nav ul {
+        flex-wrap: wrap;        /* Permette ai link di andare a capo se non c'è spazio */
+        justify-content: center;
+        gap: 20px;              /* Riduciamo lo spazio tra i link */
+    }
+
+    .principale h1 {
+        font-size: 1.6rem;
+        margin-bottom: 20px;
+    }
+
+    #login {
+        max-width: 100%;
+        padding: 28px 24px;
+        margin: 0 15px;
+    }
+
+    #login .bottoni {
+        gap: 12px;
+    }
+
+    select {
+        padding: 12px 0 8px;
+    }
+}
+
+/* Mobile (max-width: 480px) */
+@media (max-width: 480px) {
+    .header-principale {
+        flex-wrap: wrap;
+        padding: 10px 12px;
+        gap: 10px;
+        justify-content: flex-start;
+    }
+
+    .logo {
+        gap: 8px;
+        flex: 1;
+        min-width: 150px;
+    }
+
+    .nome-logo {
+        font-size: 1.3rem;
+    }
+
+    .img-logo {
+        height: 35px;
+    }
+
+    .bottone-login {
+        padding: 8px 18px;
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+
+    nav {
+        order: 2;
+        width: 100%;
+        padding: 10px 0 0 0;
+    }
+
+    nav ul {
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+    }
+
+    nav ul li a {
+        font-size: 0.85rem;
+    }
+
+    .principale {
+        min-height: auto;
+        padding: 30px 15px;
+    }
+
+    .principale h1 {
+        font-size: 1.4rem;
+        margin-bottom: 20px;
+    }
+
+    #login {
+        padding: 24px 20px;
+        margin: 0 10px;
+        border-radius: 16px;
+    }
+
+    #login input,
+    select {
+        padding: 12px 0 8px;
+        margin-bottom: 20px;
+        font-size: 0.95rem;
+    }
+
+    #login .bottoni {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+
+    #login button[type="submit"],
+    #registrati {
+        width: 100%;
+        padding: 12px 20px;
+        font-size: 0.95rem;
+        min-width: unset;
+    }
+}
+
