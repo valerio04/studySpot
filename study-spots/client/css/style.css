@@ -192,11 +192,45 @@
 
 #map {
     height: 600px; /* Altezza della mappa */
-    width: 70%;   /* Larghezza della mappa */
+    width: 100%;   /* Larghezza della mappa */
     margin-top: 20px; /* Spazio sopra la mappa */
-    margin-right: 40px;
+    margin-right: 2%;
     border: 1px solid #ccc; /* Bordo sottile per distinguere la mappa */
-    margin-left: auto;
+    margin-left: 2%;
+    
+}
+
+
+/*================================================
+    map button
+================================================*/
+#map-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%; /* Assicura che il contenitore occupi tutta la larghezza */
+    height: auto; /* Permette al contenitore di adattarsi al contenuto */
+    position: relative;
+}
+.map-button {
+    position: absolute;
+    top: 10%;
+    right: 10%;
+    z-index: 1000; /* Assicura che il bottone sia sopra la mappa */
+    display: flex;
+    flex-direction: column; /* Dispone immagine ed etichetta in colonna */
+    align-items: center; /* Centra l'etichetta rispetto all'immagine */
+}
+
+#map-button-id {
+    width: 70px; /* Larghezza dell'immagine */
+    height: auto; /* Altezza dell'immagine */
+    cursor: pointer; /* Cambia il cursore per indicare che è cliccabile */
+    border-radius: 100%; /* Rende l'immagine rotonda */
+}
+#map-button-id:hover {
+   
+    opacity: 0.7; /* Effetto hover per l'immagine */
 }
 
 
@@ -209,7 +243,6 @@
     justify-content: center; /* Centra gli elementi orizzontalmente */
     align-items: center; /* Centra gli elementi verticalmente */
     gap: 20px; /* Spazio tra gli elementi */
-    margin-left: 2%;
     background-color: #ecebea;
     /*border: 1px solid #112E51;*/
     border-radius: 15px;
