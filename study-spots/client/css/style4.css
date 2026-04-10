@@ -1,0 +1,409 @@
+@import url('header.css');
+
+.principale {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 80px);
+    padding: 40px 20px;
+    background-color: #F7FBFF;
+}
+
+.principale h1 {
+    margin-bottom: 28px;
+    font-size: 2rem;
+    line-height: 1.2;
+    color: #112E51;
+}
+
+/* =========================================
+   FORM STYLES (ADD SPOT)
+   ========================================= */
+
+#add-spot {
+    width: 100%;
+    max-width: 600px;
+    padding: 36px 32px;
+    border: 2px solid #112E51;
+    border-radius: 24px;
+    background-color: #FFFFFF;
+    box-shadow: 0 18px 50px rgba(17, 46, 81, 0.08);
+}
+
+.dati {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#add-spot input[type="text"],
+#add-spot select {
+    width: 100%;
+    padding: 14px 0 10px;
+    margin-bottom: 8px;
+    border: none;
+    border-bottom: 2px solid #D9E4F5;
+    background: transparent;
+    font-size: 1rem;
+    color: #112E51;
+    outline: none;
+    transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+#add-spot input[type="text"]::placeholder,
+#add-spot textarea::placeholder {
+    color: #7B8AAB;
+}
+
+#add-spot input[type="text"]:focus,
+#add-spot select:focus,
+#add-spot textarea:focus {
+    border-color: #112E51;
+}
+
+#add-spot textarea {
+    width: 100%;
+    padding: 14px 10px;
+    margin-bottom: 20px;
+    border: 2px solid #D9E4F5;
+    background: transparent;
+    font-size: 1rem;
+    color: #112E51;
+    font-family: 'Nunito', sans-serif;
+    outline: none;
+    resize: vertical;
+    border-radius: 8px;
+    transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Stile dei fieldset */
+fieldset {
+    border: none;
+    margin-bottom: 20px;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Stile delle legend */
+legend {
+    font-weight: bold;
+    margin-bottom: 10px;
+    width: 100%;
+    color: #112E51;
+    font-size: 1rem;
+}
+
+/* Pulsanti - Contenitore */
+.bottoni {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 28px;
+}
+
+/* Bottone Submit */
+#add-spot button[type="submit"] {
+    font-weight: 700;
+    background-color: #112E51;
+    color: #FFFFFF;
+    padding: 12px 34px;
+    border: 2px solid #112E51;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#add-spot button[type="submit"]:hover {
+    color: #112E51;
+    background-color: #FFFFFF;
+}
+
+/* Bottone Annulla */
+#Annulla {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #112E51;
+    background-color: #FFFFFF;
+    border: 2px solid #112E51;
+    border-radius: 8px;
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#Annulla:hover {
+    background-color: #F0F6FF;
+}
+
+/* Contenitore principale */
+.star-rating {
+  display: flex;
+  flex-direction: row-reverse; /* Inverte l'ordine: da destra a sinistra */
+  justify-content: flex-end;   /* Allinea le stelle a sinistra */
+  font-size: 2rem;             /* Dimensione delle stelle */
+}
+
+/* Nascondiamo i radio button di default */
+.star-rating input[type="radio"] {
+  display: none;
+}
+
+/* Stile di base delle stelle (grigie) */
+.star-rating label {
+  color: #ccc;                 /* Colore stella vuota */
+  cursor: pointer;
+  transition: color 0.2s ease; /* Animazione morbida sul colore */
+  background-color: transparent;
+  padding: 0;
+  border: none;
+  outline: none;
+  display: inline;
+  box-shadow: none;
+}
+
+/* Stile al passaggio del mouse */
+.star-rating label:hover {
+  color: #ffcc00;
+}
+
+/* Magia CSS: 
+  Quando passo sopra a una stella (hover) O quando una stella è selezionata (checked),
+  colora di giallo/oro sia quella stella che tutte le etichette "sorelle" che la seguono
+  nell'HTML (che grazie al row-reverse si trovano alla sua sinistra sullo schermo).
+*/
+.star-rating label:hover ~ label,
+.star-rating input[type="radio"]:checked ~ label {
+  color: #ffcc00; /* Colore stella piena/selezionata */
+}
+
+/* (Opzionale) Cambia colore se passo sopra a una stella dopo aver già votato */
+.star-rating input[type="radio"]:checked:hover ~ label,
+.star-rating input[type="radio"]:checked + label:hover,
+.star-rating label:hover ~ input[type="radio"]:checked ~ label {
+  color: #ffcc00;
+}
+
+/* Stile generale del modulo */
+.custom-filters {
+  font-family: Arial, sans-serif;
+  max-width: 600px;
+}
+
+/* Rimuoviamo i bordi dai raggruppamenti per un look moderno */
+fieldset {
+  border: none;
+  margin-bottom: 20px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Stile dei titoli dei gruppi */
+legend {
+  font-weight: bold;
+  margin-bottom: 10px;
+  width: 100%;
+  color: #112E51;
+}
+
+/* 1. NASCONDIAMO I RADIO E LE CHECKBOX DI DEFAULT */
+input[type="radio"],
+input[type="checkbox"] {
+  display: none;
+}
+
+/* 2. STILE BASE DEI BOTTONI (Le nostre Label) */
+label {
+  background-color: #f0f0f0;
+  color: #333;
+  padding: 10px 20px;
+  border-radius: 20px;         /* Forma arrotondata a pillola */
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  user-select: none;           /* Evita di evidenziare il testo facendo doppio clic */
+  display: inline-block;
+}
+
+/* Effetto passaggio del mouse */
+label:hover {
+  background-color: #e0e0e0;
+  transform: translateY(-2px);  /* Leggero effetto di alzamento */
+}
+
+/* 3. LA MAGIA: COSA SUCCEDE QUANDO SELEZIONIAMO UN'OPZIONE */
+/* Questo stile si applica sia ai radio che alle checkbox quando sono ":checked" */
+input[type="radio"]:checked + label,
+input[type="checkbox"]:checked + label {
+  background-color: #FF6600;   /* Colore arancione del tema */
+  color: #FFFFFF;              /* Testo bianco */
+  border: 2px solid #FF6600;   /* Bordo arancione */
+  font-weight: bold;
+}
+
+/* Stili per gli orari */
+.schedule-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.schedule-day {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.schedule-day label {
+  min-width: 100px;
+  background-color: transparent;
+  color: #112E51;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  font-weight: 600;
+  cursor: default;
+  transition: none;
+}
+
+.schedule-day label:hover {
+  background-color: transparent;
+  transform: none;
+}
+
+.schedule-day input[type="time"] {
+  padding: 8px 10px;
+  border: 2px solid #D9E4F5;
+  border-radius: 6px;
+  background: transparent;
+  color: #112E51;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.schedule-day input[type="time"]:focus {
+  border-color: #112E51;
+}
+
+.schedule-day span {
+  color: #112E51;
+  font-weight: 600;
+}
+
+/* Tablet (max-width: 768px) */
+@media (max-width: 768px) {
+    /* 1. Sistemiamo l'Header */
+    .header-principale {
+        flex-direction: column; 
+        gap: 20px;              
+        padding: 20px 15px;     
+    }
+
+    nav ul {
+        flex-wrap: wrap;        
+        justify-content: center;
+        gap: 20px;              
+    }
+
+    .principale h1 {
+        font-size: 1.6rem;
+        margin-bottom: 20px;
+    }
+
+    #add-spot {
+        max-width: 100%;
+        padding: 28px 24px;
+        margin: 0 15px;
+    }
+
+    #add-spot input[type="text"],
+    #add-spot select {
+        padding: 12px 0 8px;
+        font-size: 0.95rem;
+    }
+
+    .bottoni {
+        gap: 12px;
+    }
+
+    fieldset {
+        gap: 8px;
+    }
+}
+
+/* Mobile (max-width: 480px) */
+@media (max-width: 480px) {
+    .header-principale {
+        flex-wrap: wrap;
+        padding: 10px 12px;
+        gap: 15px;
+    }
+
+    nav ul {
+        flex-wrap: wrap;        
+        justify-content: center;
+        gap: 15px;              
+    }
+
+    .principale {
+        min-height: auto;
+        padding: 30px 15px;
+    }
+
+    .principale h1 {
+        font-size: 1.4rem;
+        margin-bottom: 20px;
+    }
+
+    #add-spot {
+        padding: 24px 20px;
+        margin: 0 10px;
+        border-radius: 16px;
+    }
+
+    #add-spot input[type="text"],
+    #add-spot select {
+        padding: 12px 0 8px;
+        margin-bottom: 16px;
+        font-size: 0.95rem;
+    }
+
+    .bottoni {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+
+    #add-spot button[type="submit"],
+    #Annulla {
+        width: 100%;
+        padding: 12px 20px;
+        font-size: 0.95rem;
+        min-width: unset;
+    }
+
+    legend {
+        font-size: 0.9rem;
+    }
+
+    label {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+
+    /* TODO: implementa qui CSS*/
+}

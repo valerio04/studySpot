@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpotStudium</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Quicksand:wght@700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../css/style4.css">
+</head>
+<body>
+
+    <header class="header-principale">
+        <a href="../index.html" class="logo">
+            <img src="../assetts/logo.jpeg" alt="Logo SpotStudium" class="img-logo">
+            <span class="nome-logo">SpotStudium</span>
+        </a>
+        
+        <nav>
+            <ul>
+                <li><a href="../index.html">Map</a></li>
+                <li><a href="ranking.html">Ranking</a></li>
+                <li><a href="list.html">List</a></li>
+            </ul>
+        </nav>
+        <a href="login.html" class="bottone-login">Login</a>
+    </header>
+
+    <main>
+        <section class="principale">
+            <h1>Insert spot's informations</h1>
+            <form id="add-spot">
+                <div class="dati">
+                    <input type="text" id="name-place" name="name-place" placeholder="Name Spot" required>
+                    <br />
+                    <input type="text" id="address" name="address" placeholder="Address" required>
+                    <br />
+                    <select id="category" name="category">
+                        <option value="bar">Bar</option>
+                        <option value="co">Coworking</option>
+                        <option value="biblio">Biblioteca</option>
+                        <option value="au">Aula Studio</option>
+                    </select>
+
+                    <fieldset>
+                        <legend>Prezzo</legend>
+                        <input type="radio" id="price1" name="price" value="1">
+                        <label for="price1">$</label>
+
+                        <input type="radio" id="price2" name="price" value="2">
+                        <label for="price2">$$</label>
+
+                        <input type="radio" id="price3" name="price" value="3">
+                        <label for="price3">$$$</label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Ambiente</legend>
+                        <input type="radio" id="outdoor" name="environment" value="outdoor">
+                        <label for="outdoor">🌳 All'aperto</label>
+
+                        <input type="radio" id="indoor" name="environment" value="indoor">
+                        <label for="indoor">🏠 Al chiuso</label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Servizi e Atmosfera</legend>
+                        <input type="checkbox" id="outlets" name="outlets" value="yes">
+                        <label for="outlets">🔌 Prese di corrente</label>
+
+                        <input type="checkbox" id="quiet" name="quiet" value="yes">
+                        <label for="quiet">🤫 Silenzioso</label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Affollamento</legend>
+                        <input type="radio" id="crowd1" name="crowd" value="1">
+                        <label for="crowd1">👤</label>
+
+                        <input type="radio" id="crowd2" name="crowd" value="2">
+                        <label for="crowd2">👥</label>
+
+                        <input type="radio" id="crowd3" name="crowd" value="3">
+                        <label for="crowd3">🫂</label>
+
+                        <input type="radio" id="crowd4" name="crowd" value="4">
+                        <label for="crowd4">�</label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Orari (Facoltativo)</legend>
+                        <div class="schedule-container">
+                            <div class="schedule-day">
+                                <label for="mon-open">Lunedì</label>
+                                <input type="time" id="mon-open" name="mon-open">
+                                <span>-</span>
+                                <input type="time" id="mon-close" name="mon-close">
+                            </div>
+                            <div class="schedule-day">
+                                <label for="tue-open">Martedì</label>
+                                <input type="time" id="tue-open" name="tue-open">
+                                <span>-</span>
+                                <input type="time" id="tue-close" name="tue-close">
+                            </div>
+                            <div class="schedule-day">
+                                <label for="wed-open">Mercoledì</label>
+                                <input type="time" id="wed-open" name="wed-open">
+                                <span>-</span>
+                                <input type="time" id="wed-close" name="wed-close">
+                            </div>
+                            <div class="schedule-day">
+                                <label for="thu-open">Giovedì</label>
+                                <input type="time" id="thu-open" name="thu-open">
+                                <span>-</span>
+                                <input type="time" id="thu-close" name="thu-close">
+                            </div>
+                            <div class="schedule-day">
+                                <label for="fri-open">Venerdì</label>
+                                <input type="time" id="fri-open" name="fri-open">
+                                <span>-</span>
+                                <input type="time" id="fri-close" name="fri-close">
+                            </div>
+                            <div class="schedule-day">
+                                <label for="sat-open">Sabato</label>
+                                <input type="time" id="sat-open" name="sat-open">
+                                <span>-</span>
+                                <input type="time" id="sat-close" name="sat-close">
+                            </div>
+                            <div class="schedule-day">
+                                <label for="sun-open">Domenica</label>
+                                <input type="time" id="sun-open" name="sun-open">
+                                <span>-</span>
+                                <input type="time" id="sun-close" name="sun-close">
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <div class="star-rating">
+                        <input type="radio" id="star5" name="rating" value="5">
+                        <label for="star5" title="5 stelle">★</label>
+
+                        <input type="radio" id="star4" name="rating" value="4">
+                        <label for="star4" title="4 stelle">★</label>
+
+                        <input type="radio" id="star3" name="rating" value="3">
+                        <label for="star3" title="3 stelle">★</label>
+
+                        <input type="radio" id="star2" name="rating" value="2">
+                        <label for="star2" title="2 stelle">★</label>
+
+                        <input type="radio" id="star1" name="rating" value="1">
+                        <label for="star1" title="1 stella">★</label>
+                    </div>
+                    <textarea id="comment" name="comment" placeholder="Lascia un commento (facoltativo)" rows="4"></textarea>
+                </div>
+
+                <div class="bottoni">
+                    <a id="Annulla" href="../index.html"> Cancel</a>
+                    <button type="submit">Add Spot</button>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+</html>
