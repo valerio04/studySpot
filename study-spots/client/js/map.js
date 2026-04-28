@@ -1,7 +1,7 @@
 // Inizializza la mappa
 const map = L.map('map').setView([41.9028, 12.4964], 13); // Coordinate di default (Roma)
 
-// Chiedi la posizione dell'utente quando la pagina viene caricata
+// aggiungi un listener per il pulsante "Near Me"
 document.getElementById('near-me-button').addEventListener('click', getUserLocation);
 
 // Aggiungi un listener per il pulsante "Search"

@@ -1,0 +1,87 @@
+# Node dependencies# Node modules
+
+**/node_modules/node_modules/
+
+
+
+# Environment variables# Environment files
+
+**/.env.env
+
+**/.env.local.env.local
+
+**/.env.*.local.env.*.local
+
+server/key.env
+
+# Logs
+
+# Logsnpm-debug.log*
+
+*.logyarn-debug.log*
+
+npm-debug.log*yarn-error.log*
+
+yarn-debug.log*
+
+yarn-error.log*# Runtime data
+
+/pids
+
+# OS files*.pid
+
+.DS_Store*.seed
+
+Thumbs.db*.pid.lock
+
+
+
+# VS Code# Dependency directories
+
+.vscode//.pnp
+
+.pnp.js
+
+# Build outputs
+
+dist/# Optional npm cache directory
+
+build/.npm
+
+
+
+# Temporary files# Build output
+
+*.tmp/dist
+
+*.temp/build
+
+
+
+# Ignore local npm package lock artifacts if any workspace settings use them# Editor directories and files
+
+package-lock.json.vscode/
+
+npm-debug.log*.idea/
+
+*.suo
+
+# Optional: ignore IDE config files*.ntvs*
+
+.idea/*.njsproj
+
+*.sln
+
+# macOS
+.DS_Store
+
+# Linux
+*~
+
+# Windows
+Thumbs.db
+ehthumbs.db
+
+# Misc
+coverage/
+*.log
