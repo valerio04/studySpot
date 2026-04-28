@@ -1,10 +1,10 @@
 
-require('dotenv').config(); // carica .env in process.env (opzionale, richiede npm i dotenv)
+require('dotenv').config({ path: require('path').join(__dirname, 'key.env') }); // carica key.env in process.env
 const express = require('express') //importiamo express
 const app = express() //app è un oggetto con cui poi chiamiamo alcuni metodi
 
 
-const PORT = process.env.PORT || 3004; //Imposto la prota 
+const PORT = process.env.PORT; //Imposto la prota 
 const HOST = '0.0.0.0' //Per consentire accesso da tutti i dispositivi nella rete locale
 
 
