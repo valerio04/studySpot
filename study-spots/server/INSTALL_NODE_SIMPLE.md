@@ -12,6 +12,8 @@ Comandi base (nella cartella `server`):
 cd /home/pc/Desktop/progetti/studySpot/study-spots/server
 npm install
 cp .env.example .env   # modifica .env con le tue chiavi (NON committare)
+
+#PER AVVIARE SERVER E VEDERE HTML FAI:
 npm start
 ```
 
