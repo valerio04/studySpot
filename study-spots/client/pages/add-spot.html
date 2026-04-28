@@ -36,8 +36,18 @@
                 <div class="dati">
                     <input type="text" id="name-place" name="name-place" placeholder="Name Spot" required>
                     <br />
-                    <input type="text" id="address" name="address" placeholder="Address" required>
+                    <input type="text" id="search-input" name="address" placeholder="Address" required>
+                    
+                    <script src="/js/search.js"></script>
+                    <div class="search-results">
+                        <table>
+                            <tbody id="results-body"></tbody>
+                        </table>
+                    </div>
                     <br />
+                    
+                    
+                    
                     <select id="category" name="category">
                         <option value="bar">Bar</option>
                         <option value="co">Coworking</option>
@@ -164,5 +174,6 @@
             </form>
         </section>
     </main>
+   
 </body>
 </html>
