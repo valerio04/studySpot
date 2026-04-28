@@ -14,7 +14,10 @@ function handleInput() {
 }
 
 async function fetchResults(query) {
-    if (query.length < 3) return;
+    if (query.length < 3) {
+        updateResultsTable([]);
+        return;
+    }
     try {
         const results = await fetchFromAPI(query);
         updateResultsTable(results);
