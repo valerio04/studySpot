@@ -1,6 +1,7 @@
 const API_URL = 'https://nominatim.openstreetmap.org/search';
 //const API_URL = 'https://cors-anywhere.herokuapp.com/https://nominatim.openstreetmap.org/search';
 
+// Aggiungi un listener per l'input di ricerca
 document.getElementById('search-input').addEventListener('input', handleInput);
 
 let debounceTimeout;
@@ -9,7 +10,7 @@ function handleInput() {
     clearTimeout(debounceTimeout);
     debounceTimeout = setTimeout(function () {
         fetchResults(document.getElementById('search-input').value.trim());
-    }, 300); // Ritardo di 300ms
+    }, 500); // Ritardo di 500ms
 }
 
 async function fetchResults(query) {
