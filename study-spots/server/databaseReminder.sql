@@ -108,3 +108,59 @@ CREATE TRIGGER on_auth_user_created
 AFTER INSERT ON auth.users
 FOR EACH ROW
 EXECUTE FUNCTION public.handle_new_user();
+
+
+
+
+
+/* esempio da mettere in register
+const { data, error } = await supabase.auth.signUp({
+  email,
+  password,
+  options: {
+    data: {
+      username,  // dal form
+      name,       // dal form
+      surname,    // dal form
+      // points: ... (opzionale)
+    }
+  }
+});
+
+per login: usa supabase.auth.signInWithPassword
+
+
+const email = "test.user@example.com";
+const password = "StrongPassword!123";
+const username = "mario_rossi";
+const name = "Mario";
+const surname = "Rossi";
+const points = 25;
+
+async function createUser() {
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        username,
+        name,
+        surname,
+        points,
+      },
+    },
+  });
+
+  if (error) {
+    console.error("Errore signUp:", error);
+    return;
+  }
+
+  console.log("Creato utente:", data);
+}
+
+createUser();
+
+
+*/
+//https://supabase.com/dashboard/project/rnawaanpgqdzccqqwtyp
