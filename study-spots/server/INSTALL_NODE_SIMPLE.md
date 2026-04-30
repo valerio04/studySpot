@@ -33,3 +33,10 @@ npm install @supabase/supabase-js dotenv
 ---
 
 Se vuoi, posso sovrascrivere `INSTALL_NODE.md` con questa versione semplice; dimmi se preferisci che lo faccia. Ti ho creato questo file nuovo per aver subito il blocco "pulito" con i comandi pronti da copiare. 
+
+
+
+
+per canncellare servr aperti:
+lsof -i :3004  
+kill <pid>

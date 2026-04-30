@@ -3,6 +3,19 @@ require('dotenv').config({ path: require('path').join(__dirname, 'key.env') }); 
 const express = require('express') //importiamo express
 const app = express() //app è un oggetto con cui poi chiamiamo alcuni metodi
 
+// Log minimale di tutte le richieste.
+// Se ti dà fastidio il rumore, commenta questo middleware.
+/*app.use((req, res, next) => {
+    console.log(`[HTTP] ${req.method} ${req.url}`);
+    next();
+});*/
+
+// Legge il corpo delle richieste in formato JSON e lo mette in req.body
+app.use(express.json());
+// Legge il corpo delle richieste inviate da form HTML (application/x-www-form-urlencoded)
+// e lo mette in req.body
+app.use(express.urlencoded({ extended: true }));
+
 
 const PORT = process.env.PORT; //Imposto la prota 
 const HOST = '0.0.0.0' //Per consentire accesso da tutti i dispositivi nella rete locale
@@ -97,7 +110,13 @@ if (SUPABASE_URL && SUPABASE_KEY) {
   supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
   console.log('Supabase client inizializzato.');
 }
+else {
+  console.warn('SUPABASE_URL o SUPABASE_KEY non configurati. Le funzionalità del database non saranno disponibili.');
+}
 
+
+
+//ESEMPIO DI GET
 app.get('/api/frullati', async (req, res) => {
 
     if (!SUPABASE_URL || !SUPABASE_KEY) {
@@ -119,7 +138,7 @@ app.get('/api/frullati', async (req, res) => {
         res.status(500).json({error: 'An error occured while fetching data'}) //usiamo la funzione send per inviare uno stato di errore al client e un JSON contenente il messaggio di errore.
         return
     }
-
+    
     //se non ci sono stati errori, usiamo la funzione JSON per inviare i dati estratti dal DB in formato json
     res.json(data) 
     
@@ -168,6 +187,58 @@ Una funzione asincrona può essere invocata in due modi:
 
 */
 
+
+
+
+app.post('/register', async (req, res) => {
+    // Log leggero: non stampiamo password o dati sensibili
+    console.log('POST /register');
+
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+        return res.status(503).json({ error: 'Database non configurato in questo ambiente' });
+    }
+
+    // estraiamo i campi passati in input alla richiesta, essi sono disponibili in req.body grazie al middleware express.json() registrato prima.
+    const { email, password, username, name, surname, points } = req.body;
+    console.log('POST /register ricevuto:', { email, password, username, name, surname, points });
+
+    try {
+        const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+            // questi campi vengono inviati a Supabase come metadata dell'utente,
+            // non come colonne dirette di auth.users. Il trigger sul DB legge
+            // NEW.raw_user_meta_data e crea la riga corrispondente in profiles.
+            options: {
+                data: {
+                    username,
+                    name,
+                    surname,
+                    points
+                }
+            }
+        });
+
+    // Se vuoi, puoi stampare `data.user?.id` per tracciare gli utenti creati.
+    // console.log('Supabase signUp userId:', data?.user?.id);
+
+        if (error) {
+            console.error('Errore registrazione Supabase:', error.message);
+            return res.status(400).json({ error: error.message });
+        }
+
+        // imposto status a 201 (successo) e invio un JSON contente i dati dell'utente appena registrato
+        return res.status(201).json({ ok: true, data });
+    } catch (e) {
+        console.error('Errore inatteso in /register:', e);
+        return res.status(500).json({ error: 'Errore server' });
+    }
+});
+
+
+
+
+//ESEMPIO DI POST
 //il metodo post fa la stessa cosa del metodo get, ma solo per chiamate POST
 // i due punti (:id) servono a indicare un parametro variabile (utile per passare dati)
 app.post('/api/ordina-frullato/:id', async (req, res) => {

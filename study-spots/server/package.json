@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "sh -c 'node server.js & xdg-open http://localhost:3004'"
+    "server": "node server.js",
+    "client": "xdg-open http://localhost:3004",
+    "start": "npm run server"
   },
   "keywords": [],
   "author": "",
