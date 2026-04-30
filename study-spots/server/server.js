@@ -100,6 +100,7 @@ app.get("/list",(req,res)=>{
 //Queste righe sono di setup, dipendono dal servizio di DB
 
 const { createClient } = require('@supabase/supabase-js');
+const { createServerClient, parseCookieHeader, serializeCookieHeader } = require('@supabase/ssr');
 
 const SUPABASE_URL = process.env.SUPABASE_URL || '';
 const SUPABASE_KEY = process.env.SUPABASE_KEY || '';
@@ -114,6 +115,25 @@ else {
   console.warn('SUPABASE_URL o SUPABASE_KEY non configurati. Le funzionalità del database non saranno disponibili.');
 }
 
+// Funzione helper per creare il client Supabase per ogni richiesta
+const getSupabase = (req, res) => {
+  return createServerClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_KEY,
+    {
+      cookies: {
+        getAll() {
+          return parseCookieHeader(req.headers.cookie ?? '')
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) =>
+            res.appendHeader('Set-Cookie', serializeCookieHeader(name, value, options))
+          )
+        },
+      },
+    }
+  )
+}
 
 
 //ESEMPIO DI GET
@@ -190,7 +210,7 @@ Una funzione asincrona può essere invocata in due modi:
 
 
 
-app.post('/register', async (req, res) => {
+app.post('/api/register', async (req, res) => {
     // Log leggero: non stampiamo password o dati sensibili
     console.log('POST /register');
 
@@ -200,10 +220,12 @@ app.post('/register', async (req, res) => {
 
     // estraiamo i campi passati in input alla richiesta, essi sono disponibili in req.body grazie al middleware express.json() registrato prima.
     const { email, password, username, name, surname, points } = req.body;
+    
+    const supabaseClient = getSupabase(req, res);
     console.log('POST /register ricevuto:', { email, password, username, name, surname, points });
 
     try {
-        const { data, error } = await supabase.auth.signUp({
+        const { data, error } = await supabaseClient.auth.signUp({
             email,
             password,
             // questi campi vengono inviati a Supabase come metadata dell'utente,
@@ -235,7 +257,19 @@ app.post('/register', async (req, res) => {
     }
 });
 
+app.post('/api/login', async (req, res) => {
+  const { email, password } = req.body;
 
+  const supabaseClient = getSupabase(req, res);
+
+  const { data, error } = await supabaseClient.auth.signInWithPassword({
+     email, 
+     password 
+    });
+  if (error) return res.status(400).json({ error: error.message });
+
+  return res.status(200).json({ ok: true, data });
+});
 
 
 //ESEMPIO DI POST

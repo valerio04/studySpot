@@ -34,20 +34,25 @@ if (form){
         // Invia i dati al server usando fetch, che è un'API moderna per fare richieste HTTP. In questo caso, stiamo facendo una richiesta POST a /register con i dati del form in formato JSON.
         try {
         console.log('Invio dati:', { email, password, username, name, surname, points });
-        const response = await fetch('/register', {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
+        
+        const datiUtente = {
             email,
             password,
             username,
             name,
             surname,
             points
-            })
+        };
+
+        const response = await fetch('/api/register', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(datiUtente),
+            credentials: 'include'
         });
+
     // console.log('Risposta fetch:', response);
         const result = await response.json();
     // console.log('Risultato JSON:', result);
