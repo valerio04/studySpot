@@ -15,7 +15,7 @@
 
     <header class="header-principale">
     <a href="/" class="logo">
-            <img src="../assets/img/logo.png" alt="Logo SpotStudium" class="img-logo">
+            <img src="assets/img/logo.png" alt="Logo SpotStudium" class="img-logo">
             <span class="nome-logo">SpotStudium</span>
         </a>
         
@@ -34,35 +34,40 @@
             <h1>Insert your informations</h1>
             <form id="register">
                 <div class="dati">
-                    <input type="text" id="username" name="username" placeholder="Username" required>
-                    <br />
-                    <input type="password" id="password" name="password" placeholder="Password" required>
-                    <br>
-                    <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm password" required>
-                    <br>
-                    <input type ="text" id="email" name ="email" placeholder="Email" required>
-                    <br>
-                    <input type="text" id="name" name="name" placeholder="First Name" required>
-                    <br>
-                    <input type="text" id="surname" name="surname" placeholder="Surname" required>
-                    <br>
-                    <input type="hidden" name="points" value="0">
-                    <label for="city">City</label>
-                    <select id="city" name="city">
-                        <option value="na">None</option>
-                        <option value="rm">Rome</option>
-                        <option value="mi">Milano</option>
-                        <option value="na">Napoli</option>
-                    </select>
+                    <div class="field">
+                        <input type="text" id="name" name="name" placeholder="Name" required> 
+                        <p id="nameError" class="error"></p>
+                    </div>
+                    <div class="field">
+                        <input type="text" id="surname" name="surname" placeholder="Surname" required> 
+                        <p id="surnameError" class="error"></p>
+                    </div>
+                    <div class="field">
+                        <input type="text" id="username" name="username" placeholder="Username" required> 
+                        <p id="usernameError" class="error"></p>
+                    </div>
+                    <div class="field">
+                        <input type ="text" id="email" name ="email" placeholder="Email" required>
+                        <p id="emailError" class="error"></p>
+                    </div>
+                    <div class="field">
+                        <input type="password" id="password" name="password" placeholder="Password" required>
+                        <p id="passwordError" class="error"></p>
+                    </div>
+                    <div class="field">
+                        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm password" required>
+                        <p id="confirmError" class="error"></p>
+                    </div>
                 </div>
 
                 <div class="bottoni">
-                    <a id="Annulla" href="/"> Cancel</a>
+                    <a id="Annulla" href="/login"> Cancel</a>
                     <button type="submit">Sign up</button>
                 </div>
             </form>
         </section>
     </main>
-    <script src="/js/register.js"></script>
+
+    <script src ="/js/register.js"></script>
 </body>
 </html>
