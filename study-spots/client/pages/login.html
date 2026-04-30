@@ -15,7 +15,7 @@
 
     <header class="header-principale">
     <a href="/" class="logo">
-            <img src="../assets/img/logo.png" alt="Logo SpotStudium" class="img-logo">
+            <img src="assets/img/logo.png" alt="Logo SpotStudium" class="img-logo">
             <span class="nome-logo">SpotStudium</span>
         </a>
         
@@ -33,9 +33,14 @@
         <section class="principale">
             <h1>Insert your credentials</h1>
             <form id="login">
-                <input type="text" id="username" name="username" placeholder="Username" required>
-                <br />
-                <input type="password" id="password" name="password" placeholder="Password" required>
+                <div>
+                    <input type="text" id="email" name="email" placeholder="Email" required>
+                    <p id="emailError" class="error"></p>
+                </div>
+                <div>
+                    <input type="password" id="password" name="password" placeholder="Password" required>
+                    <p id="passwordError" class="error"></p>
+                </div>
                 <div class="bottoni">
                     <a id="registrati" href="/register"> Sign in</a>
                     <button type="submit">Login</button>
@@ -44,5 +49,6 @@
             </form>
         </section>
     </main>
+    <script src ="/js/login.js"></script>
 </body>
 </html>
