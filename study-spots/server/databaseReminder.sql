@@ -164,3 +164,34 @@ createUser();
 
 */
 //https://supabase.com/dashboard/project/rnawaanpgqdzccqqwtyp
+
+
+
+/*<script type="module">
+  import { createClient } from "https://cdn.skypack.dev/@supabase/supabase-js";
+
+  const supabase = createClient(
+    "https://<PROJECT_REF>.supabase.co",
+    "<ANON_KEY>"
+  );
+
+  async function checkSession() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      console.log("LOGGATO:", session.user.id);
+      // mostra contenuti protetti
+    } else {
+      console.log("NON loggato");
+      // mostra login
+    }
+  }
+
+  // all'evento di login/logout
+  supabase.auth.onAuthStateChange((event, session) => {
+    console.log("AUTH EVENT:", event);
+    checkSession();
+  });
+
+  checkSession();
+</script>
+*/
