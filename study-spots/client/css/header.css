@@ -46,7 +46,76 @@ a {
     color: #112E51;
     font-weight: 700;
 }
+/* Contenitore principale (sostituisce d-flex, align-items-center, gap-2) */
+.user-actions-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* Corrisponde a gap-2 di Bootstrap */
+}
+/* Stili comuni per i pulsanti (sostituisce btn, px-4, fw-bold) */
+.user-actions-container .btn {
+    display: inline-block;
+    padding: 0.375rem 1.5rem; /* px-4 */
+    font-weight: 700; /* fw-bold */
+    font-family: inherit;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 0.375rem; /* Bordo leggermente arrotondato stile Bootstrap 5 */
+    border: 1px solid transparent;
+    transition: all 0.2s ease-in-out;
+}
 
+/* Pulsante Accedi (sostituisce btn-dark-blue) */
+.user-actions-container .btn-dark-blue {
+    background-color: #0d6efd; /* Sostituisci con il tuo blu scuro specifico se necessario */
+    color: #ffffff;
+}
+
+.user-actions-container .btn-dark-blue:hover {
+    background-color: #0b5ed7;
+    color: #ffffff;
+}
+
+/* Pulsante Registrati (sostituisce btn-outline-dark-blue) */
+.user-actions-container .btn-outline-dark-blue {
+    background-color: transparent;
+    border-color: #0d6efd; /* Sostituisci con il tuo blu scuro */
+    color: #0d6efd;
+}
+
+.user-actions-container .btn-outline-dark-blue:hover {
+    background-color: #0d6efd;
+    color: #ffffff;
+}
+
+/* Testo di benvenuto (sostituisce me-2 e fw-bold) */
+#user-info {
+    margin-right: 0.5rem; /* me-2 */
+}
+
+.fw-bold {
+    font-weight: 700;
+}
+
+/* Pulsante Logout (sostituisce btn-sm, btn-outline-danger) */
+#btn-logout {
+    padding: 0.25rem 0.5rem; /* btn-sm */
+    font-size: 0.875rem;
+    font-weight: normal;
+    color: #dc3545; /* Colore danger di Bootstrap */
+    background-color: transparent;
+    border: 1px solid #dc3545;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+#btn-logout:hover {
+    color: #ffffff;
+    background-color: #dc3545;
+}
+/*
 .bottone-login {
     font-weight: 700;
     background-color: #112E51;
@@ -61,8 +130,8 @@ a {
     color: #112E51;
     background-color: #FFFFFF;
 }
-
-   nav ul {
+*/
+nav ul {
     display: flex;      
     list-style: none;   
     gap: 40px;          

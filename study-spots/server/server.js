@@ -3,12 +3,6 @@ require('dotenv').config({ path: require('path').join(__dirname, 'key.env') }); 
 const express = require('express') //importiamo express
 const app = express() //app è un oggetto con cui poi chiamiamo alcuni metodi
 
-// Log minimale di tutte le richieste.
-// Se ti dà fastidio il rumore, commenta questo middleware.
-/*app.use((req, res, next) => {
-    console.log(`[HTTP] ${req.method} ${req.url}`);
-    next();
-});*/
 
 // Legge il corpo delle richieste in formato JSON e lo mette in req.body
 app.use(express.json());
@@ -35,22 +29,6 @@ app.use(express.static(ROOT));
 
 
 //NAVIGAZIONE 
-
-/*
-Il metodo get serve per registrare un handler (una funzione) corrispondente ad una chiatama http di GET, in particolare prende due campi:
-    - la URL della chiamata HTTP (ad esempio "/" per la home)
-    - l'handler, la funzione da eseguire quando la chiamata arriva
-
-Al momento dell'esecuzione di get non succede nulla, ciò che node.js fa è semplicemente salvare l'hadler e associarlo alla chiamata, in questo modo quando una chiamata arriva:
-    - node.js controlla se è stato registrato un handler per quella chiamata.
-    - prende i parametri della chiamata e istanzia due oggetti che vanno passati come input all'handler, essi sono:
-        - req: serve per accedere ai campi passati in input alla richiesta
-        - res: serve per aprire un canale di comunicazione in uscita verso il client.
-    
-Nota: è una convenzione che si chiamino req e res, potete chiamarli come volete.
-Nota: in JS siccome non abbiamo i tipi "diamo per scontato" che questi due oggetti abbiano metodi come ad esempio sendFile
-
-*/
 
 //Pagina home
 app.get('/',(req,res)=>{
@@ -93,9 +71,6 @@ app.get("/list",(req,res)=>{
 })
 
 
-
-
-
 //QUERY SU DATABASE
 //Queste righe sono di setup, dipendono dal servizio di DB
 
@@ -114,6 +89,8 @@ if (SUPABASE_URL && SUPABASE_KEY) {
 else {
   console.warn('SUPABASE_URL o SUPABASE_KEY non configurati. Le funzionalità del database non saranno disponibili.');
 }
+
+
 
 // Funzione helper per creare il client Supabase per ogni richiesta
 const getSupabase = (req, res) => {
@@ -136,80 +113,42 @@ const getSupabase = (req, res) => {
 }
 
 
-//ESEMPIO DI GET
-app.get('/api/frullati', async (req, res) => {
+// --- API: ME (Ottieni i dati dell'utente corrente) ---
+app.get('/api/me', async (req, res) => {
+
+    console.log('GET /api/me');
 
     if (!SUPABASE_URL || !SUPABASE_KEY) {
-    return res.status(503).json({ error: 'Database non configurato in questo ambiente' });
-  }
+        return res.status(503).json({ error: 'Database non configurato in questo ambiente' });
+    }  
 
-    const {data, error} = await supabase
-        .from('frullati')
-        .select(`
-            id,
-            nome,
-            prezzo,
-            img_path,
-            categorie (nome)
-        `) //effetuaimo la query sul DB, questa sintassi dipende dal DB che usate
-    
-    //uso await per aspettare che la query finisca
-    if(error){
-        res.status(500).json({error: 'An error occured while fetching data'}) //usiamo la funzione send per inviare uno stato di errore al client e un JSON contenente il messaggio di errore.
-        return
+    const supabaseClient = getSupabase(req, res);
+
+    const { data: { user }, error } = await supabaseClient.auth.getUser();
+
+    if (error || !user) {
+        return res.status(401).json({ error: "Non sei loggato" });
     }
-    
-    //se non ci sono stati errori, usiamo la funzione JSON per inviare i dati estratti dal DB in formato json
-    res.json(data) 
-    
+
+    // Recuperiamo i dati extra dalla tabella profiles
+    const { data: profile } = await supabaseClient
+        .from('profiles')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+
+
+    if (error) {
+        console.error("Errore nel caricamento profilo:", error.message);
+    } else {
+        console.log("Profilo trovato:", profile);
+    }
+
+    res.json({ user, profile });
 })
 
-/*
-In HTTP abbiamo i seguenti codici associati ad uno stato:
-    - 500 (quelli che cominciano con 5): errore del server, ad esempio una query sul DB fallita
-    - 400 (quelli che cominciano con 4): cattiva richiesta del client, ad esempio 404 page not found
-    - 200: successo
-*/
 
-/*
-Una funzione asincrona si dichiara tramite il costrutto async, in poche parole è una funzione che non so quanto impiegherà ad eseguire. 
-Una funzione asincrona non ritorna un oggetto ma ritorna un oggetto speciale chiamato promessa, la promessa può avere tre stati:
-    - pending: la funzione che l'ha ritornata sta ancora eseguendo, quindi il suo valore di ritorno non è ancora disponibile.
-    - resolved: la funzione che l'ha ritornata ha terminato con successo l'esecuzione, quindi il suo valore di ritorno è pronto.
-    - rejected: la funzione che l'ha ritornata ha terminato con uno stato di errore, quindi il suo valore di ritorno non è disponibile, ma sarà disponibile il codice dell'errore.
-
-Una funzione asincrona può essere invocata in due modi:
-    - tramite il costrutto await: sia la funzione C che chiama D, se D è asincrona e C invoca D tramite await allora C bloccherà il suo flusso di esecuzione al momento della chiamata. C quindi attende che la promessa che ha ritornato D passi dallo stato pending agli stati resolved o reject. 
-
-    Quando C chiama D tramite await (D è asincrona) anche C diventa asincrona. Quando ciò succede il compilatore ci obbliga infatti a dichiara C tramite async.
-
-    C = () => {
-        instr. 1
-        instr. 2
-        await D() -> C blocca il flusso fino a che D non ha finito, abbiamo un errore se non dichiariamo C asincrona: C = async () => {...}
-        instr. 3
-        ...    
-    }
-    Nota: in questo modo se D ritorna dei valori che mi servono in operazioni immediatamente successive (es. instr. 3) non c'è nessun problema perché essi sono disponibili (a meno che non ci sia stato un errore)
-    Nota: dal punto di vista del programmatore è come usare una funzione "normale".
-
-    - senza await: in tal caso C non blocca il flusso di esecuzione ma continua ad eseguire le operazioni dopo D (non aspetta che la promessa ritornata da D esca dallo stato pending). Questo significa che se dopo la chiamata a D c'è un'operazione che richieda il dato da D ritornato, tale dato potrebbe non essere disponibile.
-
-    C = () => {
-        instr. 1
-        instr. 2
-        oggetto = D() -> non aspettiamo che D finisca ma andiamo avanti 
-        console.log(oggetto)  -> se oggetto non è disponibile allora esso non viene stampato, ma viene stampato un oggetto di tipo promessa allo stato pending.
-    }
-    Nota: questo è vantaggioso se voglio chiamare tante funzioni asincrone allo stesso momento (ovviamente esse non devono dipendere l'una dall'altra).
-    Nota: alcuni linguaggi danno un warning se non usate await (C# ad esempio).
-
-
-*/
-
-
-
-
+// --- API: REGISTER ---
 app.post('/api/register', async (req, res) => {
     // Log leggero: non stampiamo password o dati sensibili
     console.log('POST /register');
@@ -257,21 +196,106 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
+
+// --- API: LOGIN ---
 app.post('/api/login', async (req, res) => {
-  const { email, password } = req.body;
+    const { email, password } = req.body;
 
-  const supabaseClient = getSupabase(req, res);
+    const supabaseClient = getSupabase(req, res);
 
-  const { data, error } = await supabaseClient.auth.signInWithPassword({
-     email, 
-     password 
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email, 
+        password 
     });
-  if (error) return res.status(400).json({ error: error.message });
 
-  return res.status(200).json({ ok: true, data });
+    if (error) return res.status(400).json({ error: error.message });
+
+    return res.status(200).json({ ok: true, data });
 });
 
 
+// --- API: LOGOUT ---
+app.post('/api/logout', async (req, res) => {
+    const supabaseClient = getSupabase(req, res);
+    const { error } = await supabaseClient.auth.signOut();
+    if (error) return res.status(500).json({ error: "Errore logout" });
+    res.status(200).json({ message: "Logout effettuato" });
+});
+
+
+// --- API: RANKING ---
+app.get('/api/ranking', async (req, res) => {
+
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+        return res.status(503).json({ error: 'Database non configurato in questo ambiente' });
+    }
+
+    const { data, error } = await supabase
+        .from('profiles')
+        .select(`
+            username,
+            points,
+            aggiunti(count),
+            commenti(count)
+        `)
+        .order('points', { ascending: false })
+        .limit(100);
+    
+    
+    if (error) {
+        res.status(500).json({error: 'Errore durante il recupero della classifica:'}); 
+        console.error('Errore durante il recupero della classifica:', error);
+        return;
+    }
+    
+    if (!data) {
+      return res.status(200).json({ success: true, data: [] });
+    }
+    
+    // 3. Formattiamo i dati trasformando la struttura nidificata
+    // se vuoi capire meglio vedi funzionamento di .map() in JS
+
+    const formattedData = data.map(profile => ({
+        username: profile.username,
+        points: profile.points,
+        num_aggiunti: profile.aggiunti[0]?.count || 0,
+        num_commenti: profile.commenti[0]?.count || 0
+    }));
+
+    res.json(formattedData)
+
+});
+
+
+
+
+/*
+app.get('/api/frullati', async (req, res) => {
+
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+    return res.status(503).json({ error: 'Database non configurato in questo ambiente' });
+  }
+
+    const {data, error} = await supabase
+        .from('frullati')
+        .select(`
+            id,
+            nome,
+            prezzo,
+            img_path,
+            categorie (nome)
+        `) //effetuaimo la query sul DB, questa sintassi dipende dal DB che usate
+    
+    //uso await per aspettare che la query finisca
+    if(error){
+        res.status(500).json({error: 'An error occured while fetching data'}) //usiamo la funzione send per inviare uno stato di errore al client e un JSON contenente il messaggio di errore.
+        return
+    }
+    
+    //se non ci sono stati errori, usiamo la funzione JSON per inviare i dati estratti dal DB in formato json
+    res.json(data) 
+    
+})
 //ESEMPIO DI POST
 //il metodo post fa la stessa cosa del metodo get, ma solo per chiamate POST
 // i due punti (:id) servono a indicare un parametro variabile (utile per passare dati)
@@ -307,7 +331,7 @@ app.post('/api/ordina-frullato/:id', async (req, res) => {
         ordine: data[0] 
     });
 });
-
+*/
 
 
 
@@ -319,34 +343,7 @@ app.listen(PORT, HOST, ()=>{
     console.log(`server in esecuzione su http://localhost:${PORT}`)
 })
 
-/* 
-tramite la funzione listen il server si mette in ascolto su una porta, essa prende come parametri:
-    - una porta
-    - l'host (opzionale)
-    - una funzione, che ha scopi di log. 
 
-Quando eseguiamo listen:
-    - node.js esegue la funzione che abbiamo passato.
-    - entra in una stato di loop infinito durante il quale ascolta sulla porta per eventuali chiamate HTTP. Quando una chiamata arriva, node.js controlla se è stato registrato un handler per quella chiamata (tramite get e post) e poi viene eseguito quell'handler. IMPORTANTE: listen va eseguita alla fine, dopo tutti i get e post
-*/
-
-/*
-GET: richiediamo dati dal DB
-POST: inseriamo dati dal DB
-DELETE: rimuoviamo dati dal DB
-PUT/PATCH: la modifica di dati già esistenti del DB
-*/
-
-/*
-due modi:
-    - usi un servizio che lo faccia da solo:
-        VANTAGGIO: è semplice
-        SVANTAGGIO: il setup iniziale potrebbe essere complicato e non sai cosa succede dietro le quinte.
-    - creare una tabella sessione e salvare dentro questa tabella un id_sessione e un id_utente, poi dovresti, dopo che l'utente si è loggato, caricare un cookie con l'id_sessione. Ad ogni accesso succesivo se il cookie è ancora valido fai una query sulla tabella e guardi se è presente una sessione per quell'utente. 
-        VANTAGGIO: sai cosa fai
-        SVANTAGGIO: è complicato
-
-*/
 
 
 
