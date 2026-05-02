@@ -226,6 +226,8 @@ app.post('/api/logout', async (req, res) => {
 // --- API: RANKING ---
 app.get('/api/ranking', async (req, res) => {
 
+    console.log('GET /api/ranking');
+
     if (!SUPABASE_URL || !SUPABASE_KEY) {
         return res.status(503).json({ error: 'Database non configurato in questo ambiente' });
     }
@@ -266,7 +268,131 @@ app.get('/api/ranking', async (req, res) => {
 
 });
 
+// --- API: PROFILE (dati completi del profilo dell'utente loggato) ---
+app.get('/api/profile',async (req,res)=>{
 
+    console.log('GET /api/profile');
+
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+        return res.status(503).json({ error: 'Database non configurato in questo ambiente' });
+    }
+    
+    const supabaseClient = getSupabase(req, res);
+
+    const {  user , error: authError } = await supabaseClient.auth.getUser();
+
+    if (authError || !user) {
+        return res.status(401).json({ error: "Non sei loggato" });
+    }
+
+    const userId = user.id;
+
+    try {
+        const { data: profile, error } = await supabaseClient
+            .from('profiles')
+            .select(`
+                username,
+                name,
+                surname,
+                points,
+                
+                salvati (
+                    data,
+                    spots (
+                        id,
+                        name,
+                        address,
+                        type
+                    )
+                ),
+                
+                aggiunti (
+                    data,
+                    spots (
+                        id,
+                        name,
+                        address,
+                        type
+                    )
+                ),
+                
+                comments (
+                    comment,
+                    star,
+                    data,
+                    spots (
+                        id,
+                        name
+                    )
+                )
+            `)
+            .eq('user_id', userId)
+            .single();
+
+        // 3. Gestione degli errori lato database
+        if (error) {
+            console.error("Errore Supabase:", error.message);
+            // Restituisco uno status 500 (Internal Server Error) e un JSON con l'errore
+            return res.status(500).json({ error: "Errore durante il recupero dei dati dal database." });
+        }
+
+        // 4. Controllo se l'utente esiste effettivamente
+        if (!profile) {
+            return res.status(404).json({ error: "Profilo non trovato." });
+        }
+
+        // 5. Tutto è andato bene: restituisco l'oggetto JSON completo al frontend
+        res.status(200).json(profile);
+
+    } catch (err) {
+        // Gestione degli errori imprevisti del server
+        console.error("Errore del server:", err);
+        res.status(500).json({ error: "Errore interno del server." });
+    }
+});
+
+// FORMATO CON IL QUALE VENGONO RESTITUITI I DATI DELL'UTENTE LOGGATO NELL'ENDPOINT /api/profile
+/*
+{
+  "username": "MarioRossi99",
+  "name": "Mario",
+  "surname": "Rossi",
+  "points": 1250,
+  "salvati": [
+    {
+      "data": "2023-10-25T10:00:00.000Z",
+      "spots": {
+        "id": 14,
+        "name": "Biblioteca Centrale",
+        "address": "Via Roma 10",
+        "type": "library"
+      }
+    }
+  ],
+  "aggiunti": [
+    {
+      "data": "2023-09-12T15:30:00.000Z",
+      "spots": {
+        "id": 8,
+        "name": "Caffè Letterario",
+        "address": "Piazza Dante 2",
+        "type": "cafe"
+      }
+    }
+  ],
+  "comments": [
+    {
+      "comment": "Ottimo posto per studiare, molto silenzioso!",
+      "star": 5,
+      "data": "2023-10-26T09:15:00.000Z",
+      "spots": {
+        "id": 14,
+        "name": "Biblioteca Centrale"
+      }
+    }
+  ]
+}
+*/
 
 
 /*
@@ -343,7 +469,7 @@ app.listen(PORT, HOST, ()=>{
     console.log(`server in esecuzione su http://localhost:${PORT}`)
 })
 
-
+// VEDI SE RIESCI A USARE ANCHE LOCALSTORAGE
 
 
 

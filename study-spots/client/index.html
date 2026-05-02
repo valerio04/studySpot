@@ -38,7 +38,7 @@
             <span id="user-info" style="display:none;">
                 Benvenuto, <span id="username" class="fw-bold"></span>!
             </span>
-            <a href="/profile" class="logo">
+            <a id="btn-profile" href="/profile" class="logo" style ="display:none;">
                 <img src="assets/img/profile.png" alt="Logo Profile" class="img-logo">
             </a>
             <button id="btn-logout" class="btn-sm btn-outline-danger" style="display:none;">Logout</button>
@@ -131,7 +131,7 @@
             const btnLogout = document.getElementById('btn-logout');
             const userInfo = document.getElementById('user-info');
             const usernameSpan = document.getElementById('username');
-
+            const profile = document.getElementById('btn-profile');
             try {
                 // Chiamiamo l'endpoint che abbiamo creato prima
                 const response = await fetch('/api/me',
@@ -145,6 +145,7 @@
                     usernameSpan.textContent = user.profile.name; // o user.email
                     
                     userInfo.style.display = 'inline';
+                    profile.style.display = 'inline';
                     btnLogout.style.display = 'inline';
                     btnLogin.style.display = 'none';
                     btnSignup.style.display = 'none';
@@ -153,6 +154,7 @@
                     btnLogin.style.display = 'inline';
                     btnSignup.style.display = 'inline';
                     userInfo.style.display = 'none';
+                    btnLogout.style.display = 'none';
                     btnLogout.style.display = 'none';
                 }
             } catch (error) {
