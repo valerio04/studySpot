@@ -7,8 +7,6 @@ const displayPoints = document.getElementById('display-points');
 const inputName = document.getElementById('name');
 const inputSurname = document.getElementById('surname');
 const inputProfileUsername = document.getElementById('profile-username');
-// email non arriva da /api/profile (per come è fatto l'endpoint), quindi la lasciamo com'è
-// const inputEmail = document.getElementById('email');
 
 // contatori
 const addedSpots = document.getElementById('added-spots');
@@ -43,17 +41,15 @@ async function aggiornaProfilo() {
         if (inputSurname) inputSurname.value = profile.surname ?? '';
         if (inputProfileUsername) inputProfileUsername.value = profile.username ?? '';
         
-        // ADESSO L'EMAIL FUNZIONA!
+        
         if (inputEmail) inputEmail.value = profile.email ?? '';
 
         // --- Contatori ---
-        // Nota: Assicurati che i nomi coincidano con quelli dell'oggetto 'response' nel backend
+        
         if (addedSpots) addedSpots.textContent = profile.aggiunti_count ?? 0;
         if (savedSpots) savedSpots.textContent = profile.salvati_count ?? 0;
-        
-        // Attenzione qui: nel backend l'abbiamo chiamata 'commenti_count'
         if (commentsCount) commentsCount.textContent = profile.commenti_count ?? 0;
-
+        /*
         // --- Liste dettagliate ---
         const salvatiList = document.getElementById('salvati-list');
         if (salvatiList && Array.isArray(profile.salvati)) {
@@ -70,6 +66,7 @@ async function aggiornaProfilo() {
                 });
             }
         }
+        */
 
     } catch (error) {
         console.error('Errore:', error);
