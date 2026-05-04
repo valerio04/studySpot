@@ -279,7 +279,7 @@ app.get('/api/profile',async (req,res)=>{
     
     const supabaseClient = getSupabase(req, res);
 
-    const {  user , error: authError } = await supabaseClient.auth.getUser();
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
 
     if (authError || !user) {
         return res.status(401).json({ error: "Non sei loggato" });
@@ -326,6 +326,7 @@ app.get('/api/profile',async (req,res)=>{
                     )
                 )
             `)
+            
             .eq('user_id', userId)
             .single();
 
@@ -341,8 +342,16 @@ app.get('/api/profile',async (req,res)=>{
             return res.status(404).json({ error: "Profilo non trovato." });
         }
 
+        const completeProfile = {
+            //i tre puntini servono a copiare tutte le proprietà di profile dentro completeProfile, in questo modo non dobbiamo riscrivere username, name, surname, points, salvati, aggiunti e comments
+            ...profile,
+            email: user.email, // L'email viene da auth.getUser()
+            aggiunti_count: profile.aggiunti?.length || 0,
+            commenti_count: profile.comments?.length || 0,
+            salvati_count: profile.salvati?.length || 0
+        };
         // 5. Tutto è andato bene: restituisco l'oggetto JSON completo al frontend
-        res.status(200).json(profile);
+        res.status(200).json(completeProfile);
 
     } catch (err) {
         // Gestione degli errori imprevisti del server
@@ -360,18 +369,16 @@ app.get('/api/profile',async (req,res)=>{
   "points": 1250,
   "salvati": [
     {
-      "data": "2023-10-25T10:00:00.000Z",
+      "data": "2026-05-01T10:00:00.000Z",
       "spots": {
         "id": 14,
         "name": "Biblioteca Centrale",
         "address": "Via Roma 10",
         "type": "library"
       }
-    }
-  ],
-  "aggiunti": [
+    },
     {
-      "data": "2023-09-12T15:30:00.000Z",
+      "data": "2026-04-28T15:30:00.000Z",
       "spots": {
         "id": 8,
         "name": "Caffè Letterario",
@@ -380,20 +387,42 @@ app.get('/api/profile',async (req,res)=>{
       }
     }
   ],
+  "aggiunti": [
+    {
+      "data": "2026-04-20T09:00:00.000Z",
+      "spots": {
+        "id": 3,
+        "name": "Parco della Musica",
+        "address": "Viale della Musica 20",
+        "type": "park"
+      }
+    }
+  ],
   "comments": [
     {
       "comment": "Ottimo posto per studiare, molto silenzioso!",
       "star": 5,
-      "data": "2023-10-26T09:15:00.000Z",
+      "data": "2026-05-02T09:15:00.000Z",
       "spots": {
         "id": 14,
         "name": "Biblioteca Centrale"
       }
+    },
+    {
+      "comment": "Troppo rumoroso.",
+      "star": 2,
+      "data": "2026-04-30T16:00:00.000Z",
+      "spots": {
+        "id": 8,
+        "name": "Caffè Letterario"
+      }
     }
-  ]
+  ],
+  "salvati_count": 2,
+  "comments_count": 2,
+  "aggiunti_count": 1
 }
 */
-
 
 /*
 app.get('/api/frullati', async (req, res) => {

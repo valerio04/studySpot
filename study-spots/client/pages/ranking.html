@@ -27,16 +27,19 @@
             </ul>
         </nav>
        <div class="user-actions-container">
-            <a id="btn-login" href="/login" class="btn btn-dark-blue fw-bold">Accedi</a>
+            <a id="btn-login" href="/login" class="btn btn-dark-blue fw-bold" style="display:none;">Accedi</a>
             <a id="btn-signup" href="/register" class="btn btn-outline-dark-blue fw-bold" style="display:none;">Registrati</a>
             <span id="user-info" style="display:none;">
                 Benvenuto, <span id="username" class="fw-bold"></span>!
             </span>
-            <a href="/profile" class="logo" style="display:none;">
+            <a id="btn-profile" href="/profile" class="logo" style="display:none;">
                 <img src="assets/img/profile.png" alt="Logo Profile" class="img-logo">
             </a>
             <button id="btn-logout" class="btn-sm btn-outline-danger" style="display:none;">Logout</button>
         </div>
     </header>
+
+    <script src="../js/checkAuth.js"></script>
+        
 </body>
 </html>

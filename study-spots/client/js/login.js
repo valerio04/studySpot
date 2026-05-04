@@ -8,15 +8,16 @@ if (!message) {
     form.insertBefore(message, form.firstChild);
 }
 
-form.addEventListener("submit", async function (event) {
+// Assegna la funzione gestisciSubmit all'evento submit del form
+form.addEventListener("submit", gestisciSubmit);
+
+
+// Funzione per gestire l'evento submit del form
+async function gestisciSubmit(event) {
     event.preventDefault();
 
-    // Utilizzo di FormData per raccogliere i dati del modulo
-    const formData = new FormData(form);
-    const datiUtente = {
-        email: formData.get('email').trim(),
-        password: formData.get('password'),
-    };
+    // Raccogli i dati del modulo utilizzando la funzione dedicata
+    const datiUtente = raccogliDatiUtente(form);
 
     try {
         const response = await fetch('/api/login', {
@@ -41,4 +42,12 @@ form.addEventListener("submit", async function (event) {
         message.textContent = "Si è verificato un errore. Riprova più tardi.";
         message.style.color = "red";
     }
-});
+}
+
+function raccogliDatiUtente(form) {
+    const formData = new FormData(form);
+    return {
+        email: formData.get('email').trim(),
+        password: formData.get('password'),
+    };
+}
