@@ -72,10 +72,8 @@ CREATE TABLE spot_tags (
   spot_id INTEGER NOT NULL,
   tag_id INTEGER NOT NULL,
   PRIMARY KEY (spot_id, tag_id),
-  CONSTRAINT fk_spottags_spots
-    FOREIGN KEY (spot_id) REFERENCES spots(id) ON DELETE CASCADE,
-  CONSTRAINT fk_spottags_tags
-    FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
+  CONSTRAINT fk_spottags_spots FOREIGN KEY (spot_id) REFERENCES spots(id) ON DELETE CASCADE,
+  CONSTRAINT fk_spottags_tags FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
 );
 
 

@@ -39,7 +39,37 @@
         </div>
     </header>
 
+    <main>
+        <div class="ranking-user">  
+            <h2 class="ranking-user-title">La tua posizione in classifica</h2>
+            <div id="ranking-user">
+                <!-- Le informazioni sulla posizione dell'utente saranno inserite dinamicamente qui -->
+            </div>
+        </div>
+        <div class="ranking-container">
+            <h1 class="ranking-title">Classifica Utenti</h1>
+            <table class="ranking-table">
+                <thead>
+                    <tr>
+                        <th>Posizione</th>
+                        <th>Utente</th>
+                        <th>Spot Aggiunti</th>
+                        <th>Commenti</th>
+                        <th>Punti</th>
+                    </tr>
+                </thead>
+                <tbody id="ranking-body">
+                    <!-- Le righe della classifica saranno inserite dinamicamente qui -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+
+
+
     <script src="../js/checkAuth.js"></script>
+    <script src="../js/ranking.js"></script>
         
 </body>
 </html>

@@ -1,4 +1,3 @@
-
 require('dotenv').config({ path: require('path').join(__dirname, 'key.env') }); // carica key.env in process.env
 const express = require('express') //importiamo express
 const app = express() //app è un oggetto con cui poi chiamiamo alcuni metodi
@@ -74,7 +73,7 @@ app.get("/list",(req,res)=>{
 //QUERY SU DATABASE
 //Queste righe sono di setup, dipendono dal servizio di DB
 
-const { createClient } = require('@supabase/supabase-js');
+const { createClient, SupabaseClient } = require('@supabase/supabase-js');
 const { createServerClient, parseCookieHeader, serializeCookieHeader } = require('@supabase/ssr');
 
 const SUPABASE_URL = process.env.SUPABASE_URL || '';
@@ -113,7 +112,7 @@ const getSupabase = (req, res) => {
 }
 
 
-// --- API: ME (Ottieni i dati dell'utente corrente) ---
+// ==========API: ME (Ottieni i dati dell'utente corrente)===========
 app.get('/api/me', async (req, res) => {
 
     console.log('GET /api/me');
@@ -146,9 +145,9 @@ app.get('/api/me', async (req, res) => {
 
     res.json({ user, profile });
 })
+//===============================================================
 
-
-// --- API: REGISTER ---
+// =============API: REGISTER ================================
 app.post('/api/register', async (req, res) => {
     // Log leggero: non stampiamo password o dati sensibili
     console.log('POST /register');
@@ -195,9 +194,9 @@ app.post('/api/register', async (req, res) => {
         return res.status(500).json({ error: 'Errore server' });
     }
 });
+//===============================================================
 
-
-// --- API: LOGIN ---
+// ========================= API: LOGIN =========================
 app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
 
@@ -214,7 +213,7 @@ app.post('/api/login', async (req, res) => {
 });
 
 
-// --- API: LOGOUT ---
+// ======== API: LOGOUT ========
 app.post('/api/logout', async (req, res) => {
     const supabaseClient = getSupabase(req, res);
     const { error } = await supabaseClient.auth.signOut();
@@ -223,7 +222,7 @@ app.post('/api/logout', async (req, res) => {
 });
 
 
-// --- API: RANKING ---
+// ======== API: RANKING ========
 app.get('/api/ranking', async (req, res) => {
 
     console.log('GET /api/ranking');
@@ -237,8 +236,8 @@ app.get('/api/ranking', async (req, res) => {
         .select(`
             username,
             points,
-            aggiunti(count),
-            commenti(count)
+            aggiunti_count: aggiunti(count),
+            comments_count: comments(count)
         `)
         .order('points', { ascending: false })
         .limit(100);
@@ -260,42 +259,61 @@ app.get('/api/ranking', async (req, res) => {
     const formattedData = data.map(profile => ({
         username: profile.username,
         points: profile.points,
-        num_aggiunti: profile.aggiunti[0]?.count || 0,
-        num_commenti: profile.commenti[0]?.count || 0
+        num_aggiunti: profile.aggiunti_count?.[0]?.count || 0,
+        num_commenti: profile.comments_count?.[0]?.count || 0
     }));
 
     res.json(formattedData)
 
 });
+//===============================================================
 
+// ======== API: RANKING (posizione dell'utente loggato) ========
 
-// --- API: RANKING (posizione dell'utente loggato) ---
-// NELLA GET DEVI PASSARGLI COME PARAMETRO L'OGGETTO USER RESTIUTUITO DALLA GET /API/PROFILE
 app.get('/api/ranking_user' , async (req, res) => {
-    console.log('GET /api/ranking/:username');
-    
+    console.log('GET /api/ranking_user');
+
     if (!SUPABASE_URL || !SUPABASE_KEY) {
         return res.status(503).json({ error: 'Database non configurato in questo ambiente' });
     }
+
+    const supabaseClient = getSupabase(req, res);
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
     
-    const { user } = req.params;
-
-    const { count, error } = await supabase
-        .from('profiles')
-        .select('*', { count: 'exact', head: true })
-        .gt('point', user.points);
-
-    if (error) {
-        res.status(500).json({error: 'Errore durante il recupero della classifica:'}); 
-        console.error('Errore durante il recupero della classifica:', error);
-        return;
+    if (authError || !user) {
+        return res.status(401).json({ error: "Non sei loggato" });
     }
 
-    res.json({ rank: count + 1 }); // +1 perché il conteggio è zero-based
+    // Recupera il profilo dell'utente loggato per ottenere i punti
+    const { data: profile, error: profileError } = await supabaseClient
+        .from('profiles')
+        .select('points')
+        .eq('user_id', user.id)
+        .single();
+
+    if (profileError || !profile) {
+        console.error('Errore durante il recupero del profilo:', profileError);
+        return res.status(500).json({ error: 'Errore durante il recupero del profilo utente' });
+    }
+
+    const userPoints = profile.points;
+
+    // Conta gli utenti con un punteggio maggiore
+    const { count, error: countError } = await supabaseClient
+        .from('profiles')
+        .select('points', { count: 'exact', head: true })
+        .gt('points', userPoints);
+
+    if (countError) {
+        console.error('Errore durante il recupero della classifica:', countError);
+        return res.status(500).json({ error: 'Errore durante il recupero della classifica' });
+    }
+
+    res.json({ rank: count + 1, points: userPoints , user_id: user.id }); // +1 perché il conteggio è zero-based
 });
 
 
-// --- API: PROFILE (dati completi del profilo dell'utente loggato) ---
+// ======== API: PROFILE (dati completi del profilo dell'utente loggato) ========
 app.get('/api/profile',async (req,res)=>{
 
     console.log('GET /api/profile');
@@ -451,33 +469,119 @@ app.get('/api/profile',async (req,res)=>{
 }
 */
 
-/*
-app.get('/api/frullati', async (req, res) => {
+/*    DA VERIFICARE SE é CORRETTA
+// ======== API: ADD SPOT ========
+app.post('/api/add-spot', async (req, res) => {
+    console.log('POST /api/add-spot');
 
     if (!SUPABASE_URL || !SUPABASE_KEY) {
-    return res.status(503).json({ error: 'Database non configurato in questo ambiente' });
-  }
-
-    const {data, error} = await supabase
-        .from('frullati')
-        .select(`
-            id,
-            nome,
-            prezzo,
-            img_path,
-            categorie (nome)
-        `) //effetuaimo la query sul DB, questa sintassi dipende dal DB che usate
-    
-    //uso await per aspettare che la query finisca
-    if(error){
-        res.status(500).json({error: 'An error occured while fetching data'}) //usiamo la funzione send per inviare uno stato di errore al client e un JSON contenente il messaggio di errore.
-        return
+        return res.status(503).json({ error: 'Database non configurato in questo ambiente' });
     }
-    
-    //se non ci sono stati errori, usiamo la funzione JSON per inviare i dati estratti dal DB in formato json
-    res.json(data) 
-    
-})
+
+    const supabaseClient = getSupabase(req, res);
+
+    // Recupera l'utente autenticato
+    const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+    if (userError || !user) {
+        return res.status(401).json({ error: "Utente non autenticato" });
+    }
+
+    const {
+        name,
+        address,
+        latitude,
+        longitude,
+        type,
+        price,
+        environment,
+        outlets,
+        quiet,
+        crowd,
+        schedule,
+        rating,
+        comment
+    } = req.body;
+
+    try {
+        // Inserisce il nuovo spot nel database
+        const { data: spot, error: spotError } = await supabaseClient
+            .from('spots')
+            .insert([
+                {
+                    name,
+                    address,
+                    latitude,
+                    longitude,
+                    type
+                }
+            ])
+            .select();
+
+        if (spotError) {
+            console.error('Errore durante l\'inserimento dello spot:', spotError);
+            return res.status(500).json({ error: 'Errore durante l\'inserimento dello spot' });
+        }
+
+        const spotId = spot[0].id;
+
+        // Inserisce i tag associati allo spot
+        const tags = [price, environment, outlets, quiet, crowd].filter(tag => tag !== undefined);
+        if (tags.length > 0) {
+            const tagInserts = tags.map(tag => ({ spot_id: spotId, tag }));
+            const { error: tagError } = await supabaseClient
+                .from('tags')
+                .insert(tagInserts);
+
+            if (tagError) {
+                console.error('Errore durante l\'inserimento dei tag:', tagError);
+                return res.status(500).json({ error: 'Errore durante l\'inserimento dei tag' });
+            }
+        }
+
+        // Inserisce gli orari associati allo spot
+        if (schedule && Array.isArray(schedule)) {
+            const scheduleInserts = schedule.map(time => ({ spot_id: spotId, time }));
+            const { error: scheduleError } = await supabaseClient
+                .from('schedules')
+                .insert(scheduleInserts);
+
+            if (scheduleError) {
+                console.error('Errore durante l\'inserimento degli orari:', scheduleError);
+                return res.status(500).json({ error: 'Errore durante l\'inserimento degli orari' });
+            }
+        }
+
+        // Inserisce il commento e la valutazione se forniti
+        if (comment || rating) {
+            const { error: commentError } = await supabaseClient
+                .from('comments')
+                .insert([
+                    {
+                        comment,
+                        star: rating,
+                        user_id: user.id, // Assumendo che l'utente sia autenticato
+                        spot_id: spotId
+                    }
+                ]);
+
+            if (commentError) {
+                console.error('Errore durante l\'inserimento del commento:', commentError);
+                return res.status(500).json({ error: 'Errore durante l\'inserimento del commento' });
+            }
+        }
+
+        res.status(201).json({ message: 'Spot aggiunto con successo!', spot });
+    } catch (error) {
+        console.error('Errore inatteso:', error);
+        res.status(500).json({ error: 'Errore inatteso durante l\'aggiunta dello spot' });
+    }
+});
+
+*/
+
+
+
+/*
 //ESEMPIO DI POST
 //il metodo post fa la stessa cosa del metodo get, ma solo per chiamate POST
 // i due punti (:id) servono a indicare un parametro variabile (utile per passare dati)
