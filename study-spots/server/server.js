@@ -268,6 +268,33 @@ app.get('/api/ranking', async (req, res) => {
 
 });
 
+
+// --- API: RANKING (posizione dell'utente loggato) ---
+// NELLA GET DEVI PASSARGLI COME PARAMETRO L'OGGETTO USER RESTIUTUITO DALLA GET /API/PROFILE
+app.get('/api/ranking_user' , async (req, res) => {
+    console.log('GET /api/ranking/:username');
+    
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+        return res.status(503).json({ error: 'Database non configurato in questo ambiente' });
+    }
+    
+    const { user } = req.params;
+
+    const { count, error } = await supabase
+        .from('profiles')
+        .select('*', { count: 'exact', head: true })
+        .gt('point', user.points);
+
+    if (error) {
+        res.status(500).json({error: 'Errore durante il recupero della classifica:'}); 
+        console.error('Errore durante il recupero della classifica:', error);
+        return;
+    }
+
+    res.json({ rank: count + 1 }); // +1 perché il conteggio è zero-based
+});
+
+
 // --- API: PROFILE (dati completi del profilo dell'utente loggato) ---
 app.get('/api/profile',async (req,res)=>{
 

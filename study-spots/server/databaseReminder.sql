@@ -110,7 +110,6 @@ FOR EACH ROW
 EXECUTE FUNCTION public.handle_new_user();
 
 
-
 /*
 QUERY PER CLASSIFICA
 select p.username, p.points, a.num_aggiunti, c.num_commenti
