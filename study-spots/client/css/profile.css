@@ -1,0 +1,239 @@
+@import url('header.css');
+/* =========================================
+   VARIABILI DI STILE (Allineate al tuo tema)
+   ========================================= */
+:root {
+    --primary-color: #112E51;
+    --accent-color: #FF6600;
+    --bg-light: #ecebea;
+    --bg-lighter: #f1f1f1;
+    --text-color: #112E51;
+    --border-radius: 15px; /* Raggio dei bordi ricorrente nel tuo design */
+}
+
+body {
+    /* Supponendo che il body base sia già gestito, 
+       aggiungiamo solo il colore del testo coerente */
+    color: var(--text-color);
+    font-family: inherit;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* =========================================
+   CONTENITORE PROFILO
+   ========================================= */
+.profile-container {
+    background: #FFFFFF;
+    width: 100%;
+    max-width: 800px;
+    border-radius: var(--border-radius);
+    /* Bordo coerente con il resto del tuo sito o una leggera ombra */
+    box-shadow: 0 4px 15px rgba(17, 46, 81, 0.1); 
+    padding: 30px;
+}
+
+/* =========================================
+   HEADER PROFILO
+   ========================================= */
+.profile-header {
+    text-align: center;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    background-color: var(--primary-color);
+    color: #FFFFFF;
+    font-size: 2.5rem;
+    font-weight: bold;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+}
+
+.profile-header h1 {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin: 0 0 10px;
+}
+
+.points-badge {
+    display: inline-block;
+    background-color: var(--accent-color);
+    color: #FFFFFF;
+    padding: 5px 15px;
+    border-radius: var(--border-radius);
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+/* =========================================
+   SEZIONI E TIPOGRAFIA
+   ========================================= */
+.profile-section { margin-bottom: 40px; }
+.profile-section h2 { 
+    font-size: 1.8rem; 
+    margin-bottom: 20px; 
+    color: var(--primary-color); 
+}
+
+/* =========================================
+   FORM E INPUT
+   ========================================= */
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+.form-row .form-group { flex: 1; }
+.form-group { margin-bottom: 20px; }
+
+label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: var(--border-radius);
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    color: var(--text-color);
+}
+
+/* Modalità Edit (Campi Attivi) - Coerente con #search-input */
+input:not(:disabled) {
+    background-color: #FFFFFF;
+    border: 2px solid var(--primary-color);
+}
+
+input:not(:disabled):focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+/* Modalità Lettura (Campi Disabilitati) */
+input:disabled {
+    background-color: transparent;
+    border: 2px solid transparent;
+    font-weight: bold;
+    padding-left: 0;
+    opacity: 1;
+}
+
+/* =========================================
+   PULSANTI (Stile allineato a .bottone1)
+   ========================================= */
+.form-actions {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Bottone di Salvataggio (Principale) */
+.btn-primary { 
+    background-color: var(--primary-color); 
+    color: #FFFFFF; 
+}
+.btn-primary:hover { 
+    background-color: var(--accent-color); 
+}
+
+/* Bottone di Modifica (Secondario - Simile a #near-me-button) */
+.btn-secondary { 
+    background-color: #112e51c5;
+    border: 1px solid var(--primary-color);
+    color: #FFFFFF; 
+}
+.btn-secondary:hover { 
+    background-color: var(--accent-color); 
+}
+
+/* Bottone di Annullamento */
+.btn-danger { 
+    background-color: transparent; 
+    border: 2px solid var(--accent-color);
+    color: var(--accent-color); 
+}
+.btn-danger:hover { 
+    background-color: var(--accent-color);
+    color: #FFFFFF;
+}
+
+/* =========================================
+   STATISTICHE (Stile allineato a .tool)
+   ========================================= */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    background-color: var(--bg-light); /* Riprende il colore #ecebea dei tuoi tool */
+    padding: 20px;
+    border-radius: var(--border-radius);
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.stat-card:hover {
+    background-color: #dad9d9; /* Riprende l'effetto hover della tua tabella */
+}
+
+.stat-card h3 {
+    font-size: 1rem;
+    color: var(--primary-color);
+    margin: 0 0 10px 0;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--accent-color);
+    margin: 0;
+}
+
+/* =========================================
+   RESPONSIVE DESIGN
+   ========================================= */
+@media (max-width: 768px) {
+    .profile-container {
+        padding: 20px 15px;
+    }
+
+    .profile-header h1 {
+        font-size: 2.2rem; /* Allineato al tuo h1 responsive */
+    }
+
+    .form-row { 
+        flex-direction: column; 
+        gap: 0; 
+    }
+    
+    .form-actions {
+        justify-content: center;
+    }
+}

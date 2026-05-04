@@ -32,7 +32,17 @@
                 <li><a href="/list">List</a></li>
             </ul>
         </nav>
-    <a href="/login" class="bottone-login">Accedi</a>
+       <div class="user-actions-container">
+            <a id="btn-login" href="/login" class="btn btn-dark-blue fw-bold">Accedi</a>
+            <a id="btn-signup" href="/register" class="btn btn-outline-dark-blue fw-bold" style="display:none;">Registrati</a>
+            <span id="user-info" style="display:none;">
+                Benvenuto, <span id="username" class="fw-bold"></span>!
+            </span>
+            <a id="btn-profile" href="/profile" class="logo" style ="display:none;">
+                <img src="assets/img/profile.png" alt="Logo Profile" class="img-logo">
+            </a>
+            <button id="btn-logout" class="btn-sm btn-outline-danger" style="display:none;">Logout</button>
+        </div>
     </header>
 
     <main>
@@ -114,7 +124,55 @@
             
         </section>
     </main>
+    <script>
+        async function checkAuth() {
+            const btnLogin = document.getElementById('btn-login');
+            const btnSignup = document.getElementById('btn-signup');
+            const btnLogout = document.getElementById('btn-logout');
+            const userInfo = document.getElementById('user-info');
+            const usernameSpan = document.getElementById('username');
+            const profile = document.getElementById('btn-profile');
+            try {
+                // Chiamiamo l'endpoint che abbiamo creato prima
+                const response = await fetch('/api/me',
+                    { credentials: 'include' }
+                );
 
+                if (response.ok) {
+                    // L'utente è loggato (Stato 200)
+                    const user = await response.json();
+                    console.log("Utente autenticato:", user);
+                    usernameSpan.textContent = user.profile.name; // o user.email
+                    
+                    userInfo.style.display = 'inline';
+                    profile.style.display = 'inline';
+                    btnLogout.style.display = 'inline';
+                    btnLogin.style.display = 'none';
+                    btnSignup.style.display = 'none';
+                } else {
+                    // L'utente non è loggato (Stato 401)
+                    btnLogin.style.display = 'inline';
+                    btnSignup.style.display = 'inline';
+                    userInfo.style.display = 'none';
+                    btnLogout.style.display = 'none';
+                    btnLogout.style.display = 'none';
+                }
+            } catch (error) {
+                console.error("Errore durante il controllo autenticazione", error);
+            }
+        }
+
+        checkAuth();
+
+        const btnLogout = document.getElementById('btn-logout');
+
+        btnLogout.addEventListener('click', async () => {
+            const response = await fetch('/api/logout', { method: 'POST' });
+            if (response.ok) {
+                window.location.href = '/'; // Ricarica la pagina o vai in home
+            }
+        });
+    </script>
     
 </body>
 </html>

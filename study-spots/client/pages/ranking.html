@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudySpot</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Quicksand:wght@700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header class="header-principale">
+        <a href="/" class="logo">
+            <img src="assets/img/logo.png" alt="Logo StudySpot" class="img-logo">
+            <span class="nome-logo">StudySpot</span>
+        </a>
+        
+        <nav>
+            <ul>
+                <li><a href="/">Map</a></li>
+                <li><a href="/ranking">Ranking</a></li>
+                <li><a href="/list">List</a></li>
+            </ul>
+        </nav>
+       <div class="user-actions-container">
+            <a id="btn-login" href="/login" class="btn btn-dark-blue fw-bold">Accedi</a>
+            <a id="btn-signup" href="/register" class="btn btn-outline-dark-blue fw-bold" style="display:none;">Registrati</a>
+            <span id="user-info" style="display:none;">
+                Benvenuto, <span id="username" class="fw-bold"></span>!
+            </span>
+            <a href="/profile" class="logo" style="display:none;">
+                <img src="assets/img/profile.png" alt="Logo Profile" class="img-logo">
+            </a>
+            <button id="btn-logout" class="btn-sm btn-outline-danger" style="display:none;">Logout</button>
+        </div>
+    </header>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudySpot</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Quicksand:wght@700&display=swap" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="header-principale">
+        <a href="/" class="logo">
+            <img src="assets/img/logo.png" alt="Logo StudySpot" class="img-logo">
+            <span class="nome-logo">StudySpot</span>
+        </a>
+        
+        <nav>
+            <ul>
+                <li><a href="/">Map</a></li>
+                <li><a href="/ranking">Ranking</a></li>
+                <li><a href="/list">List</a></li>
+            </ul>
+        </nav>
+       <div class="user-actions-container">
+            <a id="btn-login" href="/login" class="btn btn-dark-blue fw-bold">Accedi</a>
+            <a id="btn-signup" href="/register" class="btn btn-outline-dark-blue fw-bold" style="display:none;">Registrati</a>
+            <span id="user-info" style="display:none;">
+                Benvenuto, <span id="username" class="fw-bold"></span>!
+            </span>
+            <a href="/profile" class="logo" style="display:none;">
+                <img src="assets/img/profile.png" alt="Logo Profile" class="img-logo">
+            </a>
+            <button id="btn-logout" class="btn-sm btn-outline-danger" style="display:none;">Logout</button>
+        </div>
+    </header>
+    <main>
+        <div class="profile-container">
+    
+            <div class="profile-header">
+                <div class="avatar">
+                    <span id="avatar-initials">M</span>
+                </div>
+                <h1 id="display-username">MarioRossi99</h1>
+                <div class="points-badge">🏆 <span id="display-points">1.250</span> Punti</div>
+            </div>
+
+            <div class="profile-section">
+                <h2>Dati Personali</h2>
+                <form id="profile-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Nome</label>
+                            <input type="text" id="name" name="name" value="Mario" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="surname">Cognome</label>
+                            <input type="text" id="surname" name="surname" value="Rossi" disabled>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" value="MarioRossi99" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" value="mario.rossi@email.it" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" value="********" disabled>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" id="edit-btn" class="btn btn-secondary">✏️ Edit Profile</button>
+                        <button type="submit" id="save-btn" class="btn btn-primary" style="display: none;">💾 Salva Modifiche</button>
+                        <button type="button" id="cancel-btn" class="btn btn-danger" style="display: none;">Annulla</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="profile-section">
+                <h2>Le tue Attività</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>📍 Spot Aggiunti</h3>
+                        <p class="stat-value" id="added-spots">12</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>❤️ Spot Preferiti</h3>
+                        <p class="stat-value" id="saved-spots">34</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>💬 Commenti</h3>
+                        <p class="stat-value" id="comments">87</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+
+
+    <script>
+        // Funzione per cambiare scheda
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+
+            event.currentTarget.classList.add('active');
+            document.getElementById(`content-${tabName}`).classList.add('active');
+        }
+    </script>
+    <script>
+        async function checkAuth() {
+            const btnLogin = document.getElementById('btn-login');
+            const btnSignup = document.getElementById('btn-signup');
+            const btnLogout = document.getElementById('btn-logout');
+            const userInfo = document.getElementById('user-info');
+            const usernameSpan = document.getElementById('username');
+
+            try {
+                // Chiamiamo l'endpoint che abbiamo creato prima
+                const response = await fetch('/api/me',
+                    { credentials: 'include' }
+                );
+
+                if (response.ok) {
+                    // L'utente è loggato (Stato 200)
+                    const user = await response.json();
+                    console.log("Utente autenticato:", user);
+                    usernameSpan.textContent = user.profile.name; // o user.email
+                    
+                    userInfo.style.display = 'inline';
+                    btnLogout.style.display = 'inline';
+                    btnLogin.style.display = 'none';
+                    btnSignup.style.display = 'none';
+                } else {
+                    // L'utente non è loggato (Stato 401)
+                    btnLogin.style.display = 'inline';
+                    btnSignup.style.display = 'inline';
+                    userInfo.style.display = 'none';
+                    btnLogout.style.display = 'none';
+                }
+            } catch (error) {
+                console.error("Errore durante il controllo autenticazione", error);
+            }
+        }
+
+        checkAuth();
+
+        const btnLogout = document.getElementById('btn-logout');
+        
+        async function caricaProfilo() {
+            try {
+                // Facciamo la GET al tuo server
+                const response = await fetch('https://tuosito.com/api/profile', {
+                    method: 'GET',
+                    // FONDAMENTALE: permette l'invio automatico dei cookie di sessione
+                    credentials: 'include', 
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+
+                // Qui bisogna popolare i campi HTML con i dati ricevuti dal server
+
+                
+                /*
+                // Se l'utente è loggato e il cookie è valido
+                if (response.ok) {
+                    const datiUtente = await response.json();
+                    
+                    // Popoliamo i campi HTML con i dati del server
+                    document.getElementById('user-fullname').innerText = `${datiUtente.name} ${datiUtente.surname}`;
+                    document.getElementById('user-username').innerText = datiUtente.username;
+                    document.getElementById('user-email').innerText = datiUtente.email;
+                    document.getElementById('user-points').innerText = datiUtente.points;
+
+                    // Eventuale gestione delle tab per spot e commenti...
+
+                } else if (response.status === 401 || response.status === 403) {
+                    // Se il server risponde che non siamo autorizzati (es. cookie scaduto o assente)
+                    alert("Sessione scaduta o non valida. Effettua il login.");
+                    window.location.href = 'login.html';
+                } else {
+                    console.error("Errore nel recupero dei dati del profilo");
+                }
+                */
+            } catch (error) {
+                console.error("Errore di rete:", error);
+            }
+        }
+
+        // Avvia la funzione non appena la pagina è pronta
+        document.addEventListener('DOMContentLoaded', caricaProfilo);
+
+        btnLogout.addEventListener('click', async () => {
+            const response = await fetch('/api/logout', { method: 'POST' });
+            if (response.ok) {
+                window.location.href = '/'; // Ricarica la pagina o vai in home
+            }
+        });
+    </script>
+</body>
+</html>

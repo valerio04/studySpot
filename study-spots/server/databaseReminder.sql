@@ -111,7 +111,13 @@ EXECUTE FUNCTION public.handle_new_user();
 
 
 
-
+/*
+QUERY PER CLASSIFICA
+select p.username, p.points, a.num_aggiunti, c.num_commenti
+from profiles p join (select user_id, count(*) as num_aggiunti from aggiunti group by user_id) a on p.user_id = a.user_id join (select user_id, count(*) as num_commenti from commenti group by user_id) c on p.user_id = c.user_id
+order by points desc
+limit 100
+/*
 
 /* esempio da mettere in register
 const { data, error } = await supabase.auth.signUp({
