@@ -13,7 +13,9 @@ CREATE TABLE spots (
   address VARCHAR(255) NOT NULL,
   latitude DOUBLE PRECISION NOT NULL,
   longitude DOUBLE PRECISION NOT NULL,
-  type VARCHAR(255) NOT NULL
+  type VARCHAR(255) NOT NULL,
+  star_count integer NOT NULL DEFAULT 0,
+  star_avg numeric(6,2) NOT NULL DEFAULT 0
 );
 
 CREATE TABLE salvati (
@@ -72,10 +74,11 @@ CREATE TABLE spot_tags (
   spot_id INTEGER NOT NULL,
   tag_id INTEGER NOT NULL,
   PRIMARY KEY (spot_id, tag_id),
-  CONSTRAINT fk_spottags_spots FOREIGN KEY (spot_id) REFERENCES spots(id) ON DELETE CASCADE,
-  CONSTRAINT fk_spottags_tags FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
+  CONSTRAINT fk_spottags_spots
+    FOREIGN KEY (spot_id) REFERENCES spots(id) ON DELETE CASCADE,
+  CONSTRAINT fk_spottags_tags
+    FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
 );
-
 
 
 -- 1) Funzione che crea profiles quando un utente viene creato in auth.users
@@ -106,6 +109,61 @@ CREATE TRIGGER on_auth_user_created
 AFTER INSERT ON auth.users
 FOR EACH ROW
 EXECUTE FUNCTION public.handle_new_user();
+
+--==================================================
+
+-- 1) Campi su spots
+ALTER TABLE public.spots
+ADD COLUMN IF NOT EXISTS star_count integer NOT NULL DEFAULT 0,
+ADD COLUMN IF NOT EXISTS star_avg numeric(6,2) NOT NULL DEFAULT 0;
+
+-- 2) Funzione trigger (solo INSERT/DELETE) per modificar la media degli spot quando si aggiunge un commento.
+-- RICORDA DI NONMMODIFICAREMAI I ICOMMENTI SOPRATTUTO LE VALUTAZIONI STELLE
+CREATE OR REPLACE FUNCTION public.trg_comments_update_spot_star_stats()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  IF (TG_OP = 'DELETE') THEN
+    UPDATE public.spots s
+    SET
+      star_count = CASE
+        WHEN s.star_count <= 1 THEN 0
+        ELSE s.star_count - 1
+      END,
+      star_avg = CASE
+        WHEN s.star_count <= 1 THEN 0
+        ELSE ROUND(((s.star_avg * s.star_count) - OLD.star) / (s.star_count - 1), 2)
+      END
+    WHERE s.id = OLD.spot_id;
+
+    RETURN OLD;
+
+  ELSIF (TG_OP = 'INSERT') THEN
+    UPDATE public.spots s
+    SET
+      star_count = s.star_count + 1,
+      star_avg = ROUND(((s.star_avg * s.star_count) + NEW.star) / (s.star_count + 1), 2)
+    WHERE s.id = NEW.spot_id;
+
+    RETURN NEW;
+  END IF;
+
+  RETURN NULL;
+END;
+$$;
+
+-- 3) Trigger
+DROP TRIGGER IF EXISTS comments_star_stats_trigger ON public.comments;
+
+CREATE TRIGGER comments_star_stats_trigger
+AFTER INSERT OR DELETE ON public.comments
+FOR EACH ROW
+EXECUTE FUNCTION public.trg_comments_update_spot_star_stats();
+
+
+
+
 
 
 /*
