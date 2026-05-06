@@ -147,7 +147,7 @@ app.get('/api/me', async (req, res) => {
 })
 //===============================================================
 
-// =============API: REGISTER ================================
+// ============= API: REGISTER ================================
 app.post('/api/register', async (req, res) => {
     // Log leggero: non stampiamo password o dati sensibili
     console.log('POST /register');
@@ -469,9 +469,10 @@ app.get('/api/profile',async (req,res)=>{
 }
 */
 
-/*    DA VERIFICARE SE é CORRETTA
+
 // ======== API: ADD SPOT ========
-app.post('/api/add-spot', async (req, res) => {
+
+app.post('/api/add-spot', async (req, res) =>{
     console.log('POST /api/add-spot');
 
     if (!SUPABASE_URL || !SUPABASE_KEY) {
@@ -479,9 +480,10 @@ app.post('/api/add-spot', async (req, res) => {
     }
 
     const supabaseClient = getSupabase(req, res);
-
+    
     // Recupera l'utente autenticato
     const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+
     if (userError || !user) {
         return res.status(401).json({ error: "Utente non autenticato" });
     }
@@ -501,12 +503,14 @@ app.post('/api/add-spot', async (req, res) => {
         rating,
         comment
     } = req.body;
+    
 
     try {
+        let spotId;
         // Inserisce il nuovo spot nel database
         const { data: spot, error: spotError } = await supabaseClient
             .from('spots')
-            .insert([
+            .insert(
                 {
                     name,
                     address,
@@ -514,45 +518,119 @@ app.post('/api/add-spot', async (req, res) => {
                     longitude,
                     type
                 }
-            ])
-            .select();
-
+            )
+            .select()
+            .single();
+            
         if (spotError) {
             console.error('Errore durante l\'inserimento dello spot:', spotError);
             return res.status(500).json({ error: 'Errore durante l\'inserimento dello spot' });
         }
+        
+        spotId = spot.id;
 
-        const spotId = spot[0].id;
 
-        // Inserisce i tag associati allo spot
-        const tags = [price, environment, outlets, quiet, crowd].filter(tag => tag !== undefined);
+        // Prende i tag esistenti, poi associa quelli nuovi allo spot tramite la tabella pivot spot_tags. In questo modo evitiamo di creare tag duplicati.
+        const tags = [price, environment, outlets, quiet, crowd].filter(tag => tag !== undefined && tag !== null);        
         if (tags.length > 0) {
-            const tagInserts = tags.map(tag => ({ spot_id: spotId, tag }));
-            const { error: tagError } = await supabaseClient
+
+            const {data: tagData, error: tagError } = await supabaseClient
                 .from('tags')
-                .insert(tagInserts);
+                .select('id, name')
+                .in('name', tags);
 
             if (tagError) {
                 console.error('Errore durante l\'inserimento dei tag:', tagError);
                 return res.status(500).json({ error: 'Errore durante l\'inserimento dei tag' });
             }
-        }
+            
+            if (tagData && tagData.length > 0) {
+                const pivotInserts = tagData.map(t => ({
+                    spot_id: spotId,
+                    tag_id: t.id
+                }));
 
-        // Inserisce gli orari associati allo spot
-        if (schedule && Array.isArray(schedule)) {
-            const scheduleInserts = schedule.map(time => ({ spot_id: spotId, time }));
-            const { error: scheduleError } = await supabaseClient
-                .from('schedules')
-                .insert(scheduleInserts);
-
-            if (scheduleError) {
-                console.error('Errore durante l\'inserimento degli orari:', scheduleError);
-                return res.status(500).json({ error: 'Errore durante l\'inserimento degli orari' });
+                const { error: pivotError } = await supabaseClient
+                    .from('spot_tags')
+                    .insert(pivotInserts);
+                
+                if (pivotError) {
+                    console.error('Errore durante l\'associazione dei tag allo spot:', pivotError);
+                    return res.status(500).json({ error: 'Errore durante l\'associazione dei tag allo spot' });
+                }
             }
         }
 
+        /*FORMATO DEGLI ORARI DA USARE NEL FRONTEND:
+        {
+            "monday": { "open": "09:00", "close": "18:00" },
+            "tuesday": { "open": "09:00", "close": "18:00" },
+            "wednesday": { "open": "09:00", "close": "13:00" },
+            "thursday": { "open": "09:00", "close": "18:00" },
+            "friday": { "open": "09:00", "close": "22:00" },
+            "saturday": { "open": "10:00", "close": "16:00" },
+            "sunday": { "open": "00:00", "close": "00:00" }
+        }
+        */
+
+
+        // Inserisce gli orari associati allo spot
+        if (schedule) {
+            for (const [day, info] of Object.entries(schedule)) {
+
+                let hourId;
+
+                // Cerchiamo l'orario esistente
+                const { data: existingHour, error: selectError } = await supabaseClient
+                    .from('hours')
+                    .select('id')
+                    .eq('day_of_week', day)
+                    .eq('open_time', info.open)
+                    .eq('close_time', info.close)
+                    .maybeSingle(); // Ritorna null se non lo trova, senza dare errore
+
+                if (selectError) {
+                    console.error(`Errore ricerca orario per ${day}:`, selectError);
+                    continue; // Salta questo giorno in caso di errore
+                }
+
+                if (existingHour) {
+                    hourId = existingHour.id;
+                } else {
+                    // Se non esiste, lo creiamo
+                    const { data: newHour, error: insertError } = await supabaseClient
+                        .from('hours')
+                        .insert({
+                            day_of_week: day,
+                            open_time: info.open,
+                            close_time: info.close
+                        })
+                        .select('id')
+                        .single();
+
+                    if (insertError) {
+                        console.error(`Errore creazione orario per ${day}:`, insertError);
+                        return res.status(500).json({ error: `Errore durante l'inserimento dell'orario per ${day}` });
+                    }
+                    hourId = newHour.id;
+                }
+
+                if (hourId) {
+                    const { error: spotHourError } = await supabaseClient
+                        .from('spot_hours')
+                        .insert({ spot_id: spotId, hour_id: hourId });
+
+                    if (spotHourError) {
+                        console.error(`Errore associazione orario ${day} allo spot ${spotId}:`, spotHourError);
+                        return res.status(500).json({ error: `Errore durante l'associazione dell'orario per ${day}` });
+                    }
+                }
+            }
+        }
+
+
         // Inserisce il commento e la valutazione se forniti
-        if (comment || rating) {
+        if (comment && rating) {
             const { error: commentError } = await supabaseClient
                 .from('comments')
                 .insert([
@@ -570,13 +648,28 @@ app.post('/api/add-spot', async (req, res) => {
             }
         }
 
+        const { error: aggiuntiError } = await supabaseClient
+            .from('aggiunti')
+            .insert({ user_id: user.id, spot_id: spotId });
+            
+        if (aggiuntiError) {
+            console.error('Errore durante l\'inserimento in aggiunti:', aggiuntiError);
+            return res.status(500).json({ error: 'Errore durante l\'inserimento in aggiunti' });
+        }
+
         res.status(201).json({ message: 'Spot aggiunto con successo!', spot });
+        
     } catch (error) {
         console.error('Errore inatteso:', error);
         res.status(500).json({ error: 'Errore inatteso durante l\'aggiunta dello spot' });
     }
 });
 
+
+
+
+/*   
+PRENDERE LATITUDINE E LONGITUDINE TRAMITE API DI OPENSTREETMAP. L'UTENTE DEVE INSERIRE SOLO L'INDIRZZO.
 */
 
 
