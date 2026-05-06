@@ -9,7 +9,7 @@ let message = document.getElementById('add-spot-message');
 if (!message) {
     message = document.createElement('div');
     message.id = 'add-spot-message';
-    form.insertBefore(message, form.firstChild);
+    form.insertBefore(message, document.getElementById('annulla'));
 }
 
 form.addEventListener('submit', creaSpot);
