@@ -147,7 +147,7 @@ app.get('/api/me', async (req, res) => {
 })
 //===============================================================
 
-// ============= API: REGISTER ================================
+// =============API: REGISTER ================================
 app.post('/api/register', async (req, res) => {
     // Log leggero: non stampiamo password o dati sensibili
     console.log('POST /register');
@@ -529,38 +529,29 @@ app.post('/api/add-spot', async (req, res) =>{
         
         spotId = spot.id;
 
+        // --- SEZIONE TAG CORRETTA ---
+        const tags = [price, environment, outlets, quiet, crowd].filter(tag => tag !== undefined && tag !== null);
 
-        // Prende i tag esistenti, poi associa quelli nuovi allo spot tramite la tabella pivot spot_tags. In questo modo evitiamo di creare tag duplicati.
-        const tags = [price, environment, outlets, quiet, crowd].filter(tag => tag !== undefined && tag !== null);        
         if (tags.length > 0) {
-
-            const {data: tagData, error: tagError } = await supabaseClient
-                .from('tags')
-                .select('id, name')
-                .in('name', tags);
-
-            if (tagError) {
-                console.error('Errore durante l\'inserimento dei tag:', tagError);
-                return res.status(500).json({ error: 'Errore durante l\'inserimento dei tag' });
-            }
+            // Inseriamo i tag con 'upsert' per evitare duplicati, se il tag esiste già lo recuperiamo, altrimenti lo creiamo. In entrambi i casi otteniamo l'id del tag.
+            // Oppure, creiamo quelli mancanti:
             
-            if (tagData && tagData.length > 0) {
-                const pivotInserts = tagData.map(t => ({
-                    spot_id: spotId,
-                    tag_id: t.id
-                }));
+            for (const tagName of tags) {
+                // Cerchiamo o creiamo il tag
+                const { data: tagRow, error: tError } = await supabaseClient
+                    .from('tags')
+                    .upsert({ name: tagName }, { onConflict: 'name' })
+                    .select('id')
+                    .single();
 
-                const { error: pivotError } = await supabaseClient
-                    .from('spot_tags')
-                    .insert(pivotInserts);
-                
-                if (pivotError) {
-                    console.error('Errore durante l\'associazione dei tag allo spot:', pivotError);
-                    return res.status(500).json({ error: 'Errore durante l\'associazione dei tag allo spot' });
+                if (!tError && tagRow) {
+                    // 2. Associamo il tag allo spot
+                    await supabaseClient
+                        .from('spot_tags')
+                        .insert({ spot_id: spotId, tag_id: tagRow.id });
                 }
             }
         }
-
         /*FORMATO DEGLI ORARI DA USARE NEL FRONTEND:
         {
             "monday": { "open": "09:00", "close": "18:00" },
@@ -618,7 +609,7 @@ app.post('/api/add-spot', async (req, res) =>{
                 if (hourId) {
                     const { error: spotHourError } = await supabaseClient
                         .from('spot_hours')
-                        .insert({ spot_id: spotId, hour_id: hourId });
+                        .insert({ spot_id: spotId, hours_id: hourId });
 
                     if (spotHourError) {
                         console.error(`Errore associazione orario ${day} allo spot ${spotId}:`, spotHourError);

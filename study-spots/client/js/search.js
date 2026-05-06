@@ -33,7 +33,7 @@ async function fetchFromAPI(query) {
     return response.json();
 }
 
-
+/*
 function updateResultsTable(results) {
     const tableBody = document.getElementById('results-body');
     tableBody.innerHTML = ''; // Pulisce i risultati precedenti
@@ -51,4 +51,26 @@ function createTableRow(displayName) {
         document.getElementById('results-body').innerHTML = ''; // Pulisce i risultati dopo la selezione
     });
     return row;
+    
+}*/
+
+function createTableRow(result) {
+    var row = document.createElement('tr');
+    row.innerHTML = '<td>' + result.display_name + '</td>';
+    row.addEventListener('click', function() {
+        document.getElementById('search-input').value = result.display_name;
+        window.selectedLatitude = parseFloat(result.lat);
+        window.selectedLongitude = parseFloat(result.lon);
+        document.getElementById('results-body').innerHTML = '';
+    });
+    return row;
+}
+
+function updateResultsTable(results) {
+    const tableBody = document.getElementById('results-body');
+    tableBody.innerHTML = '';
+    results.forEach(function(result) {
+        var row = createTableRow(result);
+        tableBody.appendChild(row);
+    });
 }
