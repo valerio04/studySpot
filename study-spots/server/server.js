@@ -39,6 +39,11 @@ app.get('/add-spot', (req, res) => {
     res.sendFile(path.join(ROOT, 'pages', 'add-spot.html'));
 });
 
+//Pagina spot
+app.get('/spot', (req, res) => {
+    res.sendFile(path.join(ROOT, 'pages', 'spot.html'));
+});
+
 //pagina login
 app.get("/login",(req,res)=>{
     res.sendFile(path.join(ROOT,'pages','login.html')) 
