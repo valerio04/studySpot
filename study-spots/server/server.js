@@ -664,7 +664,7 @@ app.post('/api/add-spot', async (req, res) =>{
 
 
 // FINIRE DI IMPLEMENTARE. QUALI SONO LE INFORMAZIONI CHE VENGONO PASSATE PER DELETE SPOT?
-/*
+
 app.post('/api/remove-spot', async (req, res) =>{
     console.log('POST /api/remove-spot');
 
@@ -682,10 +682,36 @@ app.post('/api/remove-spot', async (req, res) =>{
     }
 
     const {
-
+        idSpot
     } = req.body;
+
+    // controllo che lo spot da rimuovere sia stato aggiunto dall'utente loggato, altrimenti non ha il permesso di rimuoverlo
+    const { data: controllo, error: controlloError } = await supabaseClient
+        .from('aggiunti')
+        .select('*')
+        .eq('id_spot', idSpot)
+        .eq('user_id', user.id)
+        .maybesingle();
+
+    if (controlloError || !controllo) {
+        console.error('Errore durante il controllo dello spot:', controlloError);
+        return res.status(404).json({ error: 'Spot non trovato' });
+    }
+
+    // Rimuove lo spot dal database
+    const { error: deleteError } = await supabaseClient
+        .from('spots')
+        .delete()
+        .eq('id', idSpot);
+    
+    if (deleteError) {
+        console.error('Errore durante la rimozione dello spot:', deleteError);
+        return res.status(500).json({ error: 'Errore durante la rimozione dello spot' });
+    }
+
+    res.status(200).json({ message: 'Spot rimosso con successo!' });
 });
-*/
+
 
 app.post('/api/info-spot/:id', async (req, res) =>{
     console.log('POST /api/info-spot');
@@ -771,6 +797,44 @@ app.post('/api/info-spot/:id', async (req, res) =>{
     }
 
     return res.status(200).json(responseData);
+});
+
+app.post('/api/salva-spot', async (req, res) =>{
+    console.log('POST /api/add-spot');
+
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+        return res.status(503).json({ error: 'Database non configurato in questo ambiente' });
+    }
+
+    const supabaseClient = getSupabase(req, res);
+    
+    // Recupera l'utente autenticato
+    const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+
+    if (userError || !user) {
+        return res.status(401).json({ error: "Utente non autenticato" });
+    }
+
+    const {
+        idSpot
+    } = req.body;
+
+
+    const { error: commentError } = await supabaseClient
+        .from('salvati')
+        .insert(
+            {
+            user_id: user.id,
+            spot_id: idSpot
+            }
+        );
+
+    if (commentError) {
+        console.error('Errore durante l\'inserimento del commento:', commentError);
+        return res.status(500).json({ error: 'Errore durante l\'inserimento del commento' });
+    }
+
+    res.status(201).json({ message: 'Spot salvato con successo!' });
 });
 
 /*   
