@@ -88,7 +88,18 @@
     align-items:flex-start;
     gap: 0px; /* Spazio tra l'icona e il testo */
     flex-direction: column !important; 
-}
+    }
+
+    .page-collezioni {
+        padding: 20px 15px;
+    }
+    .spot-card {
+        min-width: 220px; /* Card leggermente più strette da mobile */
+        max-width: 220px;
+    }
+    .carousel-header h2 {
+        font-size: 1.5rem;
+    }
     
 
 }
@@ -266,4 +277,138 @@
     align-items:center;
     gap: 0px; /* Spazio tra l'icona e il testo */
     flex-direction: row; 
+}
+
+
+
+
+/* =========================================
+   8. PAGINA COLLEZIONI E CAROSELLI
+   ========================================= */
+
+.page-collezioni {
+    align-items: flex-start; /* Allinea i contenuti a sinistra anziché al centro */
+    padding: 40px 5%;        /* Dà respiro ai lati */
+}
+
+.page-collezioni h1 {
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: #5b7da6;
+    margin-bottom: 40px;
+}
+
+/* Contenitore principale di ogni riga/categoria */
+.carousel-container {
+    width: 100%;
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Intestazione del carosello (Titolo + link "Vedi tutti") */
+.carousel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 15px;
+    padding-right: 15px;
+}
+
+.carousel-header h2 {
+    font-size: 1.8rem;
+    color: #112E51;
+}
+
+.vedi-tutti {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #FF6600;
+    transition: opacity 0.3s ease;
+}
+
+.vedi-tutti:hover {
+    opacity: 0.7;
+}
+
+/* La pista che scorre. Nascondiamo la scrollbar. */
+.carousel-track {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto; /* Permette lo scroll orizzontale */
+    scroll-behavior: smooth; /* Scorrimento fluido */
+    padding-bottom: 15px; /* Spazio per l'ombra delle card */
+    
+    /* NASCONDE LA SCROLLBAR */
+    -ms-overflow-style: none;  /* IE e Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.carousel-track::-webkit-scrollbar {
+    display: none; /* Chrome, Safari e Opera */
+}
+
+/* La singola Card del posto */
+.spot-card {
+    min-width: 260px; /* Larghezza fissa della card */
+    max-width: 260px;
+    background-color: #f1f1f1; /* Stesso grigio delle tue righe tabella */
+    border-radius: 15px;
+    overflow: hidden; /* Taglia l'immagine se sfora i bordi arrotondati */
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.spot-card:hover {
+    transform: translateY(-5px); /* Solleva la card leggermente */
+    background-color: #dad9d9;   /* Hover della tua tabella */
+    box-shadow: 0 8px 20px rgba(17, 46, 81, 0.15); /* Aggiunge un'ombra morbida */
+}
+
+.spot-card:hover h3 {
+    color: #FF6600; /* Il titolo diventa arancione, richiamo al tuo stile */
+}
+
+/* Spazio segnaposto per la foto (puoi sostituirlo con un tag <img>) */
+.card-img-placeholder {
+    height: 140px;
+    width: 100%;
+    background-color: #cccccc; /* Grigio base se non definita nel div */
+    /* background-image: url('tuo-percorso.jpg'); background-size: cover; */
+}
+
+.card-content {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card-content h3 {
+    font-size: 1.2rem;
+    color: #112E51;
+    transition: color 0.3s ease;
+}
+
+/* I micro-tag (pillole) sotto il titolo */
+.micro-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag {
+    background-color: #FFFFFF;
+    color: #112E51;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px; /* Effetto pillola */
+    border: 1px solid #112E51;
 }

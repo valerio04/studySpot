@@ -39,6 +39,11 @@ app.get('/add-spot', (req, res) => {
     res.sendFile(path.join(ROOT, 'pages', 'add-spot.html'));
 });
 
+//Pagina spot
+app.get('/spot', (req, res) => {
+    res.sendFile(path.join(ROOT, 'pages', 'spot.html'));
+});
+
 //pagina login
 app.get("/login",(req,res)=>{
     res.sendFile(path.join(ROOT,'pages','login.html')) 
@@ -649,7 +654,7 @@ app.post('/api/add-spot', async (req, res) =>{
         }
 
         res.status(201).json({ message: 'Spot aggiunto con successo!', spot });
-        
+
     } catch (error) {
         console.error('Errore inatteso:', error);
         res.status(500).json({ error: 'Errore inatteso durante l\'aggiunta dello spot' });
@@ -658,6 +663,29 @@ app.post('/api/add-spot', async (req, res) =>{
 
 
 
+// FINIRE DI IMPLEMENTARE. QUALI SONO LE INFORMAZIONI CHE VENGONO PASSATE PER DELETE SPOT?
+/*
+app.post('/api/remove-spot', async (req, res) =>{
+    console.log('POST /api/remove-spot');
+
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+        return res.status(503).json({ error: 'Database non configurato in questo ambiente' });
+    }
+
+    const supabaseClient = getSupabase(req, res);
+    
+    // Recupera l'utente autenticato
+    const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+
+    if (userError || !user) {
+        return res.status(401).json({ error: "Utente non autenticato" });
+    }
+
+    const {
+
+    } = req.body;
+});
+*/
 
 /*   
 PRENDERE LATITUDINE E LONGITUDINE TRAMITE API DI OPENSTREETMAP. L'UTENTE DEVE INSERIRE SOLO L'INDIRZZO.

@@ -1,0 +1,150 @@
+/* Layout Generale */
+.container-detail {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: left;
+}
+
+/* Header */
+.spot-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 25px;
+}
+
+.spot-header h1 {
+    color: #112E51;
+    margin-bottom: 5px;
+}
+
+.address {
+    color: #5b7da6;
+    text-decoration: underline;
+}
+
+.stars { color: #FF6600; font-size: 1.2rem; }
+
+.btn-action {
+    background: #f1f1f1;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 10px;
+    transition: 0.3s;
+}
+
+.btn-action:hover { background: #dad9d9; }
+
+/* Galleria a Griglia */
+.spot-gallery {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 10px;
+    height: 400px;
+    margin-bottom: 30px;
+}
+
+.gallery-main img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 15px 0 0 15px;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
+}
+
+.gallery-grid img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.last-photo-container {
+    position: relative;
+    border-radius: 0 15px 15px 0;
+    overflow: hidden;
+}
+
+.btn-show-all {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+/* Info Layout */
+.content-layout {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 50px;
+}
+
+.main-info { flex: 2; }
+.sidebar-info { flex: 1; }
+
+.description-card, .hours-card, .reviews-section {
+    background: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+}
+
+.google-maps-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: #FF6600;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* Orari */
+.hours-card { background: #f1f1f1; }
+.hours-card h3 { color: #112E51; margin-bottom: 15px; }
+.hours-card ul { list-style: none; padding: 0; }
+.hours-card li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+}
+.current-day { font-weight: bold; color: #112E51; }
+
+/* Recensioni */
+.review-item {
+    border-bottom: 1px solid #eee;
+    padding: 15px 0;
+}
+.review-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+.review-user img { width: 40px; border-radius: 50%; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .spot-header, .content-layout, .spot-gallery {
+        flex-direction: column;
+        display: block;
+    }
+    .spot-gallery { height: auto; }
+    .gallery-grid { grid-template-columns: 1fr 1fr; margin-top: 10px; }
+    .gallery-main img, .last-photo-container { border-radius: 15px; }
+}
