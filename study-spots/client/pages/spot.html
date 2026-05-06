@@ -93,6 +93,31 @@
 
                 <section class="reviews-section">
                     <h2>Recensioni</h2>
+
+                    <div class="add-review-box">
+                        <h3>Lascia una recensione</h3>
+                        <form action="#" method="POST">
+                            <div class="star-rating">
+                                <input type="radio" id="star5" name="rating" value="5" />
+                                <label for="star5" title="5 stelle">★</label>
+                                <input type="radio" id="star4" name="rating" value="4" />
+                                <label for="star4" title="4 stelle">★</label>
+                                <input type="radio" id="star3" name="rating" value="3" />
+                                <label for="star3" title="3 stelle">★</label>
+                                <input type="radio" id="star2" name="rating" value="2" />
+                                <label for="star2" title="2 stelle">★</label>
+                                <input type="radio" id="star1" name="rating" value="1" />
+                                <label for="star1" title="1 stella">★</label>
+                            </div>
+                            
+                            <textarea class="review-textarea" name="review_text" placeholder="Racconta la tua esperienza: com'è il Wi-Fi? C'è abbastanza silenzio?"></textarea>
+                            
+                            <button type="submit" class="btn-submit-review">
+                                Pubblica recensione
+                            </button>
+                        </form>
+                    </div>
+
                     <div class="review-list">
                         <div class="review-item">
                             <div class="review-user">
@@ -104,8 +129,9 @@
                             </div>
                             <p>Posto fantastico, molto tranquillo e le prese funzionano bene.</p>
                         </div>
-                        </div>
-                    <button class="btn-outline-dark-blue">Mostra tutte le recensioni</button>
+                    </div>
+                    
+                    <button class="btn-show-all-reviews">Mostra tutte le 128 recensioni ↓</button>
                 </section>
             </div>
 
@@ -138,7 +164,7 @@
                             </div>
                         </div>
                     </div>
-                    </div>
+                </div>
             </div>
         </section>
     </main>

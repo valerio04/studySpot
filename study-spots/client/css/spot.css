@@ -148,3 +148,111 @@
     .gallery-grid { grid-template-columns: 1fr 1fr; margin-top: 10px; }
     .gallery-main img, .last-photo-container { border-radius: 15px; }
 }
+
+/* Stile per il form di inserimento recensione */
+.add-review-box {
+    background-color: #f8f9fa;
+    border: 1px solid #eef0f2;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+}
+
+.add-review-box h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    color: #2c3e50;
+}
+
+/* Sistema di valutazione a stelle interattivo (CSS puro) */
+.star-rating {
+    display: inline-flex;
+    flex-direction: row-reverse; /* Permette all'hover di illuminare le stelle precedenti */
+    margin-bottom: 15px;
+}
+
+.star-rating input {
+    display: none;
+}
+
+.star-rating label {
+    font-size: 24px;
+    color: #d2d6dc;
+    cursor: pointer;
+    padding: 0 2px;
+    transition: color 0.2s ease-in-out;
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label,
+.star-rating input:checked ~ label {
+    color: #f1c40f; /* Giallo acceso */
+}
+
+/* Area di testo per la recensione */
+.review-textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    resize: vertical;
+    min-height: 80px;
+    margin-bottom: 15px;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+}
+
+.review-textarea:focus {
+    outline: none;
+    border-color: #0056b3; /* Colore dark-blue di base */
+    box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
+}
+
+/* Pulsante Invia */
+.btn-submit-review {
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-family: 'Quicksand', sans-serif;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-submit-review:hover {
+    background-color: #004494;
+    transform: translateY(-1px);
+}
+
+/* Pulsante Mostra Tutte le Recensioni Abbellito */
+.btn-show-all-reviews {
+    display: block;
+    width: 100%;
+    background-color: transparent;
+    color: #0056b3;
+    border: 2px solid #0056b3;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+}
+
+.btn-show-all-reviews:hover {
+    background-color: #0056b3;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 86, 179, 0.2);
+}

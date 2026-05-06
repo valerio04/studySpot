@@ -687,6 +687,92 @@ app.post('/api/remove-spot', async (req, res) =>{
 });
 */
 
+app.post('/api/info-spot/:id', async (req, res) =>{
+    console.log('POST /api/info-spot');
+
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+        return res.status(503).json({ error: 'Database non configurato in questo ambiente' });
+    }
+
+    const supabaseClient = getSupabase(req, res);
+    
+    // Recupera l'utente autenticato
+    const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+
+    if (userError || !user) {
+        return res.status(401).json({ error: "Utente non autenticato" });
+    }
+
+    const {
+        idSpot
+    } = req.body;
+
+    const responseData = {
+        id: idSpot,
+        tags: [],
+        hours: [],
+        recensioni: []
+    };
+
+
+    const { data: spot, error: spotError } = await supabaseClient
+            .from('spots')
+            .select('name, address, type, star_avg, star_count')
+            .eq('id', idSpot)
+            
+    if (spotError) {
+        console.error('Errore durante l\'inserimento dello spot:', spotError);
+        return res.status(500).json({ error: 'Errore durante l\'inserimento dello spot' });
+    }
+    
+    if (spot) {
+        Object.assign(responseData, spot);
+    }
+
+    const { data: tags, error: tagError } = await supabaseClient
+        .from('spot_tags')
+        .select(`
+            tags ( name )
+        `)
+        .eq('spot_id', idSpot)
+        
+    if (tagError) {
+        console.error('Errore durante il recupero dei tag dello spot:', tagError);
+        return res.status(500).json({ error: 'Errore durante il recupero dei tag dello spot' });
+    }
+
+    if (tags) {
+        responseData.tags = tags.map(t => t.tags?.name).filter(Boolean);
+    }
+
+    const { data: hours, error: hoursError } = await supabaseClient
+        .from('spot_hours')
+        .select(`
+            hours (day_of_week, open_time, close_time)
+        `)
+        .eq('spot_id', idSpot)
+    
+    if (hoursError) {
+        console.error('Errore durante il recupero delle ore dello spot:', hoursError);
+        return res.status(500).json({ error: 'Errore durante il recupero delle ore dello spot' });
+    }
+
+    if (hours) {
+        responseData.hours = hours.map(h => h.hours);
+    }
+
+    const { data: comments, error: commentsError } = await supabaseClient
+        .from('comments')
+        .select('comment, star')
+        .eq('spot_id',idSpot)
+
+    if (comments) {
+        responseData.recensioni = comments;
+    }
+
+    return res.status(200).json(responseData);
+});
+
 /*   
 PRENDERE LATITUDINE E LONGITUDINE TRAMITE API DI OPENSTREETMAP. L'UTENTE DEVE INSERIRE SOLO L'INDIRZZO.
 */
