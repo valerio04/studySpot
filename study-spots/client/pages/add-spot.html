@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SpotStudium</title>
+    <title>StudySpot</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,8 +15,8 @@
 
     <header class="header-principale">
         <a href="/" class="logo">
-            <img src="../assets/img/logo.png" alt="Logo SpotStudium" class="img-logo">
-            <span class="nome-logo">SpotStudium</span>
+            <img src="../assets/img/logo.png" alt="Logo StudySpot" class="img-logo">
+            <span class="nome-logo">StudySpot</span>
         </a>
         
         <nav>
@@ -57,13 +57,13 @@
 
                     <fieldset>
                         <legend>Prezzo</legend>
-                        <input type="radio" id="price1" name="price" value="1">
+                        <input type="radio" id="price1" name="price" value="$">
                         <label for="price1">$</label>
 
-                        <input type="radio" id="price2" name="price" value="2">
+                        <input type="radio" id="price2" name="price" value="$$">
                         <label for="price2">$$</label>
 
-                        <input type="radio" id="price3" name="price" value="3">
+                        <input type="radio" id="price3" name="price" value="$$$">
                         <label for="price3">$$$</label>
                     </fieldset>
 
@@ -87,63 +87,63 @@
 
                     <fieldset>
                         <legend>Affollamento</legend>
-                        <input type="radio" id="crowd1" name="crowd" value="1">
+                        <input type="radio" id="crowd1" name="crowd" value="crowd1">
                         <label for="crowd1">👤</label>
 
-                        <input type="radio" id="crowd2" name="crowd" value="2">
+                        <input type="radio" id="crowd2" name="crowd" value="crowd2">
                         <label for="crowd2">👥</label>
 
-                        <input type="radio" id="crowd3" name="crowd" value="3">
+                        <input type="radio" id="crowd3" name="crowd" value="crowd3">
                         <label for="crowd3">🫂</label>
 
-                        <input type="radio" id="crowd4" name="crowd" value="4">
-                        <label for="crowd4">�</label>
+                        <!-- <input type="radio" id="crowd4" name="crowd" value="crowd4">
+                        <label for="crowd4">🫂🫂</label> -->
                     </fieldset>
 
                     <fieldset>
                         <legend>Orari (Facoltativo)</legend>
                         <div class="schedule-container">
                             <div class="schedule-day">
-                                <label for="mon-open">Lunedì</label>
-                                <input type="time" id="mon-open" name="mon-open">
+                                <label for="monday-open">Lunedì</label>
+                                <input type="time" id="monday-open" name="monday-open" value="09:00">
                                 <span>-</span>
-                                <input type="time" id="mon-close" name="mon-close">
+                                <input type="time" id="monday-close" name="monday-close" value="20:00">
                             </div>
                             <div class="schedule-day">
-                                <label for="tue-open">Martedì</label>
-                                <input type="time" id="tue-open" name="tue-open">
+                                <label for="tuesday-open">Martedì</label>
+                                <input type="time" id="tuesday-open" name="tuesday-open" value="08:00">
                                 <span>-</span>
-                                <input type="time" id="tue-close" name="tue-close">
+                                <input type="time" id="tuesday-close" name="tuesday-close" value="20:00">
                             </div>
                             <div class="schedule-day">
-                                <label for="wed-open">Mercoledì</label>
-                                <input type="time" id="wed-open" name="wed-open">
+                                <label for="wednesday-open">Mercoledì</label>
+                                <input type="time" id="wednesday-open" name="wednesday-open" value="08:00">
                                 <span>-</span>
-                                <input type="time" id="wed-close" name="wed-close">
+                                <input type="time" id="wednesday-close" name="wednesday-close" value="20:00">
                             </div>
                             <div class="schedule-day">
-                                <label for="thu-open">Giovedì</label>
-                                <input type="time" id="thu-open" name="thu-open">
+                                <label for="thursday-open">Giovedì</label>
+                                <input type="time" id="thursday-open" name="thursday-open" value="08:00">
                                 <span>-</span>
-                                <input type="time" id="thu-close" name="thu-close">
+                                <input type="time" id="thursday-close" name="thursday-close" value="20:00">
                             </div>
                             <div class="schedule-day">
-                                <label for="fri-open">Venerdì</label>
-                                <input type="time" id="fri-open" name="fri-open">
+                                <label for="friday-open">Venerdì</label>
+                                <input type="time" id="friday-open" name="friday-open" value="08:00">
                                 <span>-</span>
-                                <input type="time" id="fri-close" name="fri-close">
+                                <input type="time" id="friday-close" name="friday-close" value="20:00">
                             </div>
                             <div class="schedule-day">
-                                <label for="sat-open">Sabato</label>
-                                <input type="time" id="sat-open" name="sat-open">
+                                <label for="saturday-open">Sabato</label>
+                                <input type="time" id="saturday-open" name="saturday-open" value="08:00">
                                 <span>-</span>
-                                <input type="time" id="sat-close" name="sat-close">
+                                <input type="time" id="saturday-close" name="saturday-close" value="20:00">
                             </div>
                             <div class="schedule-day">
-                                <label for="sun-open">Domenica</label>
-                                <input type="time" id="sun-open" name="sun-open">
+                                <label for="sunday-open">Domenica</label>
+                                <input type="time" id="sunday-open" name="sunday-open" value="08:00">
                                 <span>-</span>
-                                <input type="time" id="sun-close" name="sun-close">
+                                <input type="time" id="sunday-close" name="sunday-close" value="20:00">
                             </div>
                         </div>
                     </fieldset>
@@ -174,6 +174,6 @@
             </form>
         </section>
     </main>
-   
+   <script src="../js/add-spot.js"></script>
 </body>
 </html>
