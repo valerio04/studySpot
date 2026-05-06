@@ -1,5 +1,4 @@
--- Tabella profili collegata a Supabase auth.users
-CREATE TABLE profiles (
+ATE TABLE profiles (
   user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   username VARCHAR(255) NOT NULL UNIQUE,
   name VARCHAR(255) NOT NULL,
@@ -15,7 +14,8 @@ CREATE TABLE spots (
   longitude DOUBLE PRECISION NOT NULL,
   type VARCHAR(255) NOT NULL,
   star_count integer NOT NULL DEFAULT 0,
-  star_avg numeric(6,2) NOT NULL DEFAULT 0
+  star_avg numeric(6,2) NOT NULL DEFAULT 0,
+  comment_count integer NOT NULL DEFAULT 0
 );
 
 CREATE TABLE salvati (
@@ -162,6 +162,46 @@ FOR EACH ROW
 EXECUTE FUNCTION public.trg_comments_update_spot_star_stats();
 
 
+--===================== per contare i commenti ====
+ALTER TABLE public.spots
+ADD COLUMN IF NOT EXISTS comment_count integer NOT NULL DEFAULT 0;
+
+--per tenere aggiornati i num commenti in spot
+CREATE OR REPLACE FUNCTION public.trg_comments_update_spot_comment_count()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  IF (TG_OP = 'DELETE') THEN
+    UPDATE public.spots
+    SET comment_count = comment_count - 1
+    WHERE id = OLD.spot_id;
+
+    -- sicurezza: evita valori negativi (nel caso di inconsistenze)
+    UPDATE public.spots
+    SET comment_count = 0
+    WHERE id = OLD.spot_id AND comment_count < 0;
+
+    RETURN OLD;
+
+  ELSIF (TG_OP = 'INSERT') THEN
+    UPDATE public.spots
+    SET comment_count = comment_count + 1
+    WHERE id = NEW.spot_id;
+
+    RETURN NEW;
+  END IF;
+
+  RETURN NULL;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS comments_comment_count_trigger ON public.comments;
+
+CREATE TRIGGER comments_comment_count_trigger
+AFTER INSERT OR DELETE ON public.comments
+FOR EACH ROW
+EXECUTE FUNCTION public.trg_comments_update_spot_comment_count();
 
 
 

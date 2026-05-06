@@ -473,6 +473,75 @@ app.get('/api/profile',async (req,res)=>{
   "aggiunti_count": 1
 }
 */
+//=================API: add commento e valutazione a uno spot ================
+
+app.post('/api/add-comment', async (req, res) => {
+    console.log('POST /api/add-comment');
+
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+        return res.status(503).json({ error: 'Database non configurato' });
+    }
+
+    const supabaseClient = getSupabase(req, res);
+    
+    // 1. Recupera l'utente autenticato
+    const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+
+    if (userError || !user) {
+        return res.status(401).json({ error: "Utente non autenticato" });
+    }
+
+    const { spotId, comment, rating } = req.body;
+
+    // Validazione minima
+    if (!spotId || !rating) {
+        return res.status(400).json({ error: "ID spot e valutazione sono obbligatori" });
+    }
+
+    try {
+        // 2. Prepariamo i dati per la tabella 'comments'
+        const insertData = {
+            star: rating,
+            user_id: user.id,
+            spot_id: spotId
+        };
+
+        // Aggiungiamo il commento solo se è presente nella richiesta
+        if (comment && comment.trim() !== "") {
+            insertData.comment = comment;
+        }
+
+        const { error: commentError } = await supabaseClient
+            .from('comments')
+            .insert([insertData]);
+
+        if (commentError) {
+            console.error('Errore inserimento commento:', commentError);
+            return res.status(500).json({ error: 'Errore durante l\'inserimento del commento' });
+        }
+
+        // 3. Inserimento nella tabella 'aggiunti' 
+        const { error: aggiuntiError } = await supabaseClient
+            .from('aggiunti')
+            .insert({ user_id: user.id, spot_id: spotId });
+            
+        if (aggiuntiError) {
+            console.error('Errore inserimento in aggiunti:', aggiuntiError);
+            // Non blocchiamo necessariamente la risposta se il commento è andato a buon fine
+        }
+
+        // 4. Risposta al client
+        return res.status(201).json({ 
+            message: 'Valutazione aggiunta con successo!',
+            data: { spotId, rating, comment } 
+        });
+
+    } catch (e) {
+        console.error('Errore inatteso:', e);
+        return res.status(500).json({ error: 'Errore interno del server' });
+    }
+});
+            
 
 
 // ======== API: ADD SPOT ========
@@ -625,44 +694,241 @@ app.post('/api/add-spot', async (req, res) =>{
         }
 
 
-        // Inserisce il commento e la valutazione se forniti
-        if (comment && rating) {
+        // ========================================================
+        // NUOVA LOGICA: Inserisce la valutazione (e il commento se c'è)
+        // ========================================================
+        if (rating) { 
+            // Costruiamo dinamicamente l'oggetto da inserire, proprio come in add-comment
+            const insertData = {
+                star: rating,
+                user_id: user.id,
+                spot_id: spotId
+            };
+
+            // Aggiungiamo il testo del commento solo se non è vuoto
+            if (comment && comment.trim() !== "") {
+                insertData.comment = comment;
+            }
+
             const { error: commentError } = await supabaseClient
                 .from('comments')
-                .insert([
-                    {
-                        comment,
-                        star: rating,
-                        user_id: user.id, // Assumendo che l'utente sia autenticato
-                        spot_id: spotId
-                    }
-                ]);
+                .insert([insertData]);
 
             if (commentError) {
-                console.error('Errore durante l\'inserimento del commento:', commentError);
-                return res.status(500).json({ error: 'Errore durante l\'inserimento del commento' });
+                console.error('Errore durante l\'inserimento del commento iniziale:', commentError);
+                // Nota: potresti decidere di non restituire errore 500 qui. 
+                // Lo spot è stato creato con successo, è fallito solo il commento.
             }
         }
 
+        // ========================================================
+        // INSERIMENTO IN AGGIUNTI (Traccia che l'utente ha creato questo spot)
+        // ========================================================
         const { error: aggiuntiError } = await supabaseClient
             .from('aggiunti')
             .insert({ user_id: user.id, spot_id: spotId });
             
         if (aggiuntiError) {
             console.error('Errore durante l\'inserimento in aggiunti:', aggiuntiError);
-            return res.status(500).json({ error: 'Errore durante l\'inserimento in aggiunti' });
+            return res.status(500).json({ error: 'Errore durante la registrazione dello spot creato' });
         }
 
-        res.status(201).json({ message: 'Spot aggiunto con successo!', spot });
+        // Tutto completato con successo!
+        res.status(201).json({ message: 'Spot creato e valutato con successo!', spotId });
 
     } catch (error) {
         console.error('Errore inatteso:', error);
         res.status(500).json({ error: 'Errore inatteso durante l\'aggiunta dello spot' });
     }
 });
+//===================================================================
+
+// ======== API: DELETE SPOT ========
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+//=========================================
+
+
+
+//================== API: UPDATE SPOT ========
+
+
+
+
+//=============================================
+
+
+
+//============== API: ottieni spot piu attivi==============
+//(spot con piu voti indipendentemnte dal voto )
+app.get('/api/spots/top-activ', async (req, res) => {
+    console.log('GET /api/spots/top-activ');
+
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+        return res.status(503).json({ error: 'Database non configurato' });
+    }
+
+    const limit = Math.min(parseInt(req.query.limit, 10) || 10, 100);
+
+    try {
+        // 1. Recuperiamo i dati (senza ordinamento SQL perché ci serve la somma di due colonne)
+        const { data, error } = await supabase
+            .from('spots')
+            .select('id, name, address, type, star_avg, star_count, comment_count');
+
+        if (error) {
+            console.error('Errore Supabase:', error);
+            return res.status(500).json({ error: 'Errore durante il recupero degli spot' });
+        }
+
+        // 2. Calcoliamo l'attività totale e ordiniamo
+        const sortedSpots = (data || [])
+            .map(spot => ({
+                ...spot,
+                // Assicuriamoci che siano numeri per evitare errori (es. null + null)
+                total_activity: (Number(spot.star_count) || 0) + (Number(spot.comment_count) || 0)
+            }))
+            .sort((a, b) => b.total_activity - a.total_activity) // Ordina per attività decrescente
+            .slice(0, limit); // Taglia i risultati secondo il limite richiesto
+
+        return res.json(sortedSpots);
+
+    } catch (err) {
+        console.error('Errore inatteso:', err);
+        return res.status(500).json({ error: 'Errore interno del server' });
+    }
+});
+
+//============== API: ottieni spot piu votati (rating pesato)==============
+
+app.get('/api/spots/top-rated', async (req, res) => {
+    console.log('GET /api/spots/top-rated');
+
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+        return res.status(503).json({ error: 'Database non configurato in questo ambiente' });
+    }
+
+    const limit = Math.min(parseInt(req.query.limit, 10) || 100, 100);
+    const minVotes = Math.max(parseInt(req.query.minVotes, 10) || 10, 0);
+
+    try {
+        const { data, error } = await supabase
+            .from('spots')
+            .select(`
+                id,
+                name,
+                address,
+                type,
+                star_avg,
+                star_count
+            `);
+
+        if (error) {
+            console.error('Errore durante il recupero spot piu votati:', error);
+            return res.status(500).json({ error: 'Errore durante il recupero spot piu votati' });
+        }
+
+        //serve solo a garantire che star_avg e star_count siano numeri, in modo da evitare problemi 
+        const spots = (data || []).map(spot => ({
+            ...spot,
+            star_avg: Number(spot.star_avg) || 0,
+            star_count: Number(spot.star_count) || 0
+        }));
+        /* attivare se vuoi piu precisone ma  un po pesante per il db
+        const totalVotes = spots.reduce((sum, spot) => sum + spot.star_count, 0);
+        const totalStars = spots.reduce((sum, spot) => sum + (spot.star_avg * spot.star_count), 0);
+        const globalAvg = totalVotes > 0 ? totalStars / totalVotes : 0;
+        */
+        const globalAvg = 3.5; // Valore di riferimento fisso per non appesantire troppo il db
+
+        //aggiunge il calcolo del punteggio pesato a ogni spot, usando la formula di Bayes: weighted_score = (v / (v + m)) * R + (m / (v + m)) * globalAvg
+        // Calcoliamo il punteggio per ogni spot
+        const rankedSpots = spots.map(spot => {
+            const v = spot.star_count;    // Numero di voti
+            const R = spot.star_avg;      // Media voti dello spot
+            const m = minVotes;           // Voti minimi richiesti (es. 5)
+            const C = globalAvg;          // Media globale di riferimento (es. 3.5)
+
+            // Applichiamo la formula di Bayes
+            // Se non ci sono voti, il punteggio è 0
+            const weightedScore = v === 0 
+                ? 0 
+                : (v / (v + m) * R) + (m / (v + m) * C);
+
+            return {
+                ...spot,
+                weighted_score: Number(weightedScore.toFixed(3))
+            };
+        });
+
+        // Ordiniamo i risultati (dal più alto al più basso)
+        const sortedResults = rankedSpots.sort((a, b) => b.weighted_score - a.weighted_score);
+
+        // Prendiamo solo i primi (rispettando il limite scelto)
+        const finalSelection = sortedResults.slice(0, limit);
+
+        return res.json(finalSelection);
+    } catch (err) {
+        console.error('Errore inatteso in /api/spots/top-rated:', err);
+        return res.status(500).json({ error: 'Errore inatteso nel recupero spot piu votati' });
+    }
+});
+
+/*esempio di risposta di /api/spots/top-rated
+[
+  {
+    "id": 12,
+    "name": "Biblioteca Centrale",
+    "address": "Via Università 1",
+    "type": "Biblioteca",
+    "star_avg": 4.8,
+    "star_count": 45,
+    "weighted_score": 4.67    <---punteggio su cui si basa ordine
+  },
+  {
+    "id": 5,
+    "name": "Cafè dello Studente",
+    "address": "Piazza delle Erbe 3",
+    "type": "Aula Studio",
+    "star_avg": 5.0,
+    "star_count": 2,
+    "weighted_score": 3.929
+  },
+  {
+    "id": 8,
+    "name": "Parco Ducale (Zona Wi-Fi)",
+    "address": "Viale del Parco",
+    "type": "All'aperto",
+    "star_avg": 3.2,
+    "star_count": 12,
+    "weighted_score": 3.288
+  }
+]*/
+
+
+
+
+
+
+
+
+
+
+//=============================================
 // FINIRE DI IMPLEMENTARE. QUALI SONO LE INFORMAZIONI CHE VENGONO PASSATE PER DELETE SPOT?
 
 app.post('/api/remove-spot', async (req, res) =>{
