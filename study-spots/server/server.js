@@ -128,6 +128,7 @@ app.get('/api/me', async (req, res) => {
 
     const supabaseClient = getSupabase(req, res);
 
+    // prendo i dati dell'utente loggato tramite auth.getUser()
     const { data: { user }, error } = await supabaseClient.auth.getUser();
 
     if (error || !user) {
@@ -473,6 +474,67 @@ app.get('/api/profile',async (req,res)=>{
   "aggiunti_count": 1
 }
 */
+
+//=================API: modifica profilo ================
+
+app.post('/api/modify-profile', async (req, res) => {
+    console.log('POST /api/modify-profile');
+
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+        return res.status(503).json({ error: 'Database non configurato' });
+    }
+
+    const supabaseClient = getSupabase(req, res);
+    
+    // 1. Recupera l'utente autenticato
+    const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+
+    if (userError || !user) {
+        return res.status(401).json({ error: "Utente non autenticato" });
+    }
+
+    const {nome, cognome, username, email, password} = req.body;
+
+    try {
+        // --- PARTE 1: Aggiornamento Email e Password (Auth) ---
+        const authUpdates = {};
+        if (email) authUpdates.email = email;
+        if (password) authUpdates.password = password;
+
+        if (Object.keys(authUpdates).length > 0) {
+            const { error: updateAuthError } = await supabaseClient.auth.updateUser(authUpdates);
+            if (updateAuthError) {
+                console.error('Errore inserimento commento:', updateAuthError);
+                return res.status(500).json({ error: 'Errore durante l\'inserimento del commento' });
+            }
+        }
+
+        // --- PARTE 2: Aggiornamento Nome, Cognome, Username (Tabella Profiles) ---
+        const profileUpdates = {};
+        if (nome !== undefined) profileUpdates.nome = nome;
+        if (cognome !== undefined) profileUpdates.cognome = cognome;
+        if (username !== undefined) profileUpdates.username = username;
+
+        if (Object.keys(profileUpdates).length > 0) {
+            const { error: updateProfileError } = await supabaseClient
+                .from('profiles')
+                .update(profileUpdates)
+                .eq('id', user.id); // L'ID del profilo coincide con l'ID di Auth
+
+            if (updateProfileError) {
+                console.error('Errore inserimento commento:', updateProfileError);
+                return res.status(500).json({ error: 'Errore durante l\'inserimento del commento' });
+            }
+        }
+
+        res.json({ message: "Profilo aggiornato con successo" });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
 //=================API: add commento e valutazione a uno spot ================
 
 app.post('/api/add-comment', async (req, res) => {
@@ -931,7 +993,7 @@ app.get('/api/spots/top-rated', async (req, res) => {
 //=============================================
 // FINIRE DI IMPLEMENTARE. QUALI SONO LE INFORMAZIONI CHE VENGONO PASSATE PER DELETE SPOT?
 
-app.post('/api/remove-spot', async (req, res) =>{
+app.delete('/api/remove-spot/:id', async (req, res) =>{
     console.log('POST /api/remove-spot');
 
     if (!SUPABASE_URL || !SUPABASE_KEY) {
@@ -979,7 +1041,7 @@ app.post('/api/remove-spot', async (req, res) =>{
 });
 
 
-app.post('/api/info-spot/:id', async (req, res) =>{
+app.get('/api/info-spot/:id', async (req, res) =>{
     console.log('POST /api/info-spot');
 
     if (!SUPABASE_URL || !SUPABASE_KEY) {
@@ -995,9 +1057,7 @@ app.post('/api/info-spot/:id', async (req, res) =>{
         return res.status(401).json({ error: "Utente non autenticato" });
     }
 
-    const {
-        idSpot
-    } = req.body;
+    const idSpot = req.params.id; // Recupera l'id dello spot dai parametri dell'URL
 
     const responseData = {
         id: idSpot,
@@ -1011,6 +1071,7 @@ app.post('/api/info-spot/:id', async (req, res) =>{
             .from('spots')
             .select('name, address, type, star_avg, star_count')
             .eq('id', idSpot)
+            .maybeSingle();
             
     if (spotError) {
         console.error('Errore durante l\'inserimento dello spot:', spotError);
@@ -1102,6 +1163,144 @@ app.post('/api/salva-spot', async (req, res) =>{
 
     res.status(201).json({ message: 'Spot salvato con successo!' });
 });
+
+app.get('/api/salvati', async (req, res) => {
+    console.log('GET /api/salvati');
+
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+        return res.status(503).json({ error: 'Database non configurato in questo ambiente' });
+    }
+    
+    const supabaseClient = getSupabase(req,res);
+
+    const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+
+    if (userError || !user) {
+        return res.status(401).json({ error: "Utente non autenticato" });
+    }
+
+    const {data: spot_salvati, error: salvatiError } = await supabaseClient
+        .from('salvati')
+        .select(`
+            spots (id, name, address, type, star_avg)
+            `)
+        .eq('user_id',user.id)
+
+    if (salvatiError) {
+        console.error('Errore durante la ricerca degli spot:', salvatiError);
+        return res.status(500).json({ error: 'Errore durante la ricerca degli spot' });
+    }
+
+    // Nota: spot_salvati sarà un array di oggetti tipo: [{ spots: {...} }, { spots: {...} }]
+    res.json(spot_salvati)
+});
+
+
+app.get('/api/aggiunti', async (req, res) => {
+    console.log('GET /api/aggiunti');
+
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+        return res.status(503).json({ error: 'Database non configurato in questo ambiente' });
+    }
+    
+    const supabaseClient = getSupabase(req,res);
+
+    const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+
+    if (userError || !user) {
+        return res.status(401).json({ error: "Utente non autenticato" });
+    }
+
+    const {data: spot_aggiunti, error: aggiuntiError } = await supabaseClient
+        .from('aggiunti')
+        .select(`
+            spots (id, name, address, type, star_avg)
+            `)
+        .eq('user_id',user.id)
+
+    if (aggiuntiError) {
+        console.error('Errore durante la ricerca degli spot:', aggiuntiError);
+        return res.status(500).json({ error: 'Errore durante la ricerca degli spot' });
+    }
+
+    // Nota: spot_salvati sarà un array di oggetti tipo: [{ spots: {...} }, { spots: {...} }]
+    res.json(spot_aggiunti)
+});
+
+app.get('/api/commenti-aggiunti', async (req, res) => {
+    console.log('GET /api/commenti-aggiunti');
+
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+        return res.status(503).json({ error: 'Database non configurato in questo ambiente' });
+    }
+    
+    const supabaseClient = getSupabase(req,res);
+
+    const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+
+    if (userError || !user) {
+        return res.status(401).json({ error: "Utente non autenticato" });
+    }
+
+    const {data: commenti_aggiunti, error: commentiError } = await supabaseClient
+        .from('comments')
+        .select(`
+            comment,
+            star,
+            spot_id
+        `)
+        .eq('user_id',user.id)
+
+    if (commentiError) {
+        console.error('Errore durante la ricerca degli spot:', commentiError);
+        return res.status(500).json({ error: 'Errore durante la ricerca degli spot' });
+    }
+
+    // Nota: spot_salvati sarà un array di oggetti tipo: [{ spots: {...} }, { spots: {...} }]
+    res.json(commenti_aggiunti)
+});
+
+app.get('/api/spots_search', async (req, res) => {
+    console.log('GET /api/spots_search');
+    
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+        return res.status(503).json({ error: 'Database non configurato in questo ambiente' });
+    }
+
+    const supabaseClient = getSupabase(req, res);
+
+    // 1. Convertiamo i parametri da stringhe a numeri
+    const type = req.query.type;
+    const latitude = parseFloat(req.query.latitude);
+    const longitude = parseFloat(req.query.longitude);
+    const radiusKm = 5; // Puoi renderlo dinamico passandolo dalla query
+
+    // Validazione base
+    if (isNaN(latitude) || isNaN(longitude) || !type) {
+        return res.status(400).json({ error: 'Parametri type, latitude o longitude mancanti o non validi' });
+    }
+
+    // Calcolo dell'offset per il rettangolo (Bounding Box)
+    const latOffset = (radiusKm / 111); 
+    const lonOffset = (radiusKm / (111 * Math.cos(latitude * (Math.PI / 180))));
+
+    // Query a Supabase 
+    const { data: spots, error } = await supabaseClient
+        .from('spots')
+        .select('*')
+        .eq('type', type)
+        .gte('latitude', latitude - latOffset)
+        .lte('latitude', latitude + latOffset)
+        .gte('longitude', longitude - lonOffset)
+        .lte('longitude', longitude + lonOffset);
+
+    if (error) {
+        console.error('Errore durante la ricerca degli spot:', error);
+        return res.status(500).json({ error: 'Errore durante la ricerca degli spot' });
+    }
+
+    res.json(spots);
+}); 
 
 /*   
 PRENDERE LATITUDINE E LONGITUDINE TRAMITE API DI OPENSTREETMAP. L'UTENTE DEVE INSERIRE SOLO L'INDIRZZO.
