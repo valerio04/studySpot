@@ -256,3 +256,16 @@
     color: white;
     box-shadow: 0 4px 10px rgba(0, 86, 179, 0.2);
 }
+
+.btn-danger {
+    background-color: #ff4d4d;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #cc0000;
+}
+
+.btn-danger img {
+    filter: brightness(0) invert(1); /* Rende l'icona bianca se necessario */
+}
