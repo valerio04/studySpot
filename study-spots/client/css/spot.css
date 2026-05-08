@@ -26,6 +26,14 @@
 
 .stars { color: #FF6600; font-size: 1.2rem; }
 
+.btn-action img {
+    width: 20px;          /* Larghezza dell'icona */
+    height: 20px;         /* Altezza dell'icona */
+    object-fit: contain;  /* Mantiene le proporzioni senza tagliare */
+    vertical-align: middle; /* Allinea l'icona al centro del testo */
+    margin-right: 8px;    /* Spazio tra icona e testo */
+}
+
 .btn-action {
     background: #f1f1f1;
     border: none;
