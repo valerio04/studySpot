@@ -93,7 +93,7 @@ async function popolaPagina(spot) {
 
         // 2. Costruisci il contenuto HTML (usando i dati della singola recensione)
         // Generiamo le stelle in base al voto (voto 5 = 5 stelle)
-        const stelle = '★'.repeat(rec.voto) + '☆'.repeat(5 - rec.voto);
+        const stelle = '★'.repeat(rec.star) + '☆'.repeat(5 - rec.star);
 
         reviewItem.innerHTML = `
             <div class="review-user">
@@ -103,7 +103,7 @@ async function popolaPagina(spot) {
                     <span class="stars-small">${stelle}</span>
                 </div>
             </div>
-            <p>${rec.testo}</p>
+            <p>${rec.comment}</p>
         `;
 
         // 3. Aggiungilo alla lista nella pagina
