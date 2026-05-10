@@ -12,7 +12,25 @@ if (!message) {
     form.insertBefore(message, document.getElementById('annulla'));
 }
 
+
+// Controllo immediato al caricamento della pagina
+document.addEventListener('DOMContentLoaded', checkIfAuthenticated);
 form.addEventListener('submit', creaSpot);
+    
+async function checkIfAuthenticated() {
+    try {
+        
+        const response = await fetch('/api/me', { credentials: 'include' });
+        
+        if (response.status === 401) {
+            alert("Devi essere autenticato per accedere a questa pagina.");
+            window.location.href = '/login';
+        }
+    } catch (err) {
+        console.log("Errore controllo auth iniziale");
+    }
+};
+
 
 
 async function creaSpot(event) {
@@ -100,6 +118,15 @@ async function creaSpot(event) {
             body: JSON.stringify(spotData),
             credentials: 'include'
         });
+
+
+        // --- GESTIONE 401 (Sessione scaduta o non loggato) ---
+        if (response.status === 401) {
+            alert("Sessione scaduta o non valida. Effettua nuovamente il login.");
+            window.location.href = '/login';
+            return;
+        }
+
         const result = await response.json();
         if (!response.ok) {
             message.textContent = result.error || 'Errore durante l\'aggiunta dello spot.';

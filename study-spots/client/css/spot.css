@@ -277,3 +277,23 @@
 .btn-danger img {
     filter: brightness(0) invert(1); /* Rende l'icona bianca se necessario */
 }
+
+/* Per bottone salvati */
+
+/* Stato "Salvato" del pulsante */
+.btn-save.saved {
+    background-color: #FF6600 !important; /* Il tuo arancione */
+    color: #FFFFFF !important;
+    border-color: #FF6600 !important;
+}
+
+/* Trasforma l'icona in bianco quando è salvato */
+.btn-save.saved img {
+    filter: brightness(0) invert(1);
+}
+
+/* Effetto hover quando è già salvato (leggermente più scuro) */
+.btn-save.saved:hover {
+    background-color: #e65c00 !important;
+    opacity: 0.9;
+}

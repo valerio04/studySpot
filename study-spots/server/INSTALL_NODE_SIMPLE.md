@@ -40,3 +40,4 @@ Se vuoi, posso sovrascrivere `INSTALL_NODE.md` con questa versione semplice; dim
 per canncellare servr aperti:
 lsof -i :3004  
 kill <pid>
+oppure con kill -p <pid>

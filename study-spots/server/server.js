@@ -1019,7 +1019,7 @@ app.delete('/api/remove-spot/:id', async (req, res) =>{
         .select('*')
         .eq('id_spot', idSpot)
         .eq('user_id', user.id)
-        .maybesingle();
+        .maybeSingle();
 
     if (controlloError || !controllo) {
         console.error('Errore durante il controllo dello spot:', controlloError);
@@ -1053,9 +1053,10 @@ app.get('/api/info-spot/:id', async (req, res) =>{
     // Recupera l'utente autenticato
     const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
 
-    if (userError || !user) {
+    //dovrebbero essere accessibili a tutti anche ai non leggati
+    /*if (userError || !user) {
         return res.status(401).json({ error: "Utente non autenticato" });
-    }
+    }*/
 
     const idSpot = req.params.id; // Recupera l'id dello spot dai parametri dell'URL
 
@@ -1115,12 +1116,27 @@ app.get('/api/info-spot/:id', async (req, res) =>{
     }
 
     const { data: comments, error: commentsError } = await supabaseClient
-        .from('comments')
-        .select('comment, star')
-        .eq('spot_id',idSpot)
+    .from('comments')
+    .select(`
+        comment, 
+        star, 
+        profiles (
+            username
+        )
+    `)
+    .eq('spot_id', idSpot);
+
+    if (commentsError) {
+        console.error('Errore durante il recupero dei commenti:', commentsError);
+    }
 
     if (comments) {
-        responseData.recensioni = comments;
+        
+        responseData.recensioni = comments.map(c => ({
+            comment: c.comment,
+            star: c.star,
+            username: c.profiles?.username || 'Utente anonimo'
+        }));
     }
 
     return res.status(200).json(responseData);
@@ -1163,6 +1179,52 @@ app.post('/api/salva-spot', async (req, res) =>{
 
     res.status(201).json({ message: 'Spot salvato con successo!' });
 });
+
+
+app.get('/api/is-saved/:idSpot', async (req, res) => {
+ 
+    console.log('GET /api/is-saved/:idSpot');
+     if (!SUPABASE_URL || !SUPABASE_KEY) {
+        return res.status(503).json({ error: 'Database non configurato in questo ambiente' });
+    }
+    
+    const supabaseClient = getSupabase(req, res);
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) return res.status(401).json({ isSaved: false });
+
+    const { data } = await supabaseClient
+        .from('salvati')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('spot_id', req.params.idSpot)
+        .maybeSingle();
+
+    res.json({ isSaved: !!data });
+});
+
+
+app.delete('/api/rimuovi-spot-salvato', async (req, res) => {
+    
+     console.log('DELETE /api/rimuovi-spot-salavto');
+     if (!SUPABASE_URL || !SUPABASE_KEY) {
+        return res.status(503).json({ error: 'Database non configurato in questo ambiente' });
+    }
+    
+    const supabaseClient = getSupabase(req, res);
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) return res.status(401).json({ error: "Non autorizzato" });
+
+    const { error } = await supabaseClient
+        .from('salvati')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('spot_id', req.body.idSpot);
+
+    if (error) return res.status(500).json({ error: error.message });
+    res.json({ message: "Rimosso" });
+});
+
+
 
 app.get('/api/salvati', async (req, res) => {
     console.log('GET /api/salvati');

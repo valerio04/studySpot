@@ -1,92 +1,177 @@
 // Inizializza la mappa
-const map = L.map('map').setView([41.9028, 12.4964], 13); // Coordinate di default (Roma)
+const map = L.map('map').setView([41.9028, 12.4964], 13); // Roma di default
 
-// aggiungi un listener per il pulsante "Near Me"
-document.getElementById('near-me-button').addEventListener('click', getUserLocation);
-
-// Aggiungi un listener per il pulsante "Search"
-document.getElementById('search-button').addEventListener('click', searchLocation);
-
-
-// Aggiungi il layer di OpenStreetMap
+// Layer di base
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
-// Variabile globale per il marker corrente
-let currentMarker = null;
+// Gruppo per i marker degli spot (per poterli pulire facilmente)
+const spotsLayer = L.layerGroup().addTo(map);
+let currentMarker = null; // Marker della posizione cercata
 
-// Funzione per ottenere la posizione dell'utente
+// Event Listeners dai tuoi bottoni HTML
+document.getElementById('search-button').addEventListener('click', async () => {
+    await searchLocation();    // Prima trova la posizione
+    visualizeSpotOnMap();      // Poi cerca gli spot
+});
+
+document.getElementById('near-me-button').addEventListener('click', async () => {
+    getUserLocation();         // Questa è asincrona tramite callback, vedi sotto
+});
+
+// --- FUNZIONI DI GEOLOCALIZZAZIONE ---
+
 function getUserLocation() {
     if (navigator.geolocation) {
-        console.log('Richiesta di geolocalizzazione inviata.');
         navigator.geolocation.getCurrentPosition(
             function (position) {
-                const lat = position.coords.latitude;
-                const lng = position.coords.longitude;
-
-                console.log(`Posizione trovata: Latitudine ${lat}, Longitudine ${lng}`);
-
-                // Centra la mappa e aggiungi un marker
-                centerMap(lat, lng);
-                addMarker(lat, lng, 'Sei qui!');
+                window.selectedLatitude = position.coords.latitude;
+                window.selectedLongitude = position.coords.longitude;
+                centerMap(window.selectedLatitude, window.selectedLongitude);
+                addMarker(window.selectedLatitude, window.selectedLongitude, 'Sei qui!');
+                
+                // Avvia la ricerca degli spot automaticamente dopo aver trovato la posizione
+                visualizeSpotOnMap();
             },
             function (error) {
-                console.error('Errore nel recupero della posizione:', error.message);
-                alert('Impossibile ottenere la posizione. Assicurati di aver abilitato la geolocalizzazione.');
+                alert('Errore nel recupero della posizione.');
             }
         );
-    } else {
-        alert('Geolocalizzazione non supportata dal tuo browser.');
     }
 }
 
-// Funzione per cercare una posizione e posizionare un marker
 async function searchLocation() {
     const searchInput = document.getElementById('search-input').value.trim();
-    if (!searchInput) {
-        alert('Inserisci un luogo nella barra di ricerca.');
-        return;
-    }
+    if (!searchInput) return alert('Inserisci un luogo.');
 
     try {
         const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchInput)}&format=json`);
         const data = await response.json();
+        if (data.length === 0) return alert('Nessun risultato.');
 
-        if (data.length === 0) {
-            alert('Nessun risultato trovato per il luogo inserito.');
-            return;
+        window.selectedLatitude = parseFloat(data[0].lat);
+        window.selectedLongitude = parseFloat(data[0].lon);
+
+        centerMap(window.selectedLatitude, window.selectedLongitude);
+        addMarker(window.selectedLatitude, window.selectedLongitude, searchInput);
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+// ---  VISUALIZZAZIONE SPOT ---
+
+async function visualizeSpotOnMap() {
+    const lat = window.selectedLatitude;
+    const lng = window.selectedLongitude;
+
+    if (!lat || !lng) {
+        alert("Per favore, cerca prima una posizione o usa 'Near me'");
+        return;
+    }
+
+    // 1. Recupera tutti i tipi selezionati dai checkbox
+    const checkedBoxes = document.querySelectorAll('.tool-checkbox:checked');
+    const selectedTypes = Array.from(checkedBoxes).map(cb => {
+        // Prende il testo dal tag <span> vicino all'immagine
+        return cb.parentElement.querySelector('span').innerText.trim();
+    });
+
+    if (selectedTypes.length === 0) {
+        spotsLayer.clearLayers();
+        return;
+    }
+
+    // Puliamo la mappa dai vecchi spot
+    spotsLayer.clearLayers();
+
+    // 2. Eseguiamo le chiamate API per ogni tipo selezionato
+    try {
+        for (const type of selectedTypes) {
+            let apyType = type; // Variabile temporanea per la mappatura
+            if (type === 'Bar') apyType = 'bar'; // Mappatura per il backend
+            else if (type === 'Biblioteca') apyType = 'biblio';
+            else if (type === 'Coworking') apyType = 'co';
+            else if (type === 'Aula Studio') apyType = 'au';
+
+            const url = `/api/spots_search?type=${encodeURIComponent(apyType)}&latitude=${lat}&longitude=${lng}`;
+            const response = await fetch(url);
+            const spots = await response.json();
+
+            // 3. Aggiungi i marker per ogni spot trovato
+            spots.forEach(spot => {
+                const marker = L.marker([spot.latitude, spot.longitude]);
+
+                // Al click sul marker, carichiamo i dati reali dal server
+                marker.on('click', async function() {
+                    // Mostriamo un caricamento temporaneo nel popup
+                    marker.bindPopup("Caricamento...").openPopup();
+
+                    try {
+                        const response = await fetch(`/api/info-spot/${spot.id}`);
+                        if (!response.ok) throw new Error("Errore nel caricamento dettagli");
+                        
+                        const info = await response.json();
+                        
+                        // Costruiamo il contenuto HTML avanzato
+                        const content = createPopupContent(info);
+                        marker.setPopupContent(content);
+                    } catch (err) {
+                        console.error(err);
+                        marker.setPopupContent("Errore nel caricamento informazioni.");
+                    }
+                });
+
+                spotsLayer.addLayer(marker);
+            });
         }
-
-        const { lat, lon } = data[0];
-        centerMap(parseFloat(lat), parseFloat(lon));
-        addMarker(parseFloat(lat), parseFloat(lon), searchInput);
     } catch (error) {
-        console.error('Errore durante la ricerca della posizione:', error);
-        alert('Si è verificato un errore durante la ricerca della posizione.');
+        console.error('Errore nel caricamento degli spot:', error);
     }
 }
 
-// Funzione per rimuovere il marker esistente
-function removeCurrentMarker() {
-    if (currentMarker) {
-        map.removeLayer(currentMarker);
-        currentMarker = null;
-    }
-}
+// --- UTILS ---
 
-// Funzione per aggiungere un nuovo marker
 function addMarker(lat, lng, popupText) {
-    removeCurrentMarker();
-    currentMarker = L.marker([lat, lng]).addTo(map)
-        .bindPopup(popupText)
-        .openPopup();
+    if (currentMarker) map.removeLayer(currentMarker);
+    currentMarker = L.marker([lat, lng]).addTo(map).bindPopup(popupText).openPopup();
 }
 
-// Funzione per centrare la mappa
-function centerMap(lat, lng, zoom = 14) {
-    map.setView([lat, lng], zoom);
+function centerMap(lat, lng) {
+    map.setView([lat, lng], 14);
 }
 
+function createPopupContent(info) {
+    // Generiamo i tag come pillole usando lo stile delle tue .tag
+    const tagsHtml = info.tags.map(tag => `<span class="tag micro-tag-popup">${tag}</span>`).join('');
+    
+    // Formattazione rating (usiamo il tuo arancione per le stelle)
+    const rating = info.star_avg ? parseFloat(info.star_avg).toFixed(1) : "0.0";
 
+    return `
+        <div class="rich-popup">
+            <div class="popup-header">
+                <h3 class="popup-title">${info.name}</h3>
+                <p class="popup-address"><i class="bi bi-geo-alt-fill"></i> ${info.address}</p>
+            </div>
+            
+            <div class="popup-rating-row">
+                <span class="rating-score">${rating}</span>
+                <span class="rating-stars">★</span>
+                <span class="rating-count">(${info.star_count} Recensioni)</span>
+            </div>
 
+            <div class="popup-tags-container">
+                ${tagsHtml}
+            </div>
+
+            <div class="popup-actions d-flex justify-content-between align-items-center">
+                <a href="/spot?id=${info.id}" target="_blank" rel="noopener" class="btn-view-spot">
+                    Vedi Spot
+                </a>
+                
+            </div>
+        </div>
+    `;
+}

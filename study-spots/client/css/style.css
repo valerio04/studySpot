@@ -412,3 +412,115 @@
     border-radius: 20px; /* Effetto pillola */
     border: 1px solid #112E51;
 }
+
+
+/* =========================================
+   9. STILE POPUP MAPPA (Personalizzato)
+   ========================================= */
+
+/* Sovrascriviamo lo stile standard di Leaflet per adattarlo al tuo sito */
+.leaflet-popup-content-wrapper {
+    background-color: #f1f1f1 !important; /* Stesso sfondo delle tue card/tabella */
+    border-radius: 15px !important;
+    padding: 0 !important;
+    box-shadow: 0 8px 20px rgba(17, 46, 81, 0.2) !important;
+    border: 1px solid #112E51;
+}
+
+.leaflet-popup-content {
+    margin: 0 !important;
+    width: 260px !important;
+}
+
+.rich-popup {
+    padding: 15px;
+    font-family: 'Nunito', sans-serif;
+    text-align: left !important; /* Reset del center della sezione principale */
+}
+
+.popup-title {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.2rem !important;
+    color: #112E51 !important;
+    margin: 0 0 5px 0 !important;
+    font-weight: 700;
+}
+
+.popup-address {
+    font-size: 0.8rem;
+    color: #5b7da6; /* Colore subtitle */
+    margin-bottom: 10px !important;
+}
+
+.popup-rating-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 12px;
+}
+
+.rating-score {
+    font-weight: 700;
+    color: #112E51;
+    font-size: 1.1rem;
+}
+
+.rating-stars {
+    color: #FF6600; /* Il tuo arancione */
+    font-size: 1.2rem;
+}
+
+.rating-count {
+    color: #636e72;
+    font-size: 0.75rem;
+}
+
+.popup-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+/* Riutilizzo del tuo stile .tag con piccole modifiche per il popup */
+.micro-tag-popup {
+    font-size: 0.65rem !important;
+    padding: 2px 8px !important;
+    background-color: #FFFFFF !important;
+}
+
+.popup-actions {
+    border-top: 1px solid #ccc;
+    padding-top: 12px;
+}
+
+/* Stile bottone "Vedi Spot" basato sul tuo #search-button */
+.btn-view-spot {
+    background-color: #112E51;
+    color: #FFFFFF !important;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-view-spot:hover {
+    background-color: #FF6600;
+}
+
+/* Stile bottone Save */
+.btn-save-popup {
+    background: none;
+    border: none;
+    color: #112E51;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.btn-save-popup:hover {
+    color: #FF6600;
+}
