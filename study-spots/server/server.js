@@ -756,9 +756,9 @@ app.post('/api/add-spot', async (req, res) =>{
         }
 
 
-        // ========================================================
+        
         // NUOVA LOGICA: Inserisce la valutazione (e il commento se c'è)
-        // ========================================================
+        
         if (rating) { 
             // Costruiamo dinamicamente l'oggetto da inserire, proprio come in add-comment
             const insertData = {
@@ -783,9 +783,9 @@ app.post('/api/add-spot', async (req, res) =>{
             }
         }
 
-        // ========================================================
+        
         // INSERIMENTO IN AGGIUNTI (Traccia che l'utente ha creato questo spot)
-        // ========================================================
+        
         const { error: aggiuntiError } = await supabaseClient
             .from('aggiunti')
             .insert({ user_id: user.id, spot_id: spotId });
@@ -804,32 +804,6 @@ app.post('/api/add-spot', async (req, res) =>{
     }
 });
 //===================================================================
-
-// ======== API: DELETE SPOT ========
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//=========================================
-
-
-
-//================== API: UPDATE SPOT ========
-
-
-
 
 //=============================================
 
@@ -1039,8 +1013,9 @@ app.delete('/api/remove-spot/:id', async (req, res) =>{
 
     res.status(200).json({ message: 'Spot rimosso con successo!' });
 });
+//=============================================
 
-
+//=================API: ottieni tutte le informazioni di uno spot (per la pagina di dettaglio) ===============
 app.get('/api/info-spot/:id', async (req, res) =>{
     console.log('POST /api/info-spot');
 
@@ -1141,7 +1116,9 @@ app.get('/api/info-spot/:id', async (req, res) =>{
 
     return res.status(200).json(responseData);
 });
+//===================================================================
 
+//=================API: salva spot (per la lista dei preferiti) ===============
 app.post('/api/salva-spot', async (req, res) =>{
     console.log('POST /api/add-spot');
 
@@ -1180,7 +1157,7 @@ app.post('/api/salva-spot', async (req, res) =>{
     res.status(201).json({ message: 'Spot salvato con successo!' });
 });
 
-
+//=================API: controlla se uno spot è già stato salvato dall'utente (per mostrare il cuoricino pieno o vuoto) ===============
 app.get('/api/is-saved/:idSpot', async (req, res) => {
  
     console.log('GET /api/is-saved/:idSpot');
@@ -1202,7 +1179,7 @@ app.get('/api/is-saved/:idSpot', async (req, res) => {
     res.json({ isSaved: !!data });
 });
 
-
+//=================API: rimuovi spot salvato dalla lista dei preferiti ===============
 app.delete('/api/rimuovi-spot-salvato', async (req, res) => {
     
      console.log('DELETE /api/rimuovi-spot-salavto');
@@ -1225,7 +1202,7 @@ app.delete('/api/rimuovi-spot-salvato', async (req, res) => {
 });
 
 
-
+//=================API: ottieni lista degli spot salvati (per la pagina del profilo) ===============
 app.get('/api/salvati', async (req, res) => {
     console.log('GET /api/salvati');
 
