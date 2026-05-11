@@ -1,526 +1,266 @@
-@import url('header.css');
+/* =========================================
+   1. VARIABILI E BASE
+   ========================================= */
+:root {
+    --dark-blue: #112E51;
+    --orange-accent: #FF6600;
+    --light-gray: #f1f1f1;
+    --secondary-blue: #5b7da6;
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    color: var(--dark-blue);
+    background-color: #FFFFFF;
+}
+
+h1, h2, h3, h4, .nome-logo {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+}
+
+.text-dark-blue { color: var(--dark-blue); }
 
 /* =========================================
-   3. HERO SECTION (Sezione Centrale)
+   2. NAVBAR E NAVIGAZIONE
    ========================================= */
-.principale {
-    /* Occupa l'intera altezza dello schermo, meno lo spazio occupato dall'header (circa 70px) */
-    min-height: auto;
-    display: flex;
-    flex-direction: column; /* Impila gli elementi in verticale */
-    justify-content: center; /* Li centra in altezza */
-    align-items: center;     /* Li centra in larghezza */
-    text-align: center;
-    padding: 20px;
+.navbar-nav .nav-link {
+    transition: color 0.3s ease;
+    position: relative;
+    color: var(--dark-blue);
 }
 
-.principale h1 {
-    font-size: 3.0rem; /* Dimensione del titolo */
-    color: #112E51;
-    
+/* Effetto Hover Testo Arancione */
+.navbar-nav .nav-link:hover {
+    color: var(--orange-accent) !important;
 }
 
+/* Linea Arancione Sotto i Link al passaggio */
+.navbar-nav .nav-link::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    background: var(--orange-accent);
+    transition: width .3s;
+}
 
+.navbar-nav .nav-link:hover::after {
+    width: 100%;
+}
 
 /* =========================================
-   5. RESPONSIVE DESIGN (Smartphone e Tablet)
+   3. BOTTONI CUSTOM
    ========================================= */
-
-/* Regole per schermi grandi fino a 768px (tipico tablet/smartphone) */
-@media (max-width: 768px) {
-    
-    /* 1. Sistemiamo l'Header */
-    .header-principale {
-        flex-direction: column; /* Incolonna Logo, Nav e Bottone */
-        gap: 20px;              /* Spazio tra gli elementi incolonnati */
-        padding: 20px 15px;     /* Riduciamo lo spazio laterale */
-    }
-
-    nav ul {
-        flex-wrap: wrap;        /* Permette ai link di andare a capo se non c'è spazio */
-        justify-content: center;
-        gap: 20px;              /* Riduciamo lo spazio tra i link */
-    }
-
-    /* 2. Riduciamo il testo gigante della sezione centrale */
-    .principale h1 {
-        font-size: 2.2rem;      /* Da 3.5rem a 2.2rem per non sbordare */
-        
-    }
-
-    /* 3. Sistemiamo le pillole (bottoni) */
-    .categorie-container {
-        flex-direction: column; /* Incolonna le pillole una sotto l'altra */
-        width: 100%;            /* Prendono tutta la larghezza disponibile */
-        max-width: 300px;       /* Ma non diventano TROPPO larghe */
-    }
-
-    .pillola {
-        text-align: center;     /* Centra il testo dentro il bottone */
-    }
-
-    .results-table {
-        width: 70% !important;
-        border-collapse: collapse !important;
-        margin-top: 20px !important;
-    }
-
-    .map-tool-container {
-    
-        flex-direction: column !important; /* Dispone gli elementi in riga */
-    }
-
-    #map {
-        height: 450px !important; /* Altezza della mappa */
-        width: 100% !important;   /* Larghezza della mappa */
-        margin-top: 20px !important; /* Spazio sopra la mappa */  
-    }
-
-    .tool{
-        flex-direction: row !important; /* Dispone gli elementi in fila orizzontale */
-        width: 100% !important;
-        flex-wrap: wrap; /* Permette agli elementi di andare a capo */
-        
-    }
-
-    .src-span {
-    display: flex;
-    align-items:flex-start;
-    gap: 0px; /* Spazio tra l'icona e il testo */
-    flex-direction: column !important; 
-    }
-
-    .page-collezioni {
-        padding: 20px 15px;
-    }
-    .spot-card {
-        min-width: 220px; /* Card leggermente più strette da mobile */
-        max-width: 220px;
-    }
-    .carousel-header h2 {
-        font-size: 1.5rem;
-    }
-    
-
-}
-/* =========================================
-   6. SEARCH TOOL
-   ========================================= */
-.search-container {
-    display: flex;
-    justify-content: center; /* Centra la barra e il pulsante */
-    align-items: center;
-    gap: 10px; /* Spazio tra la barra e il pulsante */
-    margin-top: 20px; /* Spazio sopra la barra */
-    flex-direction: row;
-    flex-wrap: wrap; /* Permette agli elementi di andare a capo */
-}
-
-#search-input {
-   
-    max-width: 300px; /* Larghezza massima della barra */
-    min-width: 150px; /* Larghezza minima per evitare che diventi troppo piccola */
-    padding: 10px;
-    font-size: 1rem;
-    border: 2px solid #112E51;
-    border-radius: 15px;
-    margin-top: 10px;
-}
-
-.bottone1 {
-    padding: 10px 20px;
-    font-size: 1rem;
-    color: #FFFFFF;
+.btn-primary-custom {
+    background-color: var(--dark-blue);
+    color: white;
     border: none;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-     margin-top: 10px;
-    
+    transition: all 0.3s;
 }
 
-#near-me-button{
-    background-color: #112e51c5;
-    border: 1px solid #112E51;
-
-}
-#near-me-button:hover {
-    background-color: #FF6600;
+.btn-primary-custom:hover {
+    background-color: var(--orange-accent);
+    color: white;
 }
 
-#search-button{
-    background-color: #112E51;
+.btn-outline-primary-custom {
+    border: 2px solid var(--dark-blue);
+    color: var(--dark-blue);
+    transition: all 0.3s;
 }
 
-#search-button:hover {
-    background-color: #FF6600;
+.btn-outline-primary-custom:hover {
+    background-color: var(--dark-blue);
+    color: white;
 }
 
+.btn-secondary-custom {
+    background-color: var(--secondary-blue);
+    color: white;
+    border: none;
+    height: 46px; /* Allineamento con input */
+    transition: all 0.3s ease;
+}
 
+.btn-secondary-custom:hover {
+    background-color: var(--orange-accent);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
 
 /* =========================================
-   7. TABELLA RISULTATI
+   4. SEARCH E SUGGERIMENTI
    ========================================= */
-.results-table {
-    width: 50%;            /* Occupa tutta la larghezza possibile */
-    border-collapse: collapse; /* Elimina gli spazi tra le celle */
-    margin-top: 20px;       /* Spazio sopra la tabella */
+.border-dark-blue {
+    border: 2px solid var(--dark-blue) !important;
 }
 
-.results-table th, .results-table td {
-    border: 1px transparent #112E51; /* Bordo sottile e uniforme */
-    padding: 10px 15px;      /* Spazio interno alle celle */
-    text-align: left;        /* Testo allineato a sinistra */
-    
+.form-control {
+    height: 46px;
 }
 
-.results-table tr {
-    color: #112E51;
-    background-color: #f1f1f1;
-    transition: color 0.3s ease, background-color 0.3s ease; /* Aggiunge una transizione fluida */
-    
+.form-control:focus {
+    box-shadow: none;
+    border-color: var(--orange-accent) !important;
 }
 
-.results-table tr:hover {
-    color: #FF6600; /* Cambia il colore del testo */
-    background-color: #dad9d9; /* Cambia lo sfondo */
+/* Raccordo bordo tra input e bottone search */
+.input-group .btn-primary-custom {
+    border: 2px solid var(--dark-blue);
+    border-left: none;
 }
 
+/* Tabella Suggerimenti (Index) */
+.custom-table tbody tr {
+    background-color: var(--light-gray);
+    transition: all 0.2s;
+    cursor: pointer;
+}
 
-/*===============================================
-   map
-================================================*/
+.custom-table tbody tr:hover {
+    background-color: #dad9d9 !important;
+    color: var(--orange-accent);
+}
 
-.map-tool-container {
-    display: flex;
-    flex-direction: row; /* Dispone gli elementi in colonna */
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-    width: 100%; /* Assicura che il contenitore occupi tutta la larghezza */
-    height: auto; /* Permette al contenitore di adattarsi al contenuto */
+/* =========================================
+   5. MAPPA E FILTRI
+   ========================================= */
+#map-container {
+    position: relative;
+    border: 2px solid var(--light-gray);
+    border-radius: 1rem;
 }
 
 #map {
-    height: 600px; /* Altezza della mappa */
-    width: 100%;   /* Larghezza della mappa */
-    margin-top: 20px; /* Spazio sopra la mappa */
-    margin-right: 2%;
-    border: 1px solid #ccc; /* Bordo sottile per distinguere la mappa */
-    margin-left: 2%;
-    
+    height: 600px !important; /* Altezza ridotta */
+    width: 100%;
 }
 
-
-/*================================================
-    map button
-================================================*/
-#map-button-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%; /* Assicura che il contenitore occupi tutta la larghezza */
-    height: auto; /* Permette al contenitore di adattarsi al contenuto */
-    position: relative;
-}
-.map-button {
+.add-spot-btn {
     position: absolute;
-    top: 10%;
-    right: 10%;
-    z-index: 1000; /* Assicura che il bottone sia sopra la mappa */
-    display: flex;
-    flex-direction: column; /* Dispone immagine ed etichetta in colonna */
-    align-items: center; /* Centra l'etichetta rispetto all'immagine */
+    top: 15px;
+    right: 15px;
+    z-index: 1000;
+    transition: transform 0.2s;
 }
 
-#map-button-id {
-    width: 70px; /* Larghezza dell'immagine */
-    height: auto; /* Altezza dell'immagine */
-    cursor: pointer; /* Cambia il cursore per indicare che è cliccabile */
-    border-radius: 100%; /* Rende l'immagine rotonda */
-}
-#map-button-id:hover {
-   
-    opacity: 0.7; /* Effetto hover per l'immagine */
+.add-spot-btn:hover {
+    transform: scale(1.1);
 }
 
-
-/*===============================================
-   filtri
-================================================*/
-.tool{
-    display: flex;
-    flex-direction: column; 
-    justify-content: center; /* Centra gli elementi orizzontalmente */
-    align-items: center; /* Centra gli elementi verticalmente */
-    gap: 20px; /* Spazio tra gli elementi */
-    background-color: #ecebea;
-    /*border: 1px solid #112E51;*/
-    border-radius: 15px;
-    padding: 20px;
+.filter-card {
+    border: 1px solid rgba(0,0,0,0.05);
 }
 
-.tool-item {
-    display: flex; /* Imposta il layout flessibile per immagine e checkbox */
-    align-items: center; /* Centra immagine e checkbox verticalmente */
-    gap: 10px; /* Spazio tra immagine e checkbox */
-    justify-content: space-between;
-   
+.form-check-input:checked {
+    background-color: var(--orange-accent);
+    border-color: var(--orange-accent);
 }
-
-.tool-icon {
-    height: 40px; /* Controlla l'altezza dell'icona */
-    width: auto;  /* Mantiene le proporzioni originali dell'immagine */
-}
-.src-span {
-    display: flex;
-    align-items:center;
-    gap: 0px; /* Spazio tra l'icona e il testo */
-    flex-direction: row; 
-}
-
-
-
 
 /* =========================================
-   8. PAGINA COLLEZIONI E CAROSELLI
+   6. RANKING (CLASSIFICA)
    ========================================= */
-
-.page-collezioni {
-    align-items: flex-start; /* Allinea i contenuti a sinistra anziché al centro */
-    padding: 40px 5%;        /* Dà respiro ai lati */
+.bg-dark-blue {
+    background-color: var(--dark-blue) !important;
 }
 
-.page-collezioni h1 {
-    margin-bottom: 5px;
+/* Box posizione utente */
+.ranking-user {
+    border: 2px solid var(--dark-blue);
 }
 
-.subtitle {
-    font-size: 1.1rem;
-    color: #5b7da6;
-    margin-bottom: 40px;
-}
-
-/* Contenitore principale di ogni riga/categoria */
-.carousel-container {
-    width: 100%;
-    margin-bottom: 40px;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Intestazione del carosello (Titolo + link "Vedi tutti") */
-.carousel-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 15px;
-    padding-right: 15px;
-}
-
-.carousel-header h2 {
-    font-size: 1.8rem;
-    color: #112E51;
-}
-
-.vedi-tutti {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: #FF6600;
-    transition: opacity 0.3s ease;
-}
-
-.vedi-tutti:hover {
-    opacity: 0.7;
-}
-
-/* La pista che scorre. Nascondiamo la scrollbar. */
-.carousel-track {
-    display: flex;
-    gap: 20px;
-    overflow-x: auto; /* Permette lo scroll orizzontale */
-    scroll-behavior: smooth; /* Scorrimento fluido */
-    padding-bottom: 15px; /* Spazio per l'ombra delle card */
-    
-    /* NASCONDE LA SCROLLBAR */
-    -ms-overflow-style: none;  /* IE e Edge */
-    scrollbar-width: none;  /* Firefox */
-}
-
-.carousel-track::-webkit-scrollbar {
-    display: none; /* Chrome, Safari e Opera */
-}
-
-/* La singola Card del posto */
-.spot-card {
-    min-width: 260px; /* Larghezza fissa della card */
-    max-width: 260px;
-    background-color: #f1f1f1; /* Stesso grigio delle tue righe tabella */
-    border-radius: 15px;
-    overflow: hidden; /* Taglia l'immagine se sfora i bordi arrotondati */
-    display: flex;
-    flex-direction: column;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-    border: 1px solid transparent;
-}
-
-.spot-card:hover {
-    transform: translateY(-5px); /* Solleva la card leggermente */
-    background-color: #dad9d9;   /* Hover della tua tabella */
-    box-shadow: 0 8px 20px rgba(17, 46, 81, 0.15); /* Aggiunge un'ombra morbida */
-}
-
-.spot-card:hover h3 {
-    color: #FF6600; /* Il titolo diventa arancione, richiamo al tuo stile */
-}
-
-/* Spazio segnaposto per la foto (puoi sostituirlo con un tag <img>) */
-.card-img-placeholder {
-    height: 140px;
-    width: 100%;
-    background-color: #cccccc; /* Grigio base se non definita nel div */
-    /* background-image: url('tuo-percorso.jpg'); background-size: cover; */
-}
-
-.card-content {
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.card-content h3 {
-    font-size: 1.2rem;
-    color: #112E51;
-    transition: color 0.3s ease;
-}
-
-/* I micro-tag (pillole) sotto il titolo */
-.micro-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.tag {
-    background-color: #FFFFFF;
-    color: #112E51;
-    font-size: 0.8rem;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 20px; /* Effetto pillola */
-    border: 1px solid #112E51;
-}
-
-
-/* =========================================
-   9. STILE POPUP MAPPA (Personalizzato)
-   ========================================= */
-
-/* Sovrascriviamo lo stile standard di Leaflet per adattarlo al tuo sito */
-.leaflet-popup-content-wrapper {
-    background-color: #f1f1f1 !important; /* Stesso sfondo delle tue card/tabella */
-    border-radius: 15px !important;
-    padding: 0 !important;
-    box-shadow: 0 8px 20px rgba(17, 46, 81, 0.2) !important;
-    border: 1px solid #112E51;
-}
-
-.leaflet-popup-content {
-    margin: 0 !important;
-    width: 260px !important;
-}
-
-.rich-popup {
-    padding: 15px;
-    font-family: 'Nunito', sans-serif;
-    text-align: left !important; /* Reset del center della sezione principale */
-}
-
-.popup-title {
+/* Intestazione Tabella */
+.custom-table thead th {
     font-family: 'Quicksand', sans-serif;
-    font-size: 1.2rem !important;
-    color: #112E51 !important;
-    margin: 0 0 5px 0 !important;
     font-weight: 700;
-}
-
-.popup-address {
-    font-size: 0.8rem;
-    color: #5b7da6; /* Colore subtitle */
-    margin-bottom: 10px !important;
-}
-
-.popup-rating-row {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    margin-bottom: 12px;
-}
-
-.rating-score {
-    font-weight: 700;
-    color: #112E51;
-    font-size: 1.1rem;
-}
-
-.rating-stars {
-    color: #FF6600; /* Il tuo arancione */
-    font-size: 1.2rem;
-}
-
-.rating-count {
-    color: #636e72;
-    font-size: 0.75rem;
-}
-
-.popup-tags-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin-bottom: 15px;
-}
-
-/* Riutilizzo del tuo stile .tag con piccole modifiche per il popup */
-.micro-tag-popup {
-    font-size: 0.65rem !important;
-    padding: 2px 8px !important;
-    background-color: #FFFFFF !important;
-}
-
-.popup-actions {
-    border-top: 1px solid #ccc;
-    padding-top: 12px;
-}
-
-/* Stile bottone "Vedi Spot" basato sul tuo #search-button */
-.btn-view-spot {
-    background-color: #112E51;
-    color: #FFFFFF !important;
-    padding: 6px 12px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    border-radius: 12px;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-}
-
-.btn-view-spot:hover {
-    background-color: #FF6600;
-}
-
-/* Stile bottone Save */
-.btn-save-popup {
-    background: none;
-    border: none;
-    color: #112E51;
-    font-weight: 700;
+    text-transform: uppercase;
     font-size: 0.85rem;
-    cursor: pointer;
-    transition: color 0.3s ease;
+    letter-spacing: 0.5px;
 }
 
-.btn-save-popup:hover {
-    color: #FF6600;
+/* Colore punti nella classifica */
+.points-text {
+    font-weight: 700;
+    color: var(--orange-accent);
+}
+
+/* =========================================
+   7. RESPONSIVE
+   ========================================= */
+@media (max-width: 991px) {
+    .filter-card {
+        margin-bottom: 20px;
+    }
+    
+    #map {
+        height: 450px !important;
+    }
+    
+    .navbar-nav .nav-link::after {
+        display: none; /* Rimuove linea su mobile per pulizia */
+    }
+}
+
+/* =========================================
+   8. COLLEZIONI E CAROSELLI (LIST PAGE)
+   ========================================= */
+
+/* Traccia a scorrimento orizzontale */
+.carousel-track {
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Nasconde scrollbar per estetica ma mantiene funzionalità */
+.carousel-track::-webkit-scrollbar {
+    height: 6px;
+}
+.carousel-track::-webkit-scrollbar-track {
+    background: transparent;
+}
+.carousel-track::-webkit-scrollbar-thumb {
+    background-color: var(--light-gray);
+    border-radius: 10px;
+}
+
+/* Card Moderna */
+.spot-card-modern {
+    min-width: 260px;
+    max-width: 260px;
+    background: #FFFFFF;
+    border: 1px solid var(--light-gray);
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.spot-card-modern:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(17, 46, 81, 0.1);
+}
+
+.card-img-top-placeholder {
+    height: 150px;
+    width: 100%;
+}
+
+.badge-custom {
+    background-color: #FFFFFF;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.4rem 0.7rem;
+    border-radius: 20px;
+}
+
+.text-orange {
+    color: var(--orange-accent);
+}
+
+.vedi-tutti-link:hover {
+    opacity: 0.8;
+    text-decoration: underline !important;
 }

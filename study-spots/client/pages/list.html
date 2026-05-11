@@ -3,186 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudySpot</title>
+    <title>Collezioni - StudySpot</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Quicksand:wght@700&display=swap" rel="stylesheet">
     
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-    <header class="header-principale">
-        <a href="/" class="logo">
-            <img src="assets/img/logo.png" alt="Logo StudySpot" class="img-logo">
-            <span class="nome-logo">StudySpot</span>
-        </a>
-        
-        <nav>
-            <ul>
-                <li><a href="/">Map</a></li>
-                <li><a href="/ranking">Ranking</a></li>
-                <li><a href="/list">List</a></li>
-            </ul>
-        </nav>
-       <div class="user-actions-container">
-            <a id="btn-login" href="/login" class="btn btn-dark-blue fw-bold" style="display:none;">Accedi</a>
-            <a id="btn-signup" href="/register" class="btn btn-outline-dark-blue fw-bold" style="display:none;">Registrati</a>
-            <span id="user-info" style="display:none;">
-                Benvenuto, <span id="username" class="fw-bold"></span>!
-            </span>
-            <a id="btn-profile" href="/profile" class="logo" style="display:none;">
-                <img src="assets/img/profile.png" alt="Logo Profile" class="img-logo">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm py-2">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+                <img src="assets/img/logo.png" alt="Logo" height="45">
+                <span class="nome-logo h3 mb-0">StudySpot</span>
             </a>
-            <button id="btn-logout" class="btn-sm btn-outline-danger" style="display:none;">Logout</button>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto gap-lg-4">
+                    <li class="nav-item"><a class="nav-link fw-bold text-dark-blue" href="/">Map</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold text-dark-blue" href="/ranking">Ranking</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold text-dark-blue" href="/list">List</a></li>
+                </ul>
+                <div class="user-actions-container d-flex align-items-center gap-2">
+                    <a id="btn-login" href="/login" class="btn btn-primary-custom fw-bold" style="display:none;">Accedi</a>
+                    <a id="btn-signup" href="/register" class="btn btn-outline-primary-custom fw-bold" style="display:none;">Registrati</a>
+                    <span id="user-info" class="me-2" style="display:none;">Benvenuto, <span id="username" class="fw-bold"></span>!</span>
+                    <a id="btn-profile" href="/profile" style="display:none;">
+                        <img src="assets/img/profile.png" alt="Profile" height="40">
+                    </a>
+                    <button id="btn-logout" class="btn btn-sm btn-outline-danger" style="display:none;">Logout</button>
+                </div>
+            </div>
         </div>
-    </header>
+    </nav>
 
-    <main>
-        <section class="principale page-collezioni">
-            <h1>Trova lo spot perfetto</h1>
-            <p class="subtitle">Scorri le nostre collezioni in base alle tue necessità di oggi.</p>
+    <main class="container py-5">
+        <header class="mb-5 text-center text-md-start">
+            <h1 class="display-5 fw-bold text-dark-blue">Trova lo spot perfetto</h1>
+            <p class="lead text-muted">Scorri le nostre collezioni in base alle tue necessità di oggi.</p>
+        </header>
 
-            <div class="carousel-container">
-                <div class="carousel-header">
-                    <h2>🏆 Top Rated</h2>
-                    <a href="#" class="vedi-tutti">Vedi tutti</a>
+        <section class="collezioni-wrapper">
+            
+            <div class="carousel-container mb-5">
+                <div class="d-flex justify-content-between align-items-end mb-3 px-1">
+                    <h2 class="h3 fw-bold text-dark-blue mb-0">🏆 Top Rated</h2>
+                    <a href="#" class="text-orange fw-bold text-decoration-none vedi-tutti-link">Vedi tutti</a>
                 </div>
-                <div class="carousel-track" id="top-rated-track">
-                </div>
+                <div class="carousel-track d-flex gap-3 pb-3" id="top-rated-track">
+                    </div>
             </div>
 
-            <div class="carousel-container">
-                <div class="carousel-header">
-                    <h2>� Più frequentati</h2>
-                    <a href="#" class="vedi-tutti">Vedi tutti</a>
+            <div class="carousel-container mb-5">
+                <div class="d-flex justify-content-between align-items-end mb-3 px-1">
+                    <h2 class="h3 fw-bold text-dark-blue mb-0">💸 Economici</h2>
+                    <a href="#" class="text-orange fw-bold text-decoration-none vedi-tutti-link">Vedi tutti</a>
                 </div>
-                <div class="carousel-track" id="top-activ-track">
-                </div>
-            </div>
-
-            <div class="carousel-container">
-                <div class="carousel-header">
-                    <h2>💸 Economici (Budget Friendly)</h2  >
-                    <a href="#" class="vedi-tutti">Vedi tutti</a>
-                </div>
-                <div class="carousel-track">
-                    <div class="spot-card">
-                        <div class="card-img-placeholder"></div>
-                        <div class="card-content">
-                            <h3>Bar Università</h3>
-                            <div class="micro-tags">
-                                <span class="tag">☕ Caffè 1€</span>
+                <div class="carousel-track d-flex gap-3 pb-3">
+                    <div class="spot-card-modern">
+                        <div class="card-img-top-placeholder bg-secondary-subtle"></div>
+                        <div class="p-3">
+                            <h3 class="h5 fw-bold mb-2">Bar Università</h3>
+                            <div class="d-flex flex-wrap gap-1">
+                                <span class="badge badge-custom text-dark-blue border border-dark-blue">☕ Caffè 1€</span>
                             </div>
                         </div>
                     </div>
-                    <div class="spot-card">
-                        <div class="card-img-placeholder"></div>
-                        <div class="card-content">
-                            <h3>Aula Studio Polo A</h3>
-                            <div class="micro-tags">
-                                <span class="tag">🆓 Gratis</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="spot-card">
-                        <div class="card-img-placeholder"></div>
-                        <div class="card-content">
-                            <h3>Circolo Studenti</h3>
-                            <div class="micro-tags">
-                                <span class="tag">🥪 Sconti cibo</span>
+                    <div class="spot-card-modern">
+                        <div class="card-img-top-placeholder bg-secondary-subtle"></div>
+                        <div class="p-3">
+                            <h3 class="h5 fw-bold mb-2">Aula Studio Polo A</h3>
+                            <div class="d-flex flex-wrap gap-1">
+                                <span class="badge badge-custom text-dark-blue border border-dark-blue">🆓 Gratis</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="carousel-container">
-                <div class="carousel-header">
-                    <h2>🔌 Power Station</h2>
-                    <a href="#" class="vedi-tutti">Vedi tutti</a>
-                </div>
-                <div class="carousel-track">
-                    <div class="spot-card">
-                        <div class="card-img-placeholder"></div>
-                        <div class="card-content">
-                            <h3>Tech Library</h3>
-                            <div class="micro-tags">
-                                <span class="tag">🔌 1 Presa a sedia</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="spot-card">
-                        <div class="card-img-placeholder"></div>
-                        <div class="card-content">
-                            <h3>Startup Cafè</h3>
-                            <div class="micro-tags">
-                                <span class="tag">🔌 Prese al bancone</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="carousel-container">
-                <div class="carousel-header">
-                    <h2>🤫 Poco Affollati</h2>
-                    <a href="#" class="vedi-tutti">Vedi tutti</a>
-                </div>
-                <div class="carousel-track">
-                    <div class="spot-card">
-                        <div class="card-img-placeholder"></div>
-                        <div class="card-content">
-                            <h3>Biblioteca di Quartiere</h3>
-                            <div class="micro-tags">
-                                <span class="tag">🪑 Posto sicuro</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="spot-card">
-                        <div class="card-img-placeholder"></div>
-                        <div class="card-content">
-                            <h3>Chiostro Nascosto</h3>
-                            <div class="micro-tags">
-                                <span class="tag">🌳 All'aperto</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="carousel-container">
-                <div class="carousel-header">
-                    <h2>🔇 Silenzio Assoluto</h2>
-                    <a href="#" class="vedi-tutti">Vedi tutti</a>
-                </div>
-                <div class="carousel-track">
-                    <div class="spot-card">
-                        <div class="card-img-placeholder"></div>
-                        <div class="card-content">
-                            <h3>Sala Studio Gold</h3>
-                            <div class="micro-tags">
-                                <span class="tag">🤫 No parole</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="spot-card">
-                        <div class="card-img-placeholder"></div>
-                        <div class="card-content">
-                            <h3>Archivio Storico</h3>
-                            <div class="micro-tags">
-                                <span class="tag">📜 Pace totale</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </section>
+            </section>
     </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/list.js"></script>
     <script src="../js/checkAuth.js"></script>
-        
 </body>
 </html>

@@ -72,10 +72,12 @@ async function visualizeSpotOnMap() {
     }
 
     // 1. Recupera tutti i tipi selezionati dai checkbox
-    const checkedBoxes = document.querySelectorAll('.tool-checkbox:checked');
+    const checkedBoxes = document.querySelectorAll('.form-check-input:checked');
+    
     const selectedTypes = Array.from(checkedBoxes).map(cb => {
-        // Prende il testo dal tag <span> vicino all'immagine
-        return cb.parentElement.querySelector('span').innerText.trim();
+        // Risaliamo al contenitore 'filter-item' e cerchiamo lo span col testo
+        // Questo è più robusto rispetto al parentElement.querySelector
+        return cb.closest('.filter-item').querySelector('span').innerText.trim();
     });
 
     if (selectedTypes.length === 0) {
