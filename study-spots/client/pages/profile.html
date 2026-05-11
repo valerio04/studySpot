@@ -12,6 +12,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="bootstrap.css">
 </head>
 <body>
     <header class="header-principale">
@@ -92,18 +93,46 @@
                 <div class="stats-grid">
                     <div class="stat-card">
                         <h3>📍 Spot Aggiunti</h3>
-                        <p class="stat-value" id="added-spots">12</p>
+                        <p class="stat-value" id="added-spots">-</p>
                     </div>
                     <div class="stat-card">
                         <h3>❤️ Spot Preferiti</h3>
-                        <p class="stat-value" id="saved-spots">34</p>
+                        <p class="stat-value" id="saved-spots">-</p>
                     </div>
                     <div class="stat-card">
                         <h3>💬 Commenti</h3>
-                        <p class="stat-value" id="comments">87</p>
+                        <p class="stat-value" id="comments">-</p>
                     </div>
                 </div>
             </div>
+
+            <div class="profile-section activities-section mt-5">
+            <h2 class="mb-4">Le tue Attività</h2>
+
+            <!-- Prima Riga: Spot Preferiti -->
+            <div class="mb-5">
+                <h3 class="h5 mb-3">❤️ Spot Preferiti</h3>
+                <div id="saved-spots-track" class="d-flex flex-nowrap overflow-auto pb-3" style="gap: 1rem; scroll-behavior: smooth;">
+                    <div class="text-muted">Caricamento preferiti...</div>
+                </div>
+            </div>
+
+            <!-- Seconda Riga: Spot Aggiunti -->
+            <div class="mb-5">
+                <h3 class="h5 mb-3">📍 Spot Aggiunti</h3>
+                <div id="added-spots-track" class="d-flex flex-nowrap overflow-auto pb-3" style="gap: 1rem; scroll-behavior: smooth;">
+                    <div class="text-muted">Caricamento spot aggiunti...</div>
+                </div>
+            </div>
+
+            <!-- Terza Riga: Commenti Fatti -->
+            <div class="mb-5">
+                <h3 class="h5 mb-3">💬 Commenti Recenti</h3>
+                <div id="user-comments-track" class="d-flex flex-nowrap overflow-auto pb-3" style="gap: 1rem; scroll-behavior: smooth;">
+                    <div class="text-muted">Caricamento commenti...</div>
+                </div>
+            </div>
+        
 
         </div>
     </main>

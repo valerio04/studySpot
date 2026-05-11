@@ -1,75 +1,141 @@
+"use strict";
 
-
+// Riferimenti elementi esistenti
 const displayUsername = document.getElementById('display-username');
 const displayPoints = document.getElementById('display-points');
-
-// campi del form "Dati personali"
 const inputName = document.getElementById('name');
 const inputSurname = document.getElementById('surname');
 const inputProfileUsername = document.getElementById('profile-username');
-
-// contatori
+const inputEmail = document.getElementById('email');
 const addedSpots = document.getElementById('added-spots');
 const savedSpots = document.getElementById('saved-spots');
 const commentsCount = document.getElementById('comments');
 
-// Funzione per aggiornare i campi del profilo utente
+// Nuovi riferimenti per i track
+const savedSpotsTrack = document.getElementById('saved-spots-track');
+const addedSpotsTrack = document.getElementById('added-spots-track');
+const userCommentsTrack = document.getElementById('user-comments-track');
 
-const inputEmail = document.getElementById('email'); 
+document.addEventListener('DOMContentLoaded', () => {
+    aggiornaProfilo();
+    caricaAttivita();
+});
 
-document.addEventListener('DOMContentLoaded', aggiornaProfilo);
-
+// 1. Funzione per i dati testuali del profilo
 async function aggiornaProfilo() {
     try {
-        const response = await fetch('/api/profile', {
-            method: 'GET',
-            credentials: 'include'
-        });
-
-        if (!response.ok) {
-            throw new Error('Errore durante il recupero del profilo utente.');
-        }
-
+        const response = await fetch('/api/profile', { credentials: 'include' });
+        if (!response.ok) throw new Error('Errore profilo');
         const profile = await response.json();
 
-        // --- Dati Intestazione ---
         if (displayUsername) displayUsername.textContent = profile.username;
         if (displayPoints) displayPoints.textContent = profile.points;
-
-        // --- Campi Input (Dati personali) ---
         if (inputName) inputName.value = profile.name ?? '';
         if (inputSurname) inputSurname.value = profile.surname ?? '';
         if (inputProfileUsername) inputProfileUsername.value = profile.username ?? '';
-        
-        
         if (inputEmail) inputEmail.value = profile.email ?? '';
-
-        // --- Contatori ---
-        
         if (addedSpots) addedSpots.textContent = profile.aggiunti_count ?? 0;
         if (savedSpots) savedSpots.textContent = profile.salvati_count ?? 0;
         if (commentsCount) commentsCount.textContent = profile.commenti_count ?? 0;
-        /*
-        // --- Liste dettagliate ---
-        const salvatiList = document.getElementById('salvati-list');
-        if (salvatiList && Array.isArray(profile.salvati)) {
-            salvatiList.innerHTML = '';
-            
-            if (profile.salvati.length === 0) {
-                salvatiList.innerHTML = '<li>Nessun punto salvato</li>';
-            } else {
-                profile.salvati.forEach((item) => {
-                    const li = document.createElement('li');
-                    const spot = item.spots;
-                    li.textContent = spot ? `${spot.name} - ${spot.address}` : 'Spot non trovato';
-                    salvatiList.appendChild(li);
-                });
-            }
-        }
-        */
+        
+        
+        // Iniziali avatar
+        const avatar = document.getElementById('avatar-initials');
+        if (avatar) avatar.textContent = (profile.name?.[0] || profile.username?.[0] || 'U').toUpperCase();
 
     } catch (error) {
-        console.error('Errore:', error);
-        // Evita l'alert se l'utente non è loggato (errore 401 previsto)
+        console.error('Errore aggiornamento profilo:', error);
     }
+}
+
+// 2. Funzione principale per caricare le tre righe
+async function caricaAttivita() {
+    // Caricamento parallelo delle tre API
+    caricaTrack('/api/salvati', savedSpotsTrack, '❤️');
+    caricaTrack('/api/aggiunti', addedSpotsTrack, '📍');
+    caricaCommenti('/api/commenti-aggiunti', userCommentsTrack);
+}
+
+// 3. Renderizzatore per Spot (Salvati e Aggiunti)
+async function caricaTrack(endpoint, trackElement, icon) {
+    if (!trackElement) return;
+    try {
+        const response = await fetch(endpoint, { credentials: 'include' });
+        const rawData = await response.json();
+        const spots = rawData.map(item => item.spots).filter(s => s !== null);
+        renderCards(trackElement, spots, icon);
+    } catch (error) {
+        trackElement.innerHTML = `<div class="alert alert-danger w-100">Errore nel caricamento</div>`;
+    }
+}
+
+// 4. Renderizzatore specifico per i Commenti
+async function caricaCommenti(endpoint, trackElement) {
+    if (!trackElement) return;
+    try {
+        const response = await fetch(endpoint, { credentials: 'include' });
+        const commenti = await response.json();
+
+        trackElement.innerHTML = '';
+        if (!commenti || commenti.length === 0) {
+            trackElement.innerHTML = '<div class="text-muted p-3">Nessun commento fatto</div>';
+            return;
+        }
+
+        commenti.forEach(c => {
+            const card = document.createElement('a');
+            card.href = `/spot?id=${c.spot_id}`;
+            card.className = "card shadow-sm flex-shrink-0 text-decoration-none text-dark border-0"; 
+            card.style.width = "250px";
+            card.style.backgroundColor = "#b3b6b9ff"
+            
+            card.innerHTML = `
+                <div class="card-body p-3">
+                    <div class="mb-2"><span class="badge bg-warning text-dark">⭐ ${c.star}</span></div>
+                    <p class="card-text small mb-2" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; height: 3.6em;">
+                        "${c.comment || 'Nessun testo'}"
+                    </p>
+                    <div style="color: #112E51; font-size: 0.8rem; font-weight: bold;">Vedi spot →</div>
+                </div>
+            `;
+            trackElement.appendChild(card);
+        });
+    } catch (error) {
+        trackElement.innerHTML = `<div class="alert alert-danger w-100">Errore caricamento commenti</div>`;
+    }
+}
+
+// Helper per generare le card degli spot
+function renderCards(container, data, primaryIcon) {
+    container.innerHTML = '';
+    if (!data || data.length === 0) {
+        container.innerHTML = '<div class="text-white-50 p-3">Nessun elemento trovato</div>';
+        return;
+    }
+
+    data.forEach(spot => {
+        const card = document.createElement('a');
+        card.href = `/spot?id=${encodeURIComponent(spot.id)}`;
+        card.className = "card shadow-sm flex-shrink-0 text-decoration-none text-white border-0";
+        card.style.width = "220px";
+        card.style.backgroundColor = "#9ca4adff"; 
+        
+        card.innerHTML = `
+            <div class="d-flex align-items-center justify-content-center" 
+                 style="height: 100px; font-size: 2.5rem; background-color: #112E51; border-radius: 8px 8px 0 0;">
+                ${primaryIcon}
+            </div>
+            <div class="card-body p-3">
+                <h6 class="card-title text-truncate mb-2 fw-bold text-center">${spot.name || 'Spot'}</h6>
+                <div class="d-flex justify-content-center">
+                    <span class="badge bg-white text-dark shadow-sm">⭐ ${(Number(spot.star_avg ?? 0).toFixed(1))}</span>
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function renderEmptyState(container, message) {
+    container.innerHTML = `<div class="empty-state">${message}</div>`;
 }
