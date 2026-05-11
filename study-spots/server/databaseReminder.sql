@@ -4,7 +4,8 @@ CREATE TABLE profiles (
   username VARCHAR(255) NOT NULL UNIQUE,
   name VARCHAR(255) NOT NULL,
   surname VARCHAR(255) NOT NULL,
-  points INTEGER DEFAULT 0
+  points INTEGER DEFAULT 0,
+  role text not null default 'user'
 );
 
 CREATE TABLE spots (
@@ -278,6 +279,11 @@ CREATE TRIGGER points_on_comment_insert
 AFTER INSERT ON public.comments
 FOR EACH ROW
 EXECUTE FUNCTION public.trg_points_on_comment_insert();
+
+//===========================================000
+
+
+update public.profiles set role='admin' where user_id='34189002-e36a-492a-81dd-35f889b4ddef'; vv, v@gmail.com
 
 /*
 QUERY PER CLASSIFICA
