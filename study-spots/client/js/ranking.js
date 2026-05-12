@@ -65,6 +65,17 @@ function popolaClassifica(ranking) {
 //=================Carica i dati dell'utente loggato per mostrare la posizione in classifica=================
 async function caricaUtenteClassifica() {
     try {
+        //verifica se l'utente è loggato
+        const response = await fetch('/api/me',
+            { credentials: 'include' }
+        );
+
+        if (!response.ok) {
+            if (rankingUser) {
+                rankingUser.textContent = `Accedi per vedere la tua posizione in classifica`;
+            }
+        }
+
         // Recupera la posizione dell'utente in classifica
         const userPositionResponse = await fetch('/api/ranking_user', {
             method: 'GET',
@@ -75,9 +86,7 @@ async function caricaUtenteClassifica() {
             throw new Error('Errore durante il recupero della posizione in classifica.');
         }
 
-        const userPosition = await userPositionResponse.json();
-
-        
+        const userPosition = await userPositionResponse.json();        
 
         // Mostra la posizione e i punti dell'utente
         if (rankingUser) {

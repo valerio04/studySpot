@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ranking - StudySpot</title>
+    <title>Classifica - StudySpot</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Quicksand:wght@700&display=swap" rel="stylesheet">
     
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -27,17 +28,17 @@
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto gap-lg-4">
-                    <li class="nav-item"><a class="nav-link fw-bold text-dark-blue" href="/">Map</a></li>
-                    <li class="nav-item"><a class="nav-link fw-bold text-dark-blue" href="/ranking">Ranking</a></li>
-                    <li class="nav-item"><a class="nav-link fw-bold text-dark-blue" href="/list">List</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold text-dark-blue" href="/">Mappa</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold text-dark-blue" href="/ranking">Classifica</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold text-dark-blue" href="/list">Spot</a></li>
                 </ul>
                 
                 <div class="user-actions-container d-flex align-items-center gap-2">
                     <a id="btn-login" href="/login" class="btn btn-primary-custom fw-bold" style="display:none;">Accedi</a>
                     <a id="btn-signup" href="/register" class="btn btn-outline-primary-custom fw-bold" style="display:none;">Registrati</a>
                     <span id="user-info" class="me-2" style="display:none;">Benvenuto, <span id="username" class="fw-bold"></span>!</span>
-                    <a id="btn-profile" href="/profile" style="display:none;">
-                        <img src="assets/img/profile.png" alt="Profile" height="40">
+                    <a id="btn-profile" href="/profile" class="text-dark-blue fs-4" style="display:none;">
+                        <i class="fa-solid fa-circle-user"></i>
                     </a>
                     <button id="btn-logout" class="btn btn-sm btn-outline-danger" style="display:none;">Logout</button>
                 </div>

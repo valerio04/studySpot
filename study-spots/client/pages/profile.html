@@ -27,17 +27,17 @@
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto gap-lg-4">
-                    <li class="nav-item"><a class="nav-link fw-bold text-dark-blue" href="/">Map</a></li>
-                    <li class="nav-item"><a class="nav-link fw-bold text-dark-blue" href="/ranking">Ranking</a></li>
-                    <li class="nav-item"><a class="nav-link fw-bold text-dark-blue" href="/list">List</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold text-dark-blue" href="/">Mappa</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold text-dark-blue" href="/ranking">Classifica</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold text-dark-blue" href="/list">Spot</a></li>
                 </ul>
                 
                 <div class="user-actions-container d-flex align-items-center gap-2">
                     <a id="btn-login" href="/login" class="btn btn-primary-custom fw-bold" style="display:none;">Accedi</a>
                     <a id="btn-signup" href="/register" class="btn btn-outline-primary-custom fw-bold" style="display:none;">Registrati</a>
                     <span id="user-info" class="me-2" style="display:none;">Benvenuto, <span id="username" class="fw-bold"></span>!</span>
-                    <a id="btn-profile" href="/profile" style="display:none;">
-                        <img src="assets/img/profile.png" alt="Profile" height="40">
+                    <a id="btn-profile" href="/profile" class="text-dark-blue fs-4" style="display:none;">
+                        <i class="fa-solid fa-circle-user"></i>
                     </a>
                     <button id="btn-logout" class="btn btn-sm btn-outline-danger" style="display:none;">Logout</button>
                 </div>
@@ -46,103 +46,140 @@
     </nav>
     
     <main class="container py-5">
-        <div class="profile-container">
-    
-            <div class="text-center mb-5">
-                <div class="avatar d-inline-block mb-3">
-                    <span id="avatar-initials" class="h3">M</span>
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="card shadow-lg border-0 rounded-4 overflow-hidden mb-4">
+                    <div class="bg-dark-blue p-5 text-center position-relative">
+                        <div class="avatar-wrapper position-relative d-inline-block">
+                            <div id="avatar-initials" class="avatar-lg shadow-lg">M</div>
+                            <div class="points-badge-floating">🏆</div>
+                        </div>
+                    </div>
+                    <div class="card-body pt-0 text-center">
+                        <div class="mt-n4 mb-3">
+                            <h1 id="display-username" class="h3 fw-bold text-dark-blue mb-1">Utente</h1>
+                            <p class="text-muted small">Membro della community StudySpot</p>
+                        </div>
+                        
+                        <div class="p-3 bg-light rounded-3 mb-4">
+                            <span class="text-uppercase small fw-bold text-muted d-block mb-1">Punteggio Totale</span>
+                            <h2 class="h4 fw-bold text-orange mb-0"><span id="display-points">0</span> Punti</h2>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="button" id="edit-btn" class="btn btn-outline-primary-custom fw-bold">
+                                <i class="fas fa-edit me-2"></i>Modifica Profilo
+                            </button>
+                            <div id="edit-actions" class="d-flex gap-2" style="display: none !important;">
+                                <button type="submit" form="profile-form" id="save-btn" class="btn btn-success flex-grow-1 fw-bold">Salva</button>
+                                <button type="button" id="cancel-btn" class="btn btn-danger flex-grow-1 fw-bold">Annulla</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <h1 id="display-username" class="h2 fw-bold text-dark-blue">Utente</h1>
-                <div class="points-badge badge bg-warning text-dark fs-6">🏆 <span id="display-points"></span> Punti</div>
-            </div>
 
-            <div class="card shadow-sm border-0 rounded-4 mb-5">
-                <div class="card-body p-4">
-                    <h2 class="h4 fw-bold mb-4">Dati Personali</h2>
-                    <form id="profile-form">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="name" class="form-label fw-bold">Nome</label>
-                                <input type="text" id="name" name="name" class="form-control" value="" disabled>
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-body p-4">
+                        <h3 class="h6 fw-bold text-dark-blue mb-4 text-uppercase">Statistiche</h3>
+                        <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="icon-shape bg-soft-blue text-dark-blue">📍</div>
+                                <span class="fw-semibold">Spot Aggiunti</span>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="surname" class="form-label fw-bold">Cognome</label>
-                                <input type="text" id="surname" name="surname" class="form-control" value="" disabled>
+                            <span class="h5 mb-0 fw-bold" id="added-spots">-</span>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="icon-shape bg-soft-orange text-orange">❤️</div>
+                                <span class="fw-semibold">Preferiti</span>
                             </div>
+                            <span class="h5 mb-0 fw-bold" id="saved-spots">-</span>
                         </div>
-
-                        <div class="mb-3">
-                            <label for="profile-username" class="form-label fw-bold">Username</label>
-                            <input type="text" id="profile-username" name="username" class="form-control" value="" disabled>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="email" class="form-label fw-bold">Email</label>
-                            <input type="email" id="email" name="email" class="form-control" value="" disabled>
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="password" class="form-label fw-bold">Password</label>
-                            <input type="password" id="password" name="password" class="form-control" value="********" disabled>
-                        </div>
-
-                        <div class="d-flex gap-2">
-                            <button type="button" id="edit-btn" class="btn btn-primary-custom">✏️ Edit Profile</button>
-                            <button type="submit" id="save-btn" class="btn btn-success" style="display: none;">💾 Salva Modifiche</button>
-                            <button type="button" id="cancel-btn" class="btn btn-danger" style="display: none;">Annulla</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <div class="card shadow-sm border-0 rounded-4 mb-5">
-                <div class="card-body p-4">
-                    <h2 class="h4 fw-bold mb-4">Le tue Attività - Statistiche</h2>
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <div class="p-3 border rounded-3 text-center">
-                                <h3 class="h5 mb-2">📍 Spot Aggiunti</h3>
-                                <p class="stat-value h3 fw-bold text-dark-blue" id="added-spots">-</p>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="icon-shape bg-soft-blue text-dark-blue">💬</div>
+                                <span class="fw-semibold">Commenti</span>
                             </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="p-3 border rounded-3 text-center">
-                                <h3 class="h5 mb-2">❤️ Spot Preferiti</h3>
-                                <p class="stat-value h3 fw-bold text-dark-blue" id="saved-spots">-</p>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="p-3 border rounded-3 text-center">
-                                <h3 class="h5 mb-2">💬 Commenti</h3>
-                                <p class="stat-value h3 fw-bold text-dark-blue" id="comments">-</p>
-                            </div>
+                            <span class="h5 mb-0 fw-bold" id="comments">-</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="card shadow-sm border-0 rounded-4">
-                <div class="card-body p-4">
-                    <h2 class="h4 fw-bold mb-4">Le tue Attività - Recenti</h2>
-
-                    <div class="mb-5">
-                        <h3 class="h6 mb-3 fw-bold">❤️ Spot Preferiti</h3>
-                        <div id="saved-spots-track" class="d-flex flex-nowrap overflow-auto pb-3" style="gap: 1rem; scroll-behavior: smooth;">
-                            <div class="text-muted">Caricamento preferiti...</div>
-                        </div>
+            <div class="col-lg-8">
+                <div class="card shadow-sm border-0 rounded-4 mb-4">
+                    <div class="card-body p-4 p-md-5">
+                        <h2 class="h4 fw-bold mb-4 text-dark-blue">Dati Account</h2>
+                        <form id="profile-form">
+                            <div class="row g-3">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-floating">
+                                        <input type="text" id="name" name="name" class="form-control custom-input" placeholder="Nome" disabled>
+                                        <label for="name">Nome</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-floating">
+                                        <input type="text" id="surname" name="surname" class="form-control custom-input" placeholder="Cognome" disabled>
+                                        <label for="surname">Cognome</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-floating">
+                                        <input type="text" id="profile-username" name="username" class="form-control custom-input" placeholder="Username" disabled>
+                                        <label for="profile-username">Username</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-floating">
+                                        <input type="email" id="email" name="email" class="form-control custom-input" placeholder="Email" disabled>
+                                        <label for="email">Email</label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        <input type="password" id="password" name="password" class="form-control custom-input" placeholder="Password" value="********" disabled>
+                                        <label for="password">Password</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
+                </div>
 
-                    <div class="mb-5">
-                        <h3 class="h6 mb-3 fw-bold">📍 Spot Aggiunti</h3>
-                        <div id="added-spots-track" class="d-flex flex-nowrap overflow-auto pb-3" style="gap: 1rem; scroll-behavior: smooth;">
-                            <div class="text-muted">Caricamento spot aggiunti...</div>
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-body p-4">
+                        <h2 class="h4 fw-bold mb-4 text-dark-blue">Attività Recenti</h2>
+
+                        <div class="activity-section mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h3 class="h6 mb-0 fw-bold text-uppercase text-muted">❤️ Preferiti</h3>
+                            </div>
+                            <div id="saved-spots-track" class="carousel-track d-flex gap-3">
+                                <div class="text-muted small">Caricamento preferiti...</div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="mb-5">
-                        <h3 class="h6 mb-3 fw-bold">💬 Commenti Recenti</h3>
-                        <div id="user-comments-track" class="d-flex flex-nowrap overflow-auto pb-3" style="gap: 1rem; scroll-behavior: smooth;">
-                            <div class="text-muted">Caricamento commenti...</div>
+                        <hr class="my-4 opacity-5">
+
+                        <div class="activity-section mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h3 class="h6 mb-0 fw-bold text-uppercase text-muted">📍 Spot Inseriti</h3>
+                            </div>
+                            <div id="added-spots-track" class="carousel-track d-flex gap-3">
+                                <div class="text-muted small">Caricamento spot...</div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4 opacity-5">
+
+                        <div class="activity-section">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h3 class="h6 mb-0 fw-bold text-uppercase text-muted">💬 Commenti</h3>
+                            </div>
+                            <div id="user-comments-track" class="carousel-track d-flex gap-3">
+                                <div class="text-muted small">Caricamento commenti...</div>
+                            </div>
                         </div>
                     </div>
                 </div>

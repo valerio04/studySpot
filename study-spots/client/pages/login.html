@@ -8,7 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Quicksand:wght@700&display=swap" rel="stylesheet">
-    
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
 </head>
@@ -27,17 +28,17 @@
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto gap-lg-4">
-                    <li class="nav-item"><a class="nav-link fw-bold text-dark-blue" href="/">Map</a></li>
-                    <li class="nav-item"><a class="nav-link fw-bold text-dark-blue" href="/ranking">Ranking</a></li>
-                    <li class="nav-item"><a class="nav-link fw-bold text-dark-blue" href="/list">List</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold text-dark-blue" href="/">Mappa</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold text-dark-blue" href="/ranking">Classifica</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold text-dark-blue" href="/list">Spot</a></li>
                 </ul>
                 
                 <div class="user-actions-container d-flex align-items-center gap-2">
                     <a id="btn-login" href="/login" class="btn btn-primary-custom fw-bold" style="display:none;">Accedi</a>
                     <a id="btn-signup" href="/register" class="btn btn-outline-primary-custom fw-bold" style="display:none;">Registrati</a>
                     <span id="user-info" class="me-2" style="display:none;">Benvenuto, <span id="username" class="fw-bold"></span>!</span>
-                    <a id="btn-profile" href="/profile" style="display:none;">
-                        <img src="../assets/img/profile.png" alt="Profile" height="40">
+                    <a id="btn-profile" href="/profile" class="text-dark-blue fs-4" style="display:none;">
+                        <i class="fa-solid fa-circle-user"></i>
                     </a>
                     <button id="btn-logout" class="btn btn-sm btn-outline-danger" style="display:none;">Logout</button>
                 </div>
@@ -45,30 +46,67 @@
         </div>
     </nav>
 
-    <main class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-5">
-                <div class="card shadow-sm border-0 rounded-4">
-                    <div class="card-body p-5">
-                        <h1 class="h3 fw-bold text-center mb-4 text-dark-blue">Insert your credentials</h1>
-                        <form id="login">
-                            <div class="mb-3">
-                                <input type="text" id="email" name="email" class="form-control form-control-lg" placeholder="Email" required>
-                                <p id="emailError" class="text-danger small mt-2"></p>
-                            </div>
-                            <div class="mb-4">
-                                <input type="password" id="password" name="password" class="form-control form-control-lg" placeholder="Password" required>
-                                <p id="passwordError" class="text-danger small mt-2"></p>
-                            </div>
-                            <div class="d-grid gap-2 mb-3">
-                                <button type="submit" class="btn btn-primary-custom btn-lg fw-bold">Login</button>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <a id="registrati" href="/register" class="btn btn-outline-primary-custom btn-sm">Sign up</a>
-                                <a id="forgotten-password" href="/register" class="text-muted small text-decoration-none">Password forgotten?</a>
-                            </div>
-                        </form>
+    <main class="container py-5 min-vh-100 d-flex align-items-center">
+        <div class="row justify-content-center w-100">
+            <div class="col-12 col-lg-10 shadow-lg overflow-hidden rounded-4 border-0 d-flex flex-column flex-md-row bg-white p-0">
+                
+                <div class="col-md-5 bg-dark-blue p-5 d-none d-md-flex flex-column justify-content-center text-white">
+                    <h2 class="display-6 fw-bold mb-4">Bentornato su StudySpot!</h2>
+                    <p class="lead opacity-75">Trova il tuo posto ideale per studiare, ovunque tu sia.</p>
+                    <div class="mt-4">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="rounded-circle bg-orange p-2">📍</div>
+                            <span>Migliaia di spot recensiti</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="rounded-circle bg-orange p-2">🏆</div>
+                            <span>Scala la classifica della community</span>
+                        </div>
                     </div>
+                </div>
+
+                <div class="col-md-7 p-4 p-md-5">
+                    <div class="text-center mb-5 d-md-none">
+                        <img src="../assets/img/logo.png" alt="Logo" height="60" class="mb-3">
+                        <h1 class="h3 fw-bold text-dark-blue">StudySpot</h1>
+                    </div>
+
+                    <div class="login-header mb-4">
+                        <h2 class="h3 fw-bold text-dark-blue">Accedi</h2>
+                        <p class="text-muted">Inserisci le tue credenziali per continuare</p>
+                    </div>
+
+                    <form id="login">
+                        <div class="form-floating mb-3">
+                            <input type="email" id="email" name="email" class="form-control custom-input" placeholder="name@example.com" required>
+                            <label for="email">Indirizzo Email</label>
+                            <p id="emailError" class="text-danger small mt-1"></p>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input type="password" id="password" name="password" class="form-control custom-input" placeholder="Password" required>
+                            <label for="password">Password</label>
+                            <p id="passwordError" class="text-danger small mt-1"></p>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="rememberMe">
+                                <label class="form-check-label small" for="rememberMe">Ricordami</label>
+                            </div>
+                            <a id="forgotten-password" href="/register" class="text-orange small fw-bold text-decoration-none">Password dimenticata?</a>
+                        </div>
+
+                        <div class="d-grid gap-2 mb-4">
+                            <button type="submit" class="btn btn-primary-custom btn-lg fw-bold py-3">Entra nel tuo Spot</button>
+                        </div>
+
+                        <div class="text-center">
+                            <p class="text-muted small">Non hai ancora un account? 
+                                <a href="/register" class="text-dark-blue fw-bold text-decoration-none">Registrati gratuitamente</a>
+                            </p>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

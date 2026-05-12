@@ -694,6 +694,93 @@ h1, h2, h3, h4, .nome-logo {
 }
 
 /* =========================================
+   9. LOGIN 
+   ========================================= */
+
+/* --- LOGIN ENHANCEMENTS --- */
+.bg-orange {
+    background-color: var(--orange-accent);
+}
+
+/* Floating labels personalizzate */
+.custom-input {
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 12px !important;
+    padding-left: 1rem !important;
+}
+
+.custom-input:focus {
+    border-color: var(--orange-accent) !important;
+    box-shadow: 0 0 0 4px rgba(255, 102, 0, 0.1) !important;
+}
+
+/* Animazione per la card */
+main .row > div {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Sfondo della pagina login più soft */
+body:has(#login) body:has(#register) {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+/* =========================================
+   9. PROFILE 
+   ========================================= */
+.mt-n4 { margin-top: -3.5rem !important; }
+
+.avatar-lg {
+    width: 100px;
+    height: 100px;
+    background-color: var(--orange-accent);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    border-radius: 50%;
+    border: 5px solid white;
+    font-family: 'Quicksand', sans-serif;
+}
+
+.points-badge-floating {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    font-size: 1.1rem;
+}
+
+.icon-shape {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 1.2rem;
+}
+
+/* =========================================
    12. RESPONSIVE MOBILE STYLES
    ========================================= */
 
@@ -808,4 +895,32 @@ h1, h2, h3, h4, .nome-logo {
         padding: 6px 12px;
         font-size: 0.85rem;
     }
+}
+
+@media (max-width: 768px) {
+    .login-header {
+        text-align: center;
+    }
+}
+
+
+
+.nav-avatar {
+    width: 38px;
+    height: 38px;
+    background-color: var(--orange-accent);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-family: 'Quicksand', sans-serif;
+    transition: transform 0.2s;
+    border: 2px solid transparent;
+}
+
+.nav-avatar:hover {
+    transform: scale(1.1);
+    border-color: var(--dark-blue);
 }
