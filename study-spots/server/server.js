@@ -1041,6 +1041,10 @@ app.get('/api/info-spot/:id', async (req, res) =>{
             .select('name, address, type, star_avg, star_count')
             .eq('id', idSpot)
             .maybeSingle();
+
+     if (!spot) {
+        return res.status(404).json({ error: 'Spot non trovato' });
+    }
             
     if (spotError) {
         console.error('Errore durante l\'inserimento dello spot:', spotError);
@@ -1334,9 +1338,228 @@ app.get('/api/spots_search', async (req, res) => {
     res.json(spots);
 }); 
 
+
+//=================API: report problemi per utenti================
+app.post('/api/reports', async (req, res) => {
+    const supabaseClient = getSupabase(req, res);
+
+    // 1. Verifica autenticazione
+    const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+    if (userError || !user) return res.status(401).json({ error: "Effettua il login per segnalare" });
+
+    const { spot_id, reported_user_id, message, report_type } = req.body;
+
+    // 2. Inserimento nel DB
+    const { error } = await supabaseClient
+        .from('reports')
+        .insert([{
+            reporter_user_id: user.id,
+            spot_id: spot_id || null,
+            reported_user_id: reported_user_id || null,
+            message: message,
+            report_type: report_type || 'generale'
+        }]);
+
+    if (error) {
+        console.error('Errore invio report:', error);
+        return res.status(500).json({ error: "Errore durante l'invio della segnalazione" });
+    }
+
+    res.json({ success: true, message: "Segnalazione inviata con successo" });
+});
+
+
+//=================API: gestione report per admin================
+
+app.get('/api/admin/reports', async (req, res) => {
+    const supabaseClient = getSupabase(req, res);
+
+    // 1. Verifica autenticazione e ruolo admin (in un'unica fase o sequenziale)
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+    if (authError || !user) {
+        return res.status(401).json({ error: "Effettua il login per accedere" });
+    }
+
+    const { data: profile, error: profileError } = await supabaseClient
+        .from('profiles')
+        .select('role')
+        .eq('user_id', user.id)
+        .single();
+
+    if (profileError || !profile || profile.role !== 'admin') {
+        return res.status(403).json({ error: "Accesso negato" });
+    }
+
+    const { data, error } = await supabaseClient
+        .from('reports')
+        .select(`
+            *,
+            reporter:profiles!left!fk_report_creator(username, user_id),
+            target_user:profiles!left!fk_reported_user(username, user_id),
+            spot:spots!left(id, name)
+        `)
+        .in('status', ['pendente', 'inviato'])
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error('Errore recupero report:', error);
+        return res.status(500).json({ error: error.message });
+    }
+
+    res.json(data);
+});
+
+//=================API: aggiorna stato report (admin)================
+
+app.patch('/api/admin/reports/:id', async (req, res) => {
+    const supabaseClient = getSupabase(req, res);
+
+    // 1. Verifica autenticazione e ruolo admin
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+    if (authError || !user) {
+        return res.status(401).json({ error: "Effettua il login per accedere" });
+    }
+
+    const { data: profile, error: profileError } = await supabaseClient
+        .from('profiles')
+        .select('role')
+        .eq('user_id', user.id)
+        .single();
+
+    if (profileError || !profile || profile.role !== 'admin') {
+        return res.status(403).json({ error: "Accesso negato" });
+    }
+
+    const reportId = req.params.id;
+    const { status } = req.body; 
+
+    if (!status) {
+        return res.status(400).json({ error: "Stato non specificato" });
+    }
+
+    // 2. Aggiornamento dello status
+    const { data: updatedData, error } = await supabaseClient
+        .from('reports')
+        .update({ 
+            status: status,
+            updated_at: new Date().toISOString()
+        })
+        .eq('id', reportId)
+        .select();
+
+    if (error) {
+        console.error('Errore aggiornamento report:', error);
+        return res.status(500).json({ error: "Errore durante l'aggiornamento della segnalazione" });
+    }
+    
+    if (!updatedData || updatedData.length === 0) {
+        return res.status(404).json({ error: "Segnalazione non trovata" });
+    }
+
+    res.json({ success: true, message: "Segnalazione aggiornata con successo" });
+});
+
+//=================API: ricerca spot creati da un utente (admin)================
+app.get('/api/admin/search-user-spots', async (req, res) => {
+    const supabaseClient = getSupabase(req, res);
+    const { query } = req.query; // Ora si aspetta solo lo username
+
+    if (!query) return res.status(400).json({ error: "Query mancante" });
+
+    // 1. Verifica autenticazione e ruolo admin
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+    if (authError || !user) return res.status(401).json({ error: "Non autorizzato" });
+
+    const { data: adminProfile } = await supabaseClient
+        .from('profiles')
+        .select('role')
+        .eq('user_id', user.id)
+        .single();
+
+    if (!adminProfile || adminProfile.role !== 'admin') {
+        return res.status(403).json({ error: "Accesso negato" });
+    }
+
+    // 2. Trova l'utente target (solo per username)
+    const { data: targetProfile, error: pError } = await supabaseClient
+        .from('profiles')
+        .select('user_id, username')
+        .eq('username', query) // Ricerca esatta per username
+        .maybeSingle();
+
+    if (pError || !targetProfile) return res.status(404).json({ error: "Utente non trovato" });
+
+    // 3. Prendi gli spot creati da lui tramite la tabella 'aggiunti'
+    const { data: spots, error: sError } = await supabaseClient
+        .from('aggiunti')
+        .select('spots(id, name, address, type, star_avg)')
+        .eq('user_id', targetProfile.user_id);
+
+    if (sError) return res.status(500).json({ error: sError.message });
+
+    res.json({ user: targetProfile, spots: spots.map(s => s.spots).filter(Boolean) });
+});
+
+//=================API: cancellazione massiva spot di un utente (admin)================
+app.delete('/api/admin/delete-all-user-spots', async (req, res) => {
+    const supabaseClient = getSupabase(req, res);
+    const { username } = req.body;
+
+    if (!username) return res.status(400).json({ error: "Username mancante" });
+
+    // 1. Verifica autenticazione e ruolo admin
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+    if (authError || !user) return res.status(401).json({ error: "Non autorizzato" });
+
+    const { data: adminProfile } = await supabaseClient
+        .from('profiles')
+        .select('role')
+        .eq('user_id', user.id)
+        .single();
+
+    if (!adminProfile || adminProfile.role !== 'admin') {
+        return res.status(403).json({ error: "Accesso negato" });
+    }
+    
+    // 2. Trova l'ID dell'utente target
+    const { data: targetProfile } = await supabaseClient
+        .from('profiles')
+        .select('user_id')
+        .eq('username', username)
+        .single();
+
+    if (!targetProfile) return res.status(404).json({ error: "Utente non trovato" });
+
+    // 3. Ottieni gli ID degli spot da cancellare
+    const { data: userSpots } = await supabaseClient
+        .from('aggiunti')
+        .select('spot_id')
+        .eq('user_id', targetProfile.user_id);
+
+    if (!userSpots || userSpots.length === 0) {
+        return res.json({ success: true, message: "L'utente non ha spot creati" });
+    }
+
+    const spotIds = userSpots.map(s => s.spot_id);
+
+    // 4. Cancella gli spot (il CASCADE si occupa del resto)
+    const { error: delError } = await supabaseClient
+        .from('spots')
+        .delete()
+        .in('id', spotIds);
+
+    if (delError) {
+        console.error('Errore cancellazione massiva:', delError);
+        return res.status(500).json({ error: "Errore durante la cancellazione massiva" });
+    }
+
+    res.json({ success: true, message: `Rimossi ${spotIds.length} spot creati da ${username}` });
+});
+
 /*   
 PRENDERE LATITUDINE E LONGITUDINE TRAMITE API DI OPENSTREETMAP. L'UTENTE DEVE INSERIRE SOLO L'INDIRZZO.
 */
+
 
 
 

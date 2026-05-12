@@ -83,6 +83,51 @@ CREATE TABLE spot_tags (
 );
 
 
+CREATE TABLE IF NOT EXISTS public.reports (
+  id BIGSERIAL PRIMARY KEY,
+
+  -- L'utente che invia la segnalazione
+  reporter_user_id UUID NOT NULL,
+
+  -- Caso A: segnalazione relativa a uno SPOT
+  spot_id INTEGER,
+
+  -- Caso B: segnalazione relativa a un UTENTE
+  reported_user_id UUID,
+
+  -- Contenuto della segnalazione
+  message TEXT NOT NULL CHECK (btrim(message) <> ''),
+
+  -- Categorizzazione per i filtri (es. dashboard admin)
+  report_type VARCHAR(50) NOT NULL DEFAULT 'generale',
+  -- Stato della gestione
+  status VARCHAR(20) NOT NULL DEFAULT 'pendente',
+
+  created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+  CONSTRAINT fk_report_creator FOREIGN KEY (reporter_user_id)
+    REFERENCES public.profiles(user_id) ON DELETE CASCADE,
+
+  CONSTRAINT fk_report_spot FOREIGN KEY (spot_id)
+    REFERENCES public.spots(id) ON DELETE CASCADE,
+
+  CONSTRAINT fk_reported_user FOREIGN KEY (reported_user_id)
+    REFERENCES public.profiles(user_id) ON DELETE CASCADE,
+
+  -- Impedisce di segnalare se stessi (se reported_user_id è presente)
+  CONSTRAINT check_not_self_report CHECK (
+    reported_user_id IS NULL OR reporter_user_id <> reported_user_id
+  ),
+
+  -- Non permettere report “vuoti”: almeno uno tra spot e utente deve esserci
+  CONSTRAINT check_has_target CHECK (spot_id IS NOT NULL OR reported_user_id IS NOT NULL)
+);
+
+
+
+
+--===================================================
 -- 1) Funzione che crea profiles quando un utente viene creato in auth.users
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger
@@ -280,7 +325,64 @@ AFTER INSERT ON public.comments
 FOR EACH ROW
 EXECUTE FUNCTION public.trg_points_on_comment_insert();
 
-//===========================================000
+-- Funzione per sottrarre punti quando un commento viene eliminato
+CREATE OR REPLACE FUNCTION public.trg_points_on_comment_delete()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  has_comment boolean;
+  has_star boolean;
+  delta int := 0;
+BEGIN
+  has_star := OLD.star IS NOT NULL;
+  has_comment := (OLD.comment IS NOT NULL AND btrim(OLD.comment) <> '');
+
+  IF has_comment AND has_star THEN
+    delta := 3;
+  ELSIF has_star THEN
+    delta := 1;
+  END IF;
+
+  IF delta <> 0 THEN
+    UPDATE public.profiles
+    SET points = GREATEST(points - delta, 0)
+    WHERE user_id = OLD.user_id;
+  END IF;
+
+  RETURN OLD;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS points_on_comment_delete ON public.comments;
+
+CREATE TRIGGER points_on_comment_delete
+AFTER DELETE ON public.comments
+FOR EACH ROW
+EXECUTE FUNCTION public.trg_points_on_comment_delete();
+
+-- Funzione per sottrarre punti quando uno spot aggiunto viene rimosso
+CREATE OR REPLACE FUNCTION public.trg_points_on_spot_delete()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  UPDATE public.profiles
+  SET points = GREATEST(points - 5, 0)
+  WHERE user_id = OLD.user_id;
+
+  RETURN OLD;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS points_on_spot_delete ON public.aggiunti;
+
+CREATE TRIGGER points_on_spot_delete
+AFTER DELETE ON public.aggiunti
+FOR EACH ROW
+EXECUTE FUNCTION public.trg_points_on_spot_delete();
+
+--===========================================000
 
 
 update public.profiles set role='admin' where user_id='34189002-e36a-492a-81dd-35f889b4ddef'; vv, v@gmail.com
