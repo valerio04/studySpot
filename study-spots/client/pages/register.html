@@ -3,71 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SpotStudium</title>
+    <title>StudySpot - Register</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Quicksand:wght@700&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="../css/style3.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
 
-    <header class="header-principale">
-    <a href="/" class="logo">
-            <img src="assets/img/logo.png" alt="Logo SpotStudium" class="img-logo">
-            <span class="nome-logo">SpotStudium</span>
-        </a>
-        
-        <nav>
-            <ul>
-                <li><a href="/">Map</a></li>
-                <li><a href="/ranking">Ranking</a></li>
-                <li><a href="/list">List</a></li>
-            </ul>
-        </nav>
-        <a href="/login" class="bottone-login">Login</a>
-    </header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm py-2">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+                <img src="../assets/img/logo.png" alt="Logo" height="45">
+                <span class="nome-logo h3 mb-0">StudySpot</span>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-    <main>
-        <section class="principale">
-            <h1>Insert your informations</h1>
-            <form id="register">
-                <div class="dati">
-                    <div class="field">
-                        <input type="text" id="name" name="name" placeholder="Name" required> 
-                        <p id="nameError" class="error"></p>
-                    </div>
-                    <div class="field">
-                        <input type="text" id="surname" name="surname" placeholder="Surname" required> 
-                        <p id="surnameError" class="error"></p>
-                    </div>
-                    <div class="field">
-                        <input type="text" id="username" name="username" placeholder="Username" required> 
-                        <p id="usernameError" class="error"></p>
-                    </div>
-                    <div class="field">
-                        <input type ="text" id="email" name ="email" placeholder="Email" required>
-                        <p id="emailError" class="error"></p>
-                    </div>
-                    <div class="field">
-                        <input type="password" id="password" name="password" placeholder="Password" required>
-                        <p id="passwordError" class="error"></p>
-                    </div>
-                    <div class="field">
-                        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm password" required>
-                        <p id="confirmError" class="error"></p>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto gap-lg-4">
+                    <li class="nav-item"><a class="nav-link fw-bold text-dark-blue" href="/">Mappa</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold text-dark-blue" href="/ranking">Classifica</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold text-dark-blue" href="/list">Spot</a></li>
+                </ul>
+                
+                <div class="user-actions-container d-flex align-items-center gap-2">
+                    <a id="btn-login" href="/login" class="btn btn-primary-custom fw-bold" style="display:none;">Accedi</a>
+                    <a id="btn-signup" href="/register" class="btn btn-outline-primary-custom fw-bold" style="display:none;">Registrati</a>
+                    <span id="user-info" class="me-2" style="display:none;">Benvenuto, <span id="username" class="fw-bold"></span>!</span>
+                    <a id="btn-profile" href="/profile" class="text-dark-blue fs-4" style="display:none;">
+                        <i class="fa-solid fa-circle-user"></i>
+                    </a>
+                    <button id="btn-logout" class="btn btn-sm btn-outline-danger" style="display:none;">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container py-5 min-vh-100 d-flex align-items-center">
+        <div class="row justify-content-center w-100">
+            <div class="col-12 col-lg-11 shadow-lg overflow-hidden rounded-4 border-0 d-flex flex-column flex-md-row bg-white p-0">
+                
+                <div class="col-md-4 bg-dark-blue p-5 d-none d-md-flex flex-column justify-content-center text-white">
+                    <h2 class="display-6 fw-bold mb-4">Unisciti alla Community</h2>
+                    <p class="lead opacity-75">Crea il tuo profilo per salvare i tuoi spot preferiti e iniziare a scalare la classifica.</p>
+                    <div class="mt-4">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="rounded-circle bg-orange p-2">✍️</div>
+                            <span>Recensisci i posti migliori</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="rounded-circle bg-orange p-2">🚀</div>
+                            <span>Accumula punti esperienza</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="bottoni">
-                    <a id="Annulla" href="/login"> Cancel</a>
-                    <button type="submit">Sign up</button>
+                <div class="col-md-8 p-4 p-md-5">
+                    <div class="login-header mb-4 text-center text-md-start">
+                        <h2 class="h3 fw-bold text-dark-blue">Crea Account</h2>
+                        <p class="text-muted">Compila i campi per iniziare la tua esperienza su StudySpot</p>
+                    </div>
+
+                    <form id="register">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating">
+                                    <input type="text" id="name" name="name" class="form-control custom-input" placeholder="Nome" required>
+                                    <label for="name">Nome</label>
+                                </div>
+                                <p id="nameError" class="text-danger small mt-1"></p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating">
+                                    <input type="text" id="surname" name="surname" class="form-control custom-input" placeholder="Cognome" required>
+                                    <label for="surname">Cognome</label>
+                                </div>
+                                <p id="surnameError" class="text-danger small mt-1"></p>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-floating">
+                                <input type="text" id="username" name="username" class="form-control custom-input" placeholder="Username" required>
+                                <label for="username">Username unico</label>
+                            </div>
+                            <p id="usernameError" class="text-danger small mt-1"></p>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-floating">
+                                <input type="email" id="email" name="email" class="form-control custom-input" placeholder="Email" required>
+                                <label for="email">Indirizzo Email</label>
+                            </div>
+                            <p id="emailError" class="text-danger small mt-1"></p>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating">
+                                    <input type="password" id="password" name="password" class="form-control custom-input" placeholder="Password" required>
+                                    <label for="password">Password</label>
+                                </div>
+                                <p id="passwordError" class="text-danger small mt-1"></p>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="form-floating">
+                                    <input type="password" id="confirm-password" name="confirm-password" class="form-control custom-input" placeholder="Conferma Password" required>
+                                    <label for="confirm-password">Conferma Password</label>
+                                </div>
+                                <p id="confirmError" class="text-danger small mt-1"></p>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mb-3">
+                            <button type="submit" class="btn btn-primary-custom btn-lg fw-bold py-3">Registrati</button>
+                        </div>
+
+                        <div class="text-center">
+                            <p class="text-muted small">Hai già un account? 
+                                <a href="/login" class="text-dark-blue fw-bold text-decoration-none">Accedi qui</a>
+                        </div>
+                    </form>
                 </div>
-            </form>
-        </section>
+            </div>
+        </div>
     </main>
 
-    <script src ="/js/register.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/register.js"></script>
 </body>
 </html>

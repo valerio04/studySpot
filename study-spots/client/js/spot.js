@@ -5,16 +5,21 @@ const spotTitle = document.querySelector('.spot-header h1');
 const spotAddress = document.querySelector('.address');
 const spotRatingText = document.querySelector('.rating-text');
 const tagsContainer = document.querySelector('.micro-tags');
-const hoursList = document.querySelector('.hours-card ul');
+const hoursList = document.querySelector('.card-body ul');
 const reviewList = document.querySelector('.review-list');
 const mapsLink = document.querySelector('.google-maps-link');
+const nearbyGrid = document.getElementById('nearby-spots-grid');
 
 const btnSalva = document.getElementById('salva');
+const btnRemove = document.getElementById('btn-delete-spot');
 const formRecensione = document.querySelector('.add-review-box form');
 
 // Parametri URL
 const urlParams = new URLSearchParams(window.location.search);
 const currentSpotId = urlParams.get('id');
+
+// Store all reviews for show more functionality
+let allReviews = [];
 
 // ================= Event Listeners =================
 document.addEventListener('DOMContentLoaded', inizializzaPagina);
@@ -23,8 +28,18 @@ if (btnSalva) {
     btnSalva.addEventListener('click', gestisciSalvataggio);
 }
 
+if (btnRemove) {
+    btnRemove.addEventListener('click',gestisciCancellazione);
+}
+
 if (formRecensione) {
     formRecensione.addEventListener('submit', gestisciInvioRecensione);
+}
+
+// Show more reviews button handler
+const btnShowMoreReviews = document.querySelector('.btn-show-all-reviews');
+if (btnShowMoreReviews) {
+    btnShowMoreReviews.addEventListener('click', mostraReviewsAggiuntive);
 }
 
 // ================= Funzioni Principali =================
@@ -75,7 +90,7 @@ async function caricaDatiSpot() {
         }
 
         const dataSpot = await response.json();
-        
+        console.log("Spot richiesto:", dataSpot);
         // Popola l'interfaccia
         popolaPagina(dataSpot);
 
@@ -91,6 +106,10 @@ async function caricaDatiSpot() {
  */
 function popolaPagina(spot) {
     // 1. Intestazione e Info Base
+    if (spot.isOwner) {
+        btnRemove.style.display = 'inline';
+        console.log('isOwner');
+    }
     if (spotTitle) spotTitle.textContent = spot.name;
     if (spotAddress) spotAddress.textContent = spot.address;
     if (spotRatingText) spotRatingText.textContent = `${spot.star_avg || 0} (${spot.star_count || 0} recensioni)`;
@@ -116,6 +135,11 @@ function popolaPagina(spot) {
 
     // 5. Recensioni
     popolaRecensioni(spot.recensioni);
+
+    // 6. Nearby Spots
+    if (spot.spotsVicini) {
+        popolaSpotVicini(spot.spotsVicini);
+    }
 }
 
 //================= Funzioni di Popolamento Specifiche =================
@@ -130,15 +154,32 @@ function popolaOrari(hours) {
 
     hours.forEach(item => {
         const li = document.createElement('li');
-        if (item.day_of_week === giornoOggiTesto) li.className = 'current-day';
-
+        
         const apertura = item.open_time.substring(0, 5);
         const chiusura = item.close_time.substring(0, 5);
         const orarioTesto = (apertura === chiusura) ? 'Chiuso' : `${apertura} - ${chiusura}`;
 
-        li.innerHTML = `<span>${item.day_of_week}:</span> <span>${orarioTesto}</span>`;
+        // Check if this is today
+        if (item.day_of_week.toLowerCase() === giornoOggiTesto) {
+            li.classList.add('current-day');
+        }
+
+        li.innerHTML = `<span class="fw-bold">${capitalizeDayName(item.day_of_week)}:</span> <span>${orarioTesto}</span>`;
         hoursList.appendChild(li);
     });
+}
+
+function capitalizeDayName(day) {
+    const dayMap = {
+        'monday': 'Lunedì',
+        'tuesday': 'Martedì',
+        'wednesday': 'Mercoledì',
+        'thursday': 'Giovedì',
+        'friday': 'Venerdì',
+        'saturday': 'Sabato',
+        'sunday': 'Domenica'
+    };
+    return dayMap[day.toLowerCase()] || day;
 }
 
 function popolaRecensioni(recensioni) {
@@ -150,14 +191,20 @@ function popolaRecensioni(recensioni) {
         return;
     }
 
-    recensioni.forEach(rec => {
+    // Store all reviews for show more functionality
+    allReviews = recensioni;
+    
+    // Show only first 3 reviews
+    const mostrareRecensioni = recensioni.slice(0, 3);
+    
+    mostrareRecensioni.forEach(rec => {
         const reviewItem = document.createElement('div');
         reviewItem.className = 'review-item';
         const stelle = '★'.repeat(rec.star) + '☆'.repeat(5 - rec.star);
 
         reviewItem.innerHTML = `
             <div class="review-user">
-                <img src="${rec.user_img || 'assets/img/profile.png'}" alt="Avatar">
+                <img src="${rec.user_img || '../assets/img/profile.png'}" alt="Avatar">
                 <div>
                     <strong>${rec.username || 'Utente'}</strong>
                     <span class="stars-small">${stelle}</span>
@@ -166,6 +213,80 @@ function popolaRecensioni(recensioni) {
             <p>${rec.comment || ''}</p>
         `;
         reviewList.appendChild(reviewItem);
+    });
+
+    // If more than 3 reviews, add a "show more" button
+    if (recensioni.length > 3) {
+        const btnShowMore = document.querySelector('.btn-show-all-reviews');
+        if (btnShowMore) {
+            btnShowMore.style.display = 'block';
+            btnShowMore.textContent = `Mostra tutte le ${recensioni.length} recensioni ↓`;
+        }
+    } else {
+        const btnShowMore = document.querySelector('.btn-show-all-reviews');
+        if (btnShowMore) {
+            btnShowMore.style.display = 'none';
+        }
+    }
+}
+
+function mostraReviewsAggiuntive() {
+    if (!reviewList || !allReviews.length) return;
+    
+    reviewList.innerHTML = '';
+    
+    allReviews.forEach(rec => {
+        const reviewItem = document.createElement('div');
+        reviewItem.className = 'review-item';
+        const stelle = '★'.repeat(rec.star) + '☆'.repeat(5 - rec.star);
+
+        reviewItem.innerHTML = `
+            <div class="review-user">
+                <img src="${rec.user_img || '../assets/img/profile.png'}" alt="Avatar">
+                <div>
+                    <strong>${rec.username || 'Utente'}</strong>
+                    <span class="stars-small">${stelle}</span>
+                </div>
+            </div>
+            <p>${rec.comment || ''}</p>
+        `;
+        reviewList.appendChild(reviewItem);
+    });
+
+    // Hide the show more button
+    const btnShowMore = document.querySelector('.btn-show-all-reviews');
+    if (btnShowMore) {
+        btnShowMore.style.display = 'none';
+    }
+}
+
+function popolaSpotVicini(spotsVicini) {
+    if (!nearbyGrid || !spotsVicini || spotsVicini.length === 0) return;
+    
+    nearbyGrid.innerHTML = '';
+    
+    spotsVicini.forEach(spot => {
+        const card = document.createElement('div');
+        card.className = 'nearby-spot-card';
+        
+        const tagsHtml = spot.tags && spot.tags.length > 0 
+            ? spot.tags.map(tag => `<span class="tag">${tag}</span>`).join('')
+            : '';
+        
+        card.innerHTML = `
+            <img src="${spot.image || ''}" alt="${spot.name}" class="nearby-spot-card-img" onerror="this.style.display='none'">
+            <div class="nearby-spot-card-content">
+                <h3>${spot.name}</h3>
+                ${spot.address ? `<p class="address-small">${spot.address}</p>` : ''}
+                ${tagsHtml ? `<div class="micro-tags">${tagsHtml}</div>` : ''}
+            </div>
+        `;
+        
+        card.addEventListener('click', () => {
+            window.location.href = `/pages/spot.html?id=${spot.id}`;
+        });
+        
+        nearbyGrid.appendChild(card);
     });
 }
 
@@ -247,5 +368,33 @@ async function gestisciInvioRecensione(e) {
         }
     } catch (error) {
         console.error("Errore invio recensione:", error);
+    }
+}
+
+async function gestisciCancellazione() {
+    // Chiediamo conferma all'utente prima di procedere
+    const conferma = confirm("Sei sicuro di voler eliminare definitivamente questo spot?");
+    if (!conferma) return;
+
+    try {
+        const response = await fetch(`/api/remove-spot/${currentSpotId}`, {
+            method: 'DELETE', // O 'POST' se la tua API non accetta DELETE
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include'
+        });
+
+        if (response.ok) {
+            alert("Spot eliminato con successo.");
+            // Reindirizza l'utente alla home o alla mappa dopo l'eliminazione
+            window.location.href = '/'; 
+        } else if (response.status === 401 || response.status === 403) {
+            alert("Non hai i permessi necessari per eliminare questo spot.");
+        } else {
+            const err = await response.json();
+            throw new Error(err.error || "Errore durante la cancellazione");
+        }
+    } catch (error) {
+        console.error("Errore cancellazione spot:", error);
+        alert("Si è verificato un errore: " + error.message);
     }
 }

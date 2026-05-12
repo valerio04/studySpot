@@ -72,10 +72,12 @@ async function visualizeSpotOnMap() {
     }
 
     // 1. Recupera tutti i tipi selezionati dai checkbox
-    const checkedBoxes = document.querySelectorAll('.tool-checkbox:checked');
+    const checkedBoxes = document.querySelectorAll('.form-check-input:checked');
+    
     const selectedTypes = Array.from(checkedBoxes).map(cb => {
-        // Prende il testo dal tag <span> vicino all'immagine
-        return cb.parentElement.querySelector('span').innerText.trim();
+        // Risaliamo al contenitore 'filter-item' e cerchiamo lo span col testo
+        // Questo è più robusto rispetto al parentElement.querySelector
+        return cb.closest('.filter-item').querySelector('span').innerText.trim();
     });
 
     if (selectedTypes.length === 0) {
@@ -102,24 +104,31 @@ async function visualizeSpotOnMap() {
             // 3. Aggiungi i marker per ogni spot trovato
             spots.forEach(spot => {
                 const marker = L.marker([spot.latitude, spot.longitude]);
+                marker.bindPopup('Caricamento...');
+                marker._loading = false;
 
                 // Al click sul marker, carichiamo i dati reali dal server
                 marker.on('click', async function() {
-                    // Mostriamo un caricamento temporaneo nel popup
-                    marker.bindPopup("Caricamento...").openPopup();
+                    marker.openPopup();
+
+                    if (marker._loading) return;
+                    marker._loading = true;
+                    marker.setPopupContent('Caricamento...');
 
                     try {
                         const response = await fetch(`/api/info-spot/${spot.id}`);
-                        if (!response.ok) throw new Error("Errore nel caricamento dettagli");
-                        
+                        if (!response.ok) throw new Error('Errore nel caricamento dettagli');
+
                         const info = await response.json();
-                        
+
                         // Costruiamo il contenuto HTML avanzato
                         const content = createPopupContent(info);
                         marker.setPopupContent(content);
                     } catch (err) {
                         console.error(err);
-                        marker.setPopupContent("Errore nel caricamento informazioni.");
+                        marker.setPopupContent('Errore nel caricamento informazioni.');
+                    } finally {
+                        marker._loading = false;
                     }
                 });
 

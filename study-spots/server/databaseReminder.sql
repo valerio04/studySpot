@@ -83,7 +83,7 @@ CREATE TABLE spot_tags (
 );
 
 
-CREATE TABLE IF NOT EXISTS public.reports (
+CREATE TABLE IF NOT EXISTS reports (
   id BIGSERIAL PRIMARY KEY,
 
   -- L'utente che invia la segnalazione
@@ -116,6 +116,7 @@ CREATE TABLE IF NOT EXISTS public.reports (
     REFERENCES public.profiles(user_id) ON DELETE CASCADE,
 
   -- Impedisce di segnalare se stessi (se reported_user_id è presente)
+  
   CONSTRAINT check_not_self_report CHECK (
     reported_user_id IS NULL OR reporter_user_id <> reported_user_id
   ),
