@@ -1,4 +1,5 @@
-ATE TABLE profiles (
+-- Tabella profili collegata a Supabase auth.users
+CREATE TABLE profiles (
   user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   username VARCHAR(255) NOT NULL UNIQUE,
   name VARCHAR(255) NOT NULL,
@@ -31,13 +32,13 @@ CREATE TABLE aggiunti (
   user_id UUID NOT NULL,
   spot_id INTEGER NOT NULL,
   data TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (user_id, spot_id),
+  PRIMARY KEY (spot_id),
   CONSTRAINT fk_aggiunti_profiles FOREIGN KEY (user_id) REFERENCES profiles(user_id) ON DELETE CASCADE,
   CONSTRAINT fk_aggiunti_spots FOREIGN KEY (spot_id) REFERENCES spots(id) ON DELETE CASCADE
 );
 
 CREATE TABLE comments (
-  comment TEXT NOT NULL,
+  comment TEXT ,
   star INTEGER NOT NULL CHECK (star >= 1 AND star <= 5),
   user_id UUID NOT NULL,
   spot_id INTEGER NOT NULL,
@@ -162,32 +163,36 @@ FOR EACH ROW
 EXECUTE FUNCTION public.trg_comments_update_spot_star_stats();
 
 
---===================== per contare i commenti ====
+--=====================
 ALTER TABLE public.spots
 ADD COLUMN IF NOT EXISTS comment_count integer NOT NULL DEFAULT 0;
 
 --per tenere aggiornati i num commenti in spot
+
 CREATE OR REPLACE FUNCTION public.trg_comments_update_spot_comment_count()
 RETURNS trigger
 LANGUAGE plpgsql
 AS $$
 BEGIN
   IF (TG_OP = 'DELETE') THEN
-    UPDATE public.spots
-    SET comment_count = comment_count - 1
-    WHERE id = OLD.spot_id;
+    IF OLD.comment IS NOT NULL THEN
+      UPDATE public.spots
+      SET comment_count = comment_count - 1
+      WHERE id = OLD.spot_id;
 
-    -- sicurezza: evita valori negativi (nel caso di inconsistenze)
-    UPDATE public.spots
-    SET comment_count = 0
-    WHERE id = OLD.spot_id AND comment_count < 0;
+      UPDATE public.spots
+      SET comment_count = 0
+      WHERE id = OLD.spot_id AND comment_count < 0;
+    END IF;
 
     RETURN OLD;
 
   ELSIF (TG_OP = 'INSERT') THEN
-    UPDATE public.spots
-    SET comment_count = comment_count + 1
-    WHERE id = NEW.spot_id;
+    IF NEW.comment IS NOT NULL THEN
+      UPDATE public.spots
+      SET comment_count = comment_count + 1
+      WHERE id = NEW.spot_id;
+    END IF;
 
     RETURN NEW;
   END IF;
@@ -205,6 +210,74 @@ EXECUTE FUNCTION public.trg_comments_update_spot_comment_count();
 
 
 
+
+--trigger per punti----------
+
+CREATE OR REPLACE FUNCTION public.trg_points_on_spot_insert()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  UPDATE public.profiles
+  SET points = points + 5
+  WHERE user_id = NEW.user_id;
+
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS points_on_spot_insert ON public.aggiunti;
+
+CREATE TRIGGER points_on_spot_insert
+AFTER INSERT ON public.aggiunti
+FOR EACH ROW
+EXECUTE FUNCTION public.trg_points_on_spot_insert();
+
+
+
+CREATE OR REPLACE FUNCTION public.trg_points_on_comment_insert()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  has_comment boolean;
+  has_star boolean;
+  delta int := 0;
+BEGIN
+  has_star := NEW.star IS NOT NULL; -- star è NOT NULL nel tuo schema, ma lo gestiamo comunque
+
+  has_comment := (NEW.comment IS NOT NULL AND btrim(NEW.comment) <> '');
+
+  -- +3 se lascia sia commento che recensione
+  IF has_comment AND has_star THEN
+    delta := 3;
+  -- +1 se lascia solo recensione
+  ELSIF has_star THEN
+    delta := 1;
+  END IF;
+
+  IF delta <> 0 THEN
+    UPDATE public.profiles
+    SET points = points + delta
+    WHERE user_id = NEW.user_id;
+  END IF;
+
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS points_on_comment_insert ON public.comments;
+
+CREATE TRIGGER points_on_comment_insert
+AFTER INSERT ON public.comments
+FOR EACH ROW
+EXECUTE FUNCTION public.trg_points_on_comment_insert();
+DROP TRIGGER IF EXISTS points_on_comment_insert ON public.comments;
+
+CREATE TRIGGER points_on_comment_insert
+AFTER INSERT ON public.comments
+FOR EACH ROW
+EXECUTE FUNCTION public.trg_points_on_comment_insert();
 
 /*
 QUERY PER CLASSIFICA

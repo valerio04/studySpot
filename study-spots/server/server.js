@@ -582,15 +582,8 @@ app.post('/api/add-comment', async (req, res) => {
             return res.status(500).json({ error: 'Errore durante l\'inserimento del commento' });
         }
 
-        // 3. Inserimento nella tabella 'aggiunti' 
-        const { error: aggiuntiError } = await supabaseClient
-            .from('aggiunti')
-            .insert({ user_id: user.id, spot_id: spotId });
-            
-        if (aggiuntiError) {
-            console.error('Errore inserimento in aggiunti:', aggiuntiError);
-            // Non blocchiamo necessariamente la risposta se il commento è andato a buon fine
-        }
+        
+        
 
         // 4. Risposta al client
         return res.status(201).json({ 

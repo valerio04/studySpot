@@ -41,7 +41,7 @@ async function aggiornaProfilo() {
         
         // Iniziali avatar
         const avatar = document.getElementById('avatar-initials');
-        if (avatar) avatar.textContent = (profile.name?.[0] || profile.username?.[0] || 'U').toUpperCase();
+        if (avatar) avatar.textContent = (profile.name?.[0]  + profile.surname?.[0] ).toUpperCase();
 
     } catch (error) {
         console.error('Errore aggiornamento profilo:', error);
@@ -109,7 +109,8 @@ async function caricaCommenti(endpoint, trackElement) {
 function renderCards(container, data, primaryIcon) {
     container.innerHTML = '';
     if (!data || data.length === 0) {
-        container.innerHTML = '<div class="text-white-50 p-3">Nessun elemento trovato</div>';
+        container.innerHTML = '<div class="text-muted p-3">Nessun spot trovato</div>';
+    
         return;
     }
 
@@ -130,12 +131,10 @@ function renderCards(container, data, primaryIcon) {
                 <div class="d-flex justify-content-center">
                     <span class="badge bg-white text-dark shadow-sm">⭐ ${(Number(spot.star_avg ?? 0).toFixed(1))}</span>
                 </div>
+                <div style="color: #112E51; font-size: 0.8rem; font-weight: bold;">Vedi spot →</div>
             </div>
         `;
         container.appendChild(card);
     });
 }
 
-function renderEmptyState(container, message) {
-    container.innerHTML = `<div class="empty-state">${message}</div>`;
-}
