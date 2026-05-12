@@ -976,15 +976,14 @@ app.delete('/api/remove-spot/:id', async (req, res) =>{
         return res.status(401).json({ error: "Utente non autenticato" });
     }
 
-    const {
-        idSpot
-    } = req.body;
-
+    const idSpot = req.params.id;
+    console.log(idSpot);
+    console.log(user.id);
     // controllo che lo spot da rimuovere sia stato aggiunto dall'utente loggato, altrimenti non ha il permesso di rimuoverlo
     const { data: controllo, error: controlloError } = await supabaseClient
         .from('aggiunti')
         .select('*')
-        .eq('id_spot', idSpot)
+        .eq('spot_id', idSpot)
         .eq('user_id', user.id)
         .maybeSingle();
 
@@ -1020,7 +1019,7 @@ app.get('/api/info-spot/:id', async (req, res) =>{
     
     // Recupera l'utente autenticato
     const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
-
+    const userId = user?.id || null;
     //dovrebbero essere accessibili a tutti anche ai non leggati
     /*if (userError || !user) {
         return res.status(401).json({ error: "Utente non autenticato" });
@@ -1038,7 +1037,8 @@ app.get('/api/info-spot/:id', async (req, res) =>{
 
     const { data: spot, error: spotError } = await supabaseClient
             .from('spots')
-            .select('name, address, type, star_avg, star_count')
+            .select(`aggiunti(user_id),
+                name, address, type, star_avg, star_count`)
             .eq('id', idSpot)
             .maybeSingle();
             
@@ -1047,6 +1047,13 @@ app.get('/api/info-spot/:id', async (req, res) =>{
         return res.status(500).json({ error: 'Errore durante l\'inserimento dello spot' });
     }
     
+    console.log(spot.aggiunti);
+    // Aggiunge il campo isOwner per verificare se l'utente loggato è il creatore dello spot
+    if (spot && spot.aggiunti) {
+        console.log('trovato');
+        spot.isOwner = user && user.id === spot.aggiunti.user_id ? true : false;
+    }
+
     if (spot) {
         Object.assign(responseData, spot);
     }
@@ -1113,7 +1120,7 @@ app.get('/api/info-spot/:id', async (req, res) =>{
 
 //=================API: salva spot (per la lista dei preferiti) ===============
 app.post('/api/salva-spot', async (req, res) =>{
-    console.log('POST /api/add-spot');
+    console.log('POST /api/salva-spot');
 
     if (!SUPABASE_URL || !SUPABASE_KEY) {
         return res.status(503).json({ error: 'Database non configurato in questo ambiente' });

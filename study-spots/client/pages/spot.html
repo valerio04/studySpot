@@ -58,11 +58,6 @@
                 <button class="btn-action btn-danger" id="btn-delete-spot" style="display:none;">
                     <img src="../assets/img/delete-icon.png" alt=""> Elimina Spot
                 </button>
-                <!--
-                <button class="btn-action" id="condividi">
-                    <img src="../assets/img/share-icon.png" alt=""> Condividi
-                </button>
-                -->
                 
                 <button class="btn-action btn-save" id="salva">
                     <img src="../assets/img/save-icon.png" alt=""> Salva
@@ -160,13 +155,14 @@
                     <div class="card-body">
                         <h3 class="h5 fw-bold mb-3">Orari di apertura</h3>
                         <ul class="list-unstyled">
-                            <li class="mb-2"><span class="fw-bold">Lunedì:</span> <span>09:00 - 19:00</span></li>
+                            <!--<li class="mb-2"><span class="fw-bold">Lunedì:</span> <span>09:00 - 19:00</span></li>
                             <li class="mb-2"><span class="fw-bold">Martedì:</span> <span>09:00 - 19:00</span></li>
                             <li class="mb-2"><span class="fw-bold">Mercoledì:</span> <span>09:00 - 19:00</span></li>
                             <li class="mb-2 current-day"><span class="fw-bold">Giovedì:</span> <span>09:00 - 19:00</span></li>
                             <li class="mb-2"><span class="fw-bold">Venerdì:</span> <span>09:00 - 19:00</span></li>
                             <li class="mb-2"><span class="fw-bold">Sabato:</span> <span>09:00 - 13:00</span></li>
                             <li class="closed"><span class="fw-bold">Domenica:</span> <span>Chiuso</span></li>
+                            -->
                         </ul>
                     </div>
                 </div>
@@ -175,18 +171,8 @@
 
         <section class="nearby-section">
             <h2>Luoghi simili nelle vicinanze</h2>
-            <div class="carousel-container">
-                <div class="carousel-track">
-                    <div class="spot-card">
-                        <div class="card-img-placeholder"></div>
-                        <div class="card-content">
-                            <h3>Caffè Letterario</h3>
-                            <div class="micro-tags">
-                                <span class="tag">Cafe</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="carousel-track" id="nearby-spots-grid">
+                <!-- Cards verranno generate via JavaScript -->
             </div>
         </section>
     </main>

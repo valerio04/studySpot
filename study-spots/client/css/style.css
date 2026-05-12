@@ -152,6 +152,22 @@ h1, h2, h3, h4, .nome-logo {
 
 .filter-card {
     border: 1px solid rgba(0,0,0,0.05);
+    height: fit-content;
+}
+
+.filter-item {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    min-width: 0;
+}
+
+.filter-item > div {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.filter-item .form-check-input {
+    flex-shrink: 0;
 }
 
 .form-check-input:checked {
@@ -554,4 +570,242 @@ h1, h2, h3, h4, .nome-logo {
 .btn-save.saved:hover {
     background-color: #e65c00 !important;
     opacity: 0.9;
+}
+
+/* =========================================
+   10. TAGS/PILLOLE STYLING
+   ========================================= */
+.micro-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.tag {
+    display: inline-block;
+    background-color: var(--dark-blue);
+    color: #FFFFFF;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+.tag:hover {
+    background-color: var(--orange-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* =========================================
+   11. NEARBY SPOTS CAROUSEL
+   ========================================= */
+.nearby-section {
+    margin-top: 50px;
+}
+
+.nearby-section h2 {
+    color: var(--dark-blue);
+    margin-bottom: 20px;
+}
+
+/* Carousel track for horizontal scrolling */
+.carousel-track {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    gap: 20px;
+    padding-bottom: 10px;
+}
+
+/* Hide scrollbar but keep scrolling */
+.carousel-track::-webkit-scrollbar {
+    height: 6px;
+}
+.carousel-track::-webkit-scrollbar-track {
+    background: transparent;
+}
+.carousel-track::-webkit-scrollbar-thumb {
+    background-color: var(--light-gray);
+    border-radius: 10px;
+}
+
+.nearby-spot-card {
+    background: #FFFFFF;
+    border: 1px solid var(--light-gray);
+    border-radius: 15px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    min-width: 260px;
+    max-width: 260px;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.nearby-spot-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(17, 46, 81, 0.15);
+}
+
+.nearby-spot-card-img {
+    width: 100%;
+    height: 180px;
+    background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+    object-fit: cover;
+}
+
+.nearby-spot-card-content {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.nearby-spot-card-content h3 {
+    font-size: 1.1rem;
+    color: var(--dark-blue);
+    margin: 0 0 8px 0;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+}
+
+.nearby-spot-card-content .address-small {
+    color: var(--secondary-blue);
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+}
+
+.nearby-spot-card-content .micro-tags {
+    margin: 0;
+    gap: 6px;
+}
+
+.nearby-spot-card-content .tag {
+    font-size: 0.75rem;
+    padding: 5px 10px;
+}
+
+/* =========================================
+   12. RESPONSIVE MOBILE STYLES
+   ========================================= */
+
+/* Spot header responsive */
+@media (max-width: 768px) {
+    .spot-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .header-actions {
+        width: 100%;
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-action {
+        flex: 1;
+        margin-left: 0;
+    }
+}
+
+/* Content layout responsive */
+@media (max-width: 768px) {
+    .content-layout {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .main-info { flex: 1; }
+    .sidebar-info { flex: 1; }
+
+    .spot-gallery {
+        grid-template-columns: 1fr;
+        height: auto;
+        margin-bottom: 20px;
+    }
+
+    .gallery-main img {
+        border-radius: 15px;
+    }
+
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .last-photo-container {
+        border-radius: 15px;
+    }
+}
+
+/* Hours responsive */
+@media (max-width: 768px) {
+    .hours-card li {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .current-day {
+        background-color: var(--orange-accent);
+        color: #FFFFFF;
+        padding: 8px 12px;
+        border-radius: 8px;
+        margin: -8px -12px;
+        padding: 8px 12px;
+    }
+}
+
+/* Nearby cards responsive */
+@media (max-width: 768px) {
+    .nearby-spot-card {
+        min-width: 220px;
+        max-width: 220px;
+    }
+
+    .nearby-spot-card-img {
+        height: 150px;
+    }
+
+    .nearby-spot-card-content {
+        padding: 12px;
+    }
+
+    .nearby-spot-card-content h3 {
+        font-size: 1rem;
+    }
+
+    .nearby-spot-card-content .tag {
+        font-size: 0.7rem;
+        padding: 4px 8px;
+    }
+
+    .container-detail {
+        padding: 15px;
+    }
+
+    .spot-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .description-card, .hours-card, .reviews-section {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .micro-tags {
+        gap: 8px;
+    }
+
+    .tag {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
 }
