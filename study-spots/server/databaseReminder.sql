@@ -5,7 +5,7 @@ CREATE TABLE profiles (
   name VARCHAR(255) NOT NULL,
   surname VARCHAR(255) NOT NULL,
   points INTEGER DEFAULT 0,
-  role text not null default 'user'
+  role text not null default 'user'  -- altra opzione è 'admin'
 );
 
 CREATE TABLE spots (
@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS reports (
     REFERENCES public.profiles(user_id) ON DELETE CASCADE,
 
   -- Impedisce di segnalare se stessi (se reported_user_id è presente)
-  
+
   CONSTRAINT check_not_self_report CHECK (
     reported_user_id IS NULL OR reporter_user_id <> reported_user_id
   ),
