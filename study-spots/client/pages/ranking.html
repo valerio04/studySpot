@@ -46,13 +46,20 @@
         </div>
     </nav>
 
-    <main class="container py-5">
+    <main class="container py-5 page-ranking"> 
         <div class="row justify-content-center mb-5">
-            <div class="col-md-8">
-                <div class="ranking-user bg-light border border-dark-blue rounded-4 p-4 shadow-sm">
-                    <h2 class="h4 fw-bold text-dark-blue mb-3 text-center text-md-start">La tua posizione in classifica</h2>
-                    <div id="ranking-user" class="text-center text-md-start fs-5">
-                        <span class="text-muted small italic">Caricamento posizione...</span>
+            <div class="col-md-10 col-lg-8">
+                <div class="ranking-card-user shadow-sm d-flex align-items-center">
+                    <div class="user-rank-badge" id="user-rank-number">#--</div>
+                    <div class="flex-grow-1 ms-3">
+                        <h2 class="h5 fw-bold mb-0 text-white">La tua posizione</h2>
+                        <div id="ranking-user" class="text-white-50 small">
+                            Caricamento...
+                        </div>
+                    </div>
+                    <div class="user-rank-points text-end">
+                        <span id="user-total-points" class="h4 fw-bold mb-0">0</span>
+                        <div class="small opacity-75">Punti Totali</div>
                     </div>
                 </div>
             </div>
@@ -60,18 +67,20 @@
 
         <div class="row justify-content-center">
             <div class="col-md-10 col-lg-8">
-                <div class="ranking-container">
-                    <h1 class="display-6 fw-bold text-dark-blue mb-4 text-center">Classifica Utenti</h1>
+                <div class="ranking-wrapper shadow-lg">
+                    <div class="ranking-header">
+                        <h1 class="h3 fw-bold mb-0"><i class="fa-solid fa-trophy me-2 text-warning"></i>Leaderboard</h1>
+                    </div>
                     
-                    <div class="table-responsive shadow-sm rounded-4">
-                        <table class="table table-hover align-middle mb-0 custom-table">
-                            <thead class="bg-dark-blue text-white">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0 custom-ranking-table">
+                            <thead>
                                 <tr>
-                                    <th class="ps-4 py-3">Posizione</th>
-                                    <th class="py-3">Utente</th>
-                                    <th class="py-3 text-center">Spot Aggiunti</th>
-                                    <th class="py-3 text-center">Commenti</th>
-                                    <th class="pe-4 py-3 text-end">Punti</th>
+                                    <th class="text-center">Pos.</th>
+                                    <th>Utente</th>
+                                    <th class="text-center d-none d-md-table-cell">Spot</th>
+                                    <th class="text-center d-none d-md-table-cell">Recensioni</th>
+                                    <th class="text-end pe-4">Punti</th>
                                 </tr>
                             </thead>
                             <tbody id="ranking-body">
