@@ -1034,7 +1034,6 @@ app.get('/api/info-spot/:id', async (req, res) =>{
         recensioni: []
     };
 
-
     const { data: spot, error: spotError } = await supabaseClient
             .from('spots')
             .select(`aggiunti(user_id),

@@ -105,9 +105,20 @@ async function caricaDatiSpot() {
 /**
  * Distribuisce i dati dell'oggetto spot nei vari elementi della pagina
  */
-function popolaPagina(spot) {
+async function popolaPagina(spot) {
     // 1. Intestazione e Info Base
-    if (spot.isOwner) {
+    const response = await fetch(`/api/me`, {
+            credentials: 'include'
+        });
+
+    if (!response.ok) {
+        throw new Error('Errore durante il recupero dei dati dello spot.');
+    }
+
+    const user = await response.json();
+    console.log("verifica utente role", user);
+
+    if (spot.isOwner || user.profile.role == 'admin') {
         btnRemove.style.display = 'inline';
         console.log('isOwner');
     }
