@@ -19,6 +19,22 @@ h1, h2, h3, h4, .nome-logo {
     font-weight: 700;
 }
 
+.bg-orange {
+    background-color: var(--orange-accent);
+}
+
+.bg-dark-blue {
+    background-color: var(--dark-blue) !important;
+}
+
+.border-dark-blue {
+    border: 2px solid var(--dark-blue) !important;
+}
+
+.text-orange {
+    color: var(--orange-accent);
+}
+
 .text-dark-blue { color: var(--dark-blue); }
 
 /* =========================================
@@ -93,9 +109,6 @@ h1, h2, h3, h4, .nome-logo {
 /* =========================================
    4. SEARCH E SUGGERIMENTI
    ========================================= */
-.border-dark-blue {
-    border: 2px solid var(--dark-blue) !important;
-}
 
 .form-control {
     height: 46px;
@@ -176,51 +189,117 @@ h1, h2, h3, h4, .nome-logo {
 }
 
 /* =========================================
-   6. RANKING (CLASSIFICA)
+   6. RANKING (CLASSIFICA) - SCOPED
    ========================================= */
-.bg-dark-blue {
-    background-color: var(--dark-blue) !important;
+
+/* Card utente personale */
+.page-ranking .ranking-card-user {
+    background: linear-gradient(135deg, var(--dark-blue) 0%, #1a4a82 100%);
+    border-radius: 20px;
+    padding: 20px 30px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    border: none;
 }
 
-/* Box posizione utente */
-.ranking-user {
-    border: 2px solid var(--dark-blue);
+.page-ranking .ranking-card-user::after {
+    content: '\f091';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: -10px;
+    bottom: -10px;
+    font-size: 5rem;
+    opacity: 0.1;
+    transform: rotate(-15deg);
 }
 
-/* Intestazione Tabella */
-.custom-table thead th {
-    font-family: 'Quicksand', sans-serif;
-    font-weight: 700;
+.page-ranking .user-rank-badge {
+    background: var(--orange-accent);
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 10px rgba(255, 102, 0, 0.3);
+}
+
+/* Tabella Wrapper */
+.page-ranking .ranking-wrapper {
+    background: white;
+    border-radius: 24px;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.page-ranking .ranking-header {
+    background-color: #f8f9fa;
+    padding: 25px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Stile Tabella */
+.page-ranking .custom-ranking-table thead th {
+    border: none;
+    color: #6c757d;
     text-transform: uppercase;
-    font-size: 0.85rem;
-    letter-spacing: 0.5px;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    padding: 15px 20px;
 }
 
-/* Colore punti nella classifica */
-.points-text {
-    font-weight: 700;
-    color: var(--orange-accent);
+.page-ranking .custom-ranking-table tbody tr {
+    transition: transform 0.2s ease;
+}
+
+.page-ranking .custom-ranking-table tbody tr:hover {
+    background-color: #fdfdfd !important;
+    transform: scale(1.005);
+}
+
+/* Cerchietti Posizione (Podio) */
+.page-ranking .rank-number {
+    font-weight: 800;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 0.9rem;
+}
+
+.page-ranking .rank-1 { background-color: #FFD700; color: #856404; box-shadow: 0 2px 5px rgba(255,215,0,0.4); }
+.page-ranking .rank-2 { background-color: #C0C0C0; color: #444; }
+.page-ranking .rank-3 { background-color: #CD7F32; color: #fff; }
+
+/* Avatar utente in tabella */
+.page-ranking .user-info-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Punti */
+.page-ranking .points-text {
+    font-weight: 800;
+    color: var(--dark-blue);
+    font-size: 1.1rem;
+}
+
+.page-ranking .points-text::after {
+    content: ' pts';
+    font-size: 0.75rem;
+    color: #adb5bd;
+    font-weight: 400;
 }
 
 /* =========================================
-   7. RESPONSIVE
-   ========================================= */
-@media (max-width: 991px) {
-    .filter-card {
-        margin-bottom: 20px;
-    }
-    
-    #map {
-        height: 450px !important;
-    }
-    
-    .navbar-nav .nav-link::after {
-        display: none; /* Rimuove linea su mobile per pulizia */
-    }
-}
-
-/* =========================================
-   8. COLLEZIONI E CAROSELLI (LIST PAGE)
+   7. COLLEZIONI E CAROSELLI (LIST PAGE)
    ========================================= */
 
 /* Traccia a scorrimento orizzontale */
@@ -270,10 +349,6 @@ h1, h2, h3, h4, .nome-logo {
     font-weight: 700;
     padding: 0.4rem 0.7rem;
     border-radius: 20px;
-}
-
-.text-orange {
-    color: var(--orange-accent);
 }
 
 .vedi-tutti-link:hover {
@@ -625,18 +700,6 @@ h1, h2, h3, h4, .nome-logo {
     padding-bottom: 10px;
 }
 
-/* Hide scrollbar but keep scrolling */
-.carousel-track::-webkit-scrollbar {
-    height: 6px;
-}
-.carousel-track::-webkit-scrollbar-track {
-    background: transparent;
-}
-.carousel-track::-webkit-scrollbar-thumb {
-    background-color: var(--light-gray);
-    border-radius: 10px;
-}
-
 .nearby-spot-card {
     background: #FFFFFF;
     border: 1px solid var(--light-gray);
@@ -700,9 +763,6 @@ h1, h2, h3, h4, .nome-logo {
    ========================================= */
 
 /* --- LOGIN ENHANCEMENTS --- */
-.bg-orange {
-    background-color: var(--orange-accent);
-}
 
 /* Floating labels personalizzate */
 .custom-input {
@@ -785,6 +845,19 @@ body:has(#login) body:has(#register) {
 /* =========================================
    12. RESPONSIVE MOBILE STYLES
    ========================================= */
+@media (max-width: 991px) {
+    .filter-card {
+        margin-bottom: 20px;
+    }
+    
+    #map {
+        height: 450px !important;
+    }
+    
+    .navbar-nav .nav-link::after {
+        display: none; /* Rimuove linea su mobile per pulizia */
+    }
+}
 
 /* Spot header responsive */
 @media (max-width: 768px) {

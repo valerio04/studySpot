@@ -3,6 +3,8 @@
 // Elementi DOM
 const rankingBody = document.getElementById('ranking-body');
 const rankingUser = document.getElementById('ranking-user');
+const rankingUserNumber = document.getElementById('user-rank-number');
+const UserPoints = document.getElementById('user-total-points');
 
 // Carica la classifica all'apertura della pagina
 document.addEventListener('DOMContentLoaded', caricaClassifica);
@@ -51,11 +53,24 @@ function popolaClassifica(ranking) {
     ranking.forEach((profilo, index) => {
         const riga = document.createElement('tr');
         riga.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${profilo.username || 'Anonimo'}</td>
-            <td>${profilo.num_aggiunti ?? 0}</td>
-            <td>${profilo.num_commenti ?? 0}</td>
-            <td>${profilo.points ?? 0}</td>
+            <td class="text-center">
+                <span class="rank-number ${index + 1 <= 3 ? 'rank-' + (index + 1) : ''}">
+                    ${index + 1}
+                </span>
+            </td>
+            <td>
+                <div class="user-info-cell">
+                    <div class="nav-avatar" style="width: 32px; height: 32px; font-size: 0.8rem;">
+                        ${profilo.username.charAt(0).toUpperCase()}
+                    </div>
+                    <span class="fw-bold">${profilo.username || 'Anonimo'}</span>
+                </div>
+            </td>
+            <td class="text-center d-none d-md-table-cell">${profilo.num_aggiunti ?? 0}</td>
+            <td class="text-center d-none d-md-table-cell">${profilo.num_commenti ?? 0}</td>
+            <td class="text-end pe-4">
+                <span class="points-text">${profilo.points ?? 0}</span>
+            </td>
         `;
         rankingBody.appendChild(riga);
     });
@@ -92,7 +107,9 @@ async function caricaUtenteClassifica() {
         if (rankingUser) {
             rankingUser.textContent = `La tua posizione: ${userPosition.rank ?? 0} - Punti: ${userPosition.points ?? 0}`;
         }
-
+        rankingUserNumber.textContent = `# ${userPosition.rank ?? 0}`;
+        UserPoints.textContent = userPosition.points ?? 0;
+        
     } catch (error) {
         console.error('Errore caricamento dati utente:', error);
     }

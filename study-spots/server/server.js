@@ -1614,9 +1614,24 @@ app.post('/api/ordina-frullato/:id', async (req, res) => {
 
 
 //AVVIO 
-app.listen(PORT, HOST, ()=>{
+const server = app.listen(3004, '0.0.0.0', ()=>{
     console.log(`server in esecuzione su http://localhost:${PORT}`)
 })
+
+// ================= Gestione chiusura graceful con Ctrl+C =================
+process.on('SIGINT', () => {
+    console.log('\n✋ Ricezione segnale SIGINT. Chiusura server in corso...');
+    server.close(() => {
+        console.log('✅ Server chiuso correttamente');
+        process.exit(0);
+    });
+    
+    // Forza l'uscita dopo 10 secondi se il server rimane appeso
+    setTimeout(() => {
+        console.error('⚠️  Timeout di chiusura, forzatura dell\'uscita');
+        process.exit(1);
+    }, 10000);
+});
 
 // VEDI SE RIESCI A USARE ANCHE LOCALSTORAGE
 

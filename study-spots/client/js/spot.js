@@ -1,6 +1,7 @@
 'use strict';
 
 // ================= Elementi DOM =================
+const Title = document.querySelector('title');
 const spotTitle = document.querySelector('.spot-header h1');
 const spotAddress = document.querySelector('.address');
 const spotRatingText = document.querySelector('.rating-text');
@@ -110,9 +111,13 @@ function popolaPagina(spot) {
         btnRemove.style.display = 'inline';
         console.log('isOwner');
     }
+    if (Title) Title.textContent = spot.name;
     if (spotTitle) spotTitle.textContent = spot.name;
     if (spotAddress) spotAddress.textContent = spot.address;
     if (spotRatingText) spotRatingText.textContent = `${spot.star_avg || 0} (${spot.star_count || 0} recensioni)`;
+
+    // Aggiorna le stelle in base alla media
+    popolaStelle(spot.star_avg || 0);
 
     // 2. Tag (Pillole)
     if (tagsContainer) {
@@ -143,6 +148,27 @@ function popolaPagina(spot) {
 }
 
 //================= Funzioni di Popolamento Specifiche =================
+
+/**
+ * Popola l'elemento con classe 'stars' con le stelle colorate
+ * @param {number} starAvg - Media delle stelle (es. 3.5)
+ */
+function popolaStelle(starAvg) {
+    const starsElement = document.querySelector('.stars');
+    if (!starsElement) return;
+    
+    // Arrotonda a 0.5 per mostrare mezza stella se necessario
+    const roundedStar = Math.round(starAvg * 2) / 2;
+    const fullStars = Math.floor(roundedStar);
+    //const hasHalfStar = roundedStar % 1 !== 0;
+    const emptyStars = 5 - fullStars /*(hasHalfStar ? 1 : 0)*/;
+    
+    let starsText = '★'.repeat(fullStars);
+    //if (hasHalfStar) starsText += '½';
+    starsText += '☆'.repeat(emptyStars);
+    
+    starsElement.textContent = starsText;
+}
 
 function popolaOrari(hours) {
     if (!hoursList) return;
@@ -204,7 +230,7 @@ function popolaRecensioni(recensioni) {
 
         reviewItem.innerHTML = `
             <div class="review-user">
-                <img src="${rec.user_img || '../assets/img/profile.png'}" alt="Avatar">
+                <i class="fa-solid fa-circle-user"></i>
                 <div>
                     <strong>${rec.username || 'Utente'}</strong>
                     <span class="stars-small">${stelle}</span>
