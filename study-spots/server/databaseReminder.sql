@@ -5,7 +5,7 @@ CREATE TABLE profiles (
   name VARCHAR(255) NOT NULL,
   surname VARCHAR(255) NOT NULL,
   points INTEGER DEFAULT 0,
-  role text not null default 'user'  -- altra opzione è 'admin'
+  role text not null default 'user'
 );
 
 CREATE TABLE spots (
@@ -82,53 +82,59 @@ CREATE TABLE spot_tags (
     FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
 );
 
-
 CREATE TABLE IF NOT EXISTS reports (
   id BIGSERIAL PRIMARY KEY,
 
-  -- L'utente che invia la segnalazione
   reporter_user_id UUID NOT NULL,
-
-  -- Caso A: segnalazione relativa a uno SPOT
   spot_id INTEGER,
-
-  -- Caso B: segnalazione relativa a un UTENTE
   reported_user_id UUID,
 
-  -- Contenuto della segnalazione
   message TEXT NOT NULL CHECK (btrim(message) <> ''),
-
-  -- Categorizzazione per i filtri (es. dashboard admin)
   report_type VARCHAR(50) NOT NULL DEFAULT 'generale',
-  -- Stato della gestione
   status VARCHAR(20) NOT NULL DEFAULT 'pendente',
 
   created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   CONSTRAINT fk_report_creator FOREIGN KEY (reporter_user_id)
-    REFERENCES public.profiles(user_id) ON DELETE CASCADE,
+    REFERENCES profiles(user_id) ON DELETE CASCADE,
 
   CONSTRAINT fk_report_spot FOREIGN KEY (spot_id)
-    REFERENCES public.spots(id) ON DELETE CASCADE,
+    REFERENCES spots(id) ON DELETE CASCADE,
 
   CONSTRAINT fk_reported_user FOREIGN KEY (reported_user_id)
-    REFERENCES public.profiles(user_id) ON DELETE CASCADE,
-
-  -- Impedisce di segnalare se stessi (se reported_user_id è presente)
+    REFERENCES profiles(user_id) ON DELETE CASCADE,
 
   CONSTRAINT check_not_self_report CHECK (
     reported_user_id IS NULL OR reporter_user_id <> reported_user_id
-  ),
-
-  -- Non permettere report “vuoti”: almeno uno tra spot e utente deve esserci
-  CONSTRAINT check_has_target CHECK (spot_id IS NOT NULL OR reported_user_id IS NOT NULL)
+  )
 );
 
 
+CREATE TABLE IF NOT EXISTS spot_photos (
+  id BIGSERIAL PRIMARY KEY,
+
+  spot_id INTEGER NOT NULL,
+  numero_foto INTEGER NOT NULL,
+
+  link_foto TEXT NOT NULL CHECK (btrim(link_foto) <> ''),
+
+  created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+  CONSTRAINT fk_spot_photos_spots
+    FOREIGN KEY (spot_id) REFERENCES spots(id) ON DELETE CASCADE,
+
+  CONSTRAINT uq_spot_photo_number
+    UNIQUE (spot_id, numero_foto)
+);
+
+--==========================================================================0
 
 
---===================================================
+
+
+
+
 -- 1) Funzione che crea profiles quando un utente viene creato in auth.users
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger
@@ -319,13 +325,11 @@ CREATE TRIGGER points_on_comment_insert
 AFTER INSERT ON public.comments
 FOR EACH ROW
 EXECUTE FUNCTION public.trg_points_on_comment_insert();
-DROP TRIGGER IF EXISTS points_on_comment_insert ON public.comments;
 
-CREATE TRIGGER points_on_comment_insert
-AFTER INSERT ON public.comments
-FOR EACH ROW
-EXECUTE FUNCTION public.trg_points_on_comment_insert();
 
+
+
+--
 -- Funzione per sottrarre punti quando un commento viene eliminato
 CREATE OR REPLACE FUNCTION public.trg_points_on_comment_delete()
 RETURNS trigger
@@ -383,7 +387,7 @@ AFTER DELETE ON public.aggiunti
 FOR EACH ROW
 EXECUTE FUNCTION public.trg_points_on_spot_delete();
 
---===========================================000
+--==============================================================================================
 
 
 update public.profiles set role='admin' where user_id='34189002-e36a-492a-81dd-35f889b4ddef'; vv, v@gmail.com
