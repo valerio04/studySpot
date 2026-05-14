@@ -194,19 +194,69 @@ h1, h2, h3, h4, .nome-logo {
     padding-top: 16px;
 }
 
+.filter-card {
+    border: 1px solid rgba(0,0,0,0.05);
+    height: fit-content;
+    min-width: 220px;          /* larghezza minima sidebar */
+    overflow: hidden;          /* niente elementi fuori */
+}
+
 .filter-item {
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+    gap: 14px;
+
+    padding: 4px 0;
+
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .filter-item > div {
-    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    flex: 1;
     min-width: 0;
 }
 
-.filter-item .form-check-input {
+.filter-item span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.filter-item img {
+    width: 30px;
     flex-shrink: 0;
+}
+
+.filter-item .form-check-input {
+    margin: 0;
+
+    width: 18px;
+    height: 18px;
+
+    flex-shrink: 0;
+}
+
+/* importantissimo */
+.col-lg-2 {
+    flex-shrink: 0;
+    min-width: 240px;
+}
+
+.col-lg-10 {
+    min-width: 0;
+    flex: 1;
+}
+
+#map-container {
+    width: 100%;
+    overflow: hidden;
 }
 
 .form-check-input:checked {
