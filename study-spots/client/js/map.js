@@ -7,7 +7,16 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // Gruppo per i marker degli spot (per poterli pulire facilmente)
-const spotsLayer = L.layerGroup().addTo(map);
+const spotsLayer = L.markerClusterGroup({
+    showCoverageOnHover: false,
+    spiderfyOnMaxZoom: true,
+    zoomToBoundsOnClick: true,
+    animate: true,
+    animateAddingMarkers: true,
+    disableClusteringAtZoom: 16  //17 è massimo zoom, puoi andare da 5 a 17, 5 è livello nazionale
+});
+
+map.addLayer(spotsLayer);
 let currentMarker = null; // Marker della posizione cercata
 const searchHereButton = document.getElementById('search-here-button');
 const mapResultsList = document.getElementById('map-results-list');
@@ -188,7 +197,11 @@ async function visualizeSpotOnMap() {
         (spotsToRender || []).forEach((item) => {
             const spot = item.spot || item;
             const info = item.info;
-            const marker = L.marker([spot.latitude, spot.longitude]);
+            const marker = L.marker([spot.latitude, spot.longitude],
+                                        {
+                                            icon: createSpotIcon(spot.type)
+                                        }
+                                    );
             marker.bindPopup('Caricamento...');
             marker._loading = false;
             marker._spotInfo = info || null;
@@ -239,10 +252,45 @@ async function visualizeSpotOnMap() {
 }
 
 // --- UTILS ---
+function createUserIcon() {
+    return L.divIcon({
+        className: '',
+        html: `<div class="user-marker"></div>`,
+        iconSize: [22, 22],
+        iconAnchor: [11, 11]
+    });
+}
+
+function createSpotIcon(type) {
+
+    const icons = {
+        bar: 'fa-mug-hot',
+        biblio: 'fa-book',
+        co: 'fa-laptop',
+        au: 'fa-pencil'
+    };
+
+    return L.divIcon({
+        className: '',
+        html: `
+            <div class="custom-marker marker-${type}">
+                <i class="fa-solid ${icons[type]}"></i>
+            </div>
+        `,
+        iconSize: [42, 42],
+        iconAnchor: [21, 42],
+        popupAnchor: [0, -36]
+    });
+}
 
 function addMarker(lat, lng, popupText) {
     if (currentMarker) map.removeLayer(currentMarker);
-    currentMarker = L.marker([lat, lng]).addTo(map).bindPopup(popupText).openPopup();
+    currentMarker = L.marker([lat, lng], {
+        icon: createUserIcon()
+        })
+        .addTo(map)
+        .bindPopup(popupText)
+        .openPopup();
 }
 
 function centerMap(lat, lng) {
@@ -263,34 +311,92 @@ map.on('moveend', () => {
 });
 
 function createPopupContent(info) {
-    // Generiamo i tag come pillole usando lo stile delle tue .tag
-    const tagsHtml = info.tags.map(tag => `<span class="tag micro-tag-popup">${tag}</span>`).join('');
-    
-    // Formattazione rating (usiamo il tuo arancione per le stelle)
+    const tags = Array.isArray(info.tags) ? info.tags : [];
+
+    const tagsHtml = tags
+        .slice(0, 4)
+        .map(tag => `
+            <span class="badge rounded-pill text-dark bg-light border fw-bold">
+                ${tag}
+            </span>
+        `)
+        .join('');
+
     const rating = info.star_avg ? parseFloat(info.star_avg).toFixed(1) : "0.0";
+    const reviews = info.star_count ?? 0;
+
+    const typeData = {
+        bar: {
+            label: 'Bar',
+            icon: 'fa-mug-hot',
+            className: 'popup-bar'
+        },
+        biblio: {
+            label: 'Biblioteca',
+            icon: 'fa-book',
+            className: 'popup-biblio'
+        },
+        co: {
+            label: 'Coworking',
+            icon: 'fa-laptop',
+            className: 'popup-co'
+        },
+        au: {
+            label: 'Aula Studio',
+            icon: 'fa-pencil',
+            className: 'popup-au'
+        }
+    };
+
+    const type = typeData[info.type] || {
+        label: 'Spot',
+        icon: 'fa-location-dot',
+        className: 'popup-default'
+    };
 
     return `
-        <div class="rich-popup">
-            <div class="popup-header">
-                <h3 class="popup-title">${info.name}</h3>
-                <p class="popup-address"><i class="bi bi-geo-alt-fill"></i> ${info.address}</p>
-            </div>
+        <div class="studyspot-popup card border-0 overflow-hidden">
             
-            <div class="popup-rating-row">
-                <span class="rating-score">${rating}</span>
-                <span class="rating-stars">★</span>
-                <span class="rating-count">(${info.star_count} Recensioni)</span>
+            <div class="card-header border-0 text-white ${type.className}">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="popup-icon-box d-flex align-items-center justify-content-center rounded-4">
+                        <i class="fa-solid ${type.icon}"></i>
+                    </div>
+
+                    <div>
+                        <div class="fw-bold small opacity-75">Categoria</div>
+                        <div class="fw-bold fs-6">${type.label}</div>
+                    </div>
+                </div>
             </div>
 
-            <div class="popup-tags-container">
-                ${tagsHtml}
-            </div>
+            <div class="card-body p-3">
+                <h3 class="h6 fw-bold text-dark-blue mb-1 popup-title">
+                    ${info.name || 'Nome non disponibile'}
+                </h3>
 
-            <div class="popup-actions d-flex justify-content-between align-items-center">
-                <a href="/spot?id=${info.id}" target="_blank" rel="noopener" class="btn-view-spot">
+                <p class="small text-muted mb-3 popup-address">
+                    <i class="fa-solid fa-location-dot me-1 text-orange"></i>
+                    ${info.address || 'Indirizzo non disponibile'}
+                </p>
+
+                <div class="d-inline-flex align-items-center gap-2 bg-light border rounded-pill px-3 py-2 mb-3">
+                    <span class="fw-bold text-dark-blue">${rating}</span>
+                    <i class="fa-solid fa-star text-orange small"></i>
+                    <span class="small text-muted fw-bold">${reviews} recensioni</span>
+                </div>
+
+                ${
+                    tagsHtml
+                        ? `<div class="d-flex flex-wrap gap-2 mb-3">${tagsHtml}</div>`
+                        : `<p class="small text-muted fw-bold mb-3">Nessun tag disponibile</p>`
+                }
+
+                <a href="/spot?id=${info.id}" target="_blank" rel="noopener" 
+                   class="btn btn-primary-custom rounded-pill w-100 fw-bold">
                     Vedi Spot
+                    <i class="fa-solid fa-arrow-right ms-1"></i>
                 </a>
-                
             </div>
         </div>
     `;
