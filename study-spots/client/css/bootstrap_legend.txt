@@ -1,0 +1,627 @@
+MANUALE RAPIDO PER USARE Bootstrap
+
+/* =========================
+   DISPLAY
+   ========================= */
+
+d-flex                         → display: flex;
+d-inline-flex                  → display: inline-flex;
+d-block                        → display: block;
+d-inline                       → display: inline;
+d-inline-block                 → display: inline-block;
+d-none                         → display: none;
+
+
+/* =========================
+   FLEX DIRECTION / WRAP
+   ========================= */
+
+flex-row                       → elementi in riga
+flex-column                    → elementi in colonna
+flex-wrap                      → permette agli elementi di andare a capo
+flex-nowrap                    → impedisce agli elementi di andare a capo
+
+
+/* =========================
+   FLEX ALIGNMENT
+   ========================= */
+
+align-items-start              → allinea gli elementi in alto
+align-items-center             → centra verticalmente gli elementi
+align-items-end                → allinea gli elementi in basso
+align-items-stretch            → allunga gli elementi verticalmente
+
+justify-content-start          → allinea a sinistra
+justify-content-center         → centra orizzontalmente
+justify-content-end            → allinea a destra
+justify-content-between        → spazio massimo tra gli elementi
+justify-content-around         → spazio attorno agli elementi
+justify-content-evenly         → spazio uguale tra gli elementi
+
+
+/* =========================
+   GAP
+   ========================= */
+
+gap-0                          → nessuno spazio tra elementi
+gap-1                          → spazio molto piccolo
+gap-2                          → spazio piccolo
+gap-3                          → spazio medio
+gap-4                          → spazio grande
+gap-5                          → spazio molto grande
+
+
+/* =========================
+   MARGIN GENERALE
+   ========================= */
+
+m-0                            → margin 0 su tutti i lati
+m-1                            → margin piccolo su tutti i lati
+m-2                            → margin medio-piccolo su tutti i lati
+m-3                            → margin medio su tutti i lati
+m-4                            → margin grande su tutti i lati
+m-5                            → margin molto grande su tutti i lati
+
+
+/* =========================
+   MARGIN TOP
+   ========================= */
+
+mt-0                           → margin-top 0
+mt-1                           → margin-top piccolo
+mt-2                           → margin-top medio-piccolo
+mt-3                           → margin-top medio
+mt-4                           → margin-top grande
+mt-5                           → margin-top molto grande
+
+
+/* =========================
+   MARGIN BOTTOM
+   ========================= */
+
+mb-0                           → margin-bottom 0
+mb-1                           → margin-bottom piccolo
+mb-2                           → margin-bottom medio-piccolo
+mb-3                           → margin-bottom medio
+mb-4                           → margin-bottom grande
+mb-5                           → margin-bottom molto grande
+
+
+/* =========================
+   MARGIN LEFT / RIGHT
+   ========================= */
+
+ms-0                           → margin-left/start 0
+ms-1                           → margin-left/start piccolo
+ms-2                           → margin-left/start medio-piccolo
+ms-3                           → margin-left/start medio
+ms-4                           → margin-left/start grande
+ms-5                           → margin-left/start molto grande
+
+me-0                           → margin-right/end 0
+me-1                           → margin-right/end piccolo
+me-2                           → margin-right/end medio-piccolo
+me-3                           → margin-right/end medio
+me-4                           → margin-right/end grande
+me-5                           → margin-right/end molto grande
+
+
+/* =========================
+   MARGIN ORIZZONTALE / VERTICALE
+   ========================= */
+
+mx-0                           → margin orizzontale 0
+mx-1                           → margin orizzontale piccolo
+mx-2                           → margin orizzontale medio-piccolo
+mx-3                           → margin orizzontale medio
+mx-4                           → margin orizzontale grande
+mx-5                           → margin orizzontale molto grande
+mx-auto                        → margine orizzontale automatico, utile per centrare
+
+my-0                           → margin verticale 0
+my-1                           → margin verticale piccolo
+my-2                           → margin verticale medio-piccolo
+my-3                           → margin verticale medio
+my-4                           → margin verticale grande
+my-5                           → margin verticale molto grande
+
+
+/* =========================
+   PADDING GENERALE
+   ========================= */
+
+p-0                            → padding 0 su tutti i lati
+p-1                            → padding piccolo su tutti i lati
+p-2                            → padding medio-piccolo su tutti i lati
+p-3                            → padding medio su tutti i lati
+p-4                            → padding grande su tutti i lati
+p-5                            → padding molto grande su tutti i lati
+
+
+/* =========================
+   PADDING TOP / BOTTOM
+   ========================= */
+
+pt-0                           → padding-top 0
+pt-1                           → padding-top piccolo
+pt-2                           → padding-top medio-piccolo
+pt-3                           → padding-top medio
+pt-4                           → padding-top grande
+pt-5                           → padding-top molto grande
+
+pb-0                           → padding-bottom 0
+pb-1                           → padding-bottom piccolo
+pb-2                           → padding-bottom medio-piccolo
+pb-3                           → padding-bottom medio
+pb-4                           → padding-bottom grande
+pb-5                           → padding-bottom molto grande
+
+
+/* =========================
+   PADDING LEFT / RIGHT
+   ========================= */
+
+ps-0                           → padding-left/start 0
+ps-1                           → padding-left/start piccolo
+ps-2                           → padding-left/start medio-piccolo
+ps-3                           → padding-left/start medio
+ps-4                           → padding-left/start grande
+ps-5                           → padding-left/start molto grande
+
+pe-0                           → padding-right/end 0
+pe-1                           → padding-right/end piccolo
+pe-2                           → padding-right/end medio-piccolo
+pe-3                           → padding-right/end medio
+pe-4                           → padding-right/end grande
+pe-5                           → padding-right/end molto grande
+
+
+/* =========================
+   PADDING ORIZZONTALE / VERTICALE
+   ========================= */
+
+px-0                           → padding orizzontale 0
+px-1                           → padding orizzontale piccolo
+px-2                           → padding orizzontale medio-piccolo
+px-3                           → padding orizzontale medio
+px-4                           → padding orizzontale grande
+px-5                           → padding orizzontale molto grande
+
+py-0                           → padding verticale 0
+py-1                           → padding verticale piccolo
+py-2                           → padding verticale medio-piccolo
+py-3                           → padding verticale medio
+py-4                           → padding verticale grande
+py-5                           → padding verticale molto grande
+
+
+/* =========================
+   TEXT ALIGN
+   ========================= */
+
+text-start                     → testo a sinistra
+text-center                    → testo centrato
+text-end                       → testo a destra
+
+
+/* =========================
+   TEXT COLORS
+   ========================= */
+
+text-primary                   → testo blu Bootstrap
+text-secondary                 → testo grigio
+text-success                   → testo verde
+text-danger                    → testo rosso
+text-warning                   → testo giallo/arancione
+text-info                      → testo azzurro
+text-light                     → testo chiaro
+text-dark                      → testo scuro
+text-muted                     → testo grigio chiaro
+text-white                     → testo bianco
+
+
+/* =========================
+   BACKGROUND COLORS
+   ========================= */
+
+bg-primary                     → sfondo blu Bootstrap
+bg-secondary                   → sfondo grigio
+bg-success                     → sfondo verde
+bg-danger                      → sfondo rosso
+bg-warning                     → sfondo giallo/arancione
+bg-info                        → sfondo azzurro
+bg-light                       → sfondo chiaro
+bg-dark                        → sfondo scuro
+bg-white                       → sfondo bianco
+
+
+/* =========================
+   FONT WEIGHT / STYLE
+   ========================= */
+
+fw-light                       → font leggero
+fw-normal                      → font normale
+fw-semibold                    → semigrassetto
+fw-bold                        → grassetto
+fw-bolder                      → molto grassetto
+
+fst-normal                     → testo normale
+fst-italic                     → corsivo
+
+
+/* =========================
+   TEXT TRANSFORM
+   ========================= */
+
+text-uppercase                 → testo tutto maiuscolo
+text-lowercase                 → testo tutto minuscolo
+text-capitalize                → iniziali maiuscole
+
+
+/* =========================
+   FONT SIZE
+   ========================= */
+
+fs-1                           → testo molto grande
+fs-2                           → testo grande
+fs-3                           → testo medio-grande
+fs-4                           → testo medio
+fs-5                           → testo medio-piccolo
+fs-6                           → testo piccolo
+
+small                          → testo più piccolo del normale
+lead                           → testo introduttivo più grande e leggibile
+
+
+/* =========================
+   BORDER
+   ========================= */
+
+border                         → aggiunge bordo
+border-0                       → rimuove bordo
+border-top                     → bordo sopra
+border-bottom                  → bordo sotto
+border-start                   → bordo a sinistra/start
+border-end                     → bordo a destra/end
+
+
+/* =========================
+   BORDER COLORS
+   ========================= */
+
+border-primary                 → bordo blu Bootstrap
+border-secondary               → bordo grigio
+border-success                 → bordo verde
+border-danger                  → bordo rosso
+border-warning                 → bordo giallo/arancione
+border-info                    → bordo azzurro
+border-light                   → bordo chiaro
+border-dark                    → bordo scuro
+border-white                   → bordo bianco
+
+
+/* =========================
+   BORDER RADIUS
+   ========================= */
+
+rounded                        → bordi arrotondati normali
+rounded-0                      → nessun arrotondamento
+rounded-1                      → poco arrotondato
+rounded-2                      → arrotondamento medio-piccolo
+rounded-3                      → arrotondamento medio
+rounded-4                      → molto arrotondato
+rounded-5                      → molto molto arrotondato
+rounded-circle                 → forma circolare
+rounded-pill                   → forma a pillola
+
+
+/* =========================
+   SHADOW
+   ========================= */
+
+shadow-none                    → nessuna ombra
+shadow-sm                      → ombra piccola
+shadow                         → ombra normale
+shadow-lg                      → ombra grande
+
+
+/* =========================
+   WIDTH / HEIGHT
+   ========================= */
+
+w-25                           → larghezza 25%
+w-50                           → larghezza 50%
+w-75                           → larghezza 75%
+w-100                          → larghezza 100%
+w-auto                         → larghezza automatica
+
+h-25                           → altezza 25%
+h-50                           → altezza 50%
+h-75                           → altezza 75%
+h-100                          → altezza 100%
+h-auto                         → altezza automatica
+
+mw-100                         → max-width 100%
+mh-100                         → max-height 100%
+
+
+/* =========================
+   POSITION
+   ========================= */
+
+position-static                → position: static;
+position-relative              → position: relative;
+position-absolute              → position: absolute;
+position-fixed                 → position: fixed;
+position-sticky                → position: sticky;
+
+top-0                          → top: 0;
+bottom-0                       → bottom: 0;
+start-0                        → left/start: 0;
+end-0                          → right/end: 0;
+
+translate-middle               → sposta di -50% su X e Y, utile per centrare absolute
+translate-middle-x             → sposta di -50% su X
+translate-middle-y             → sposta di -50% su Y
+
+
+/* =========================
+   OVERFLOW / VISIBILITY
+   ========================= */
+
+overflow-hidden                → nasconde ciò che esce
+overflow-auto                  → scroll automatico se serve
+overflow-scroll                → scroll sempre
+overflow-visible               → lascia uscire il contenuto
+
+visible                        → visibile
+invisible                      → invisibile ma occupa spazio
+
+
+/* =========================
+   GRID SYSTEM
+   ========================= */
+
+container                      → contenitore centrato con larghezza massima
+container-fluid                → contenitore largo tutta la pagina
+row                            → riga della griglia Bootstrap
+col                            → colonna automatica
+col-1                          → 1 colonna su 12
+col-2                          → 2 colonne su 12
+col-3                          → 3 colonne su 12
+col-4                          → 4 colonne su 12
+col-5                          → 5 colonne su 12
+col-6                          → 6 colonne su 12
+col-7                          → 7 colonne su 12
+col-8                          → 8 colonne su 12
+col-9                          → 9 colonne su 12
+col-10                         → 10 colonne su 12
+col-11                         → 11 colonne su 12
+col-12                         → 12 colonne su 12, larghezza piena
+
+
+/* =========================
+   RESPONSIVE COLUMNS
+   ========================= */
+
+col-sm-6                       → 6 colonne da schermi small in su
+col-md-6                       → 6 colonne da schermi medium in su
+col-lg-6                       → 6 colonne da schermi large in su
+col-xl-6                       → 6 colonne da schermi extra large in su
+col-xxl-6                      → 6 colonne da schermi extra extra large in su
+
+
+/* =========================
+   GRID GAP
+   ========================= */
+
+g-0                            → nessuno spazio tra righe/colonne
+g-1                            → spazio piccolo tra righe/colonne
+g-2                            → spazio medio-piccolo tra righe/colonne
+g-3                            → spazio medio tra righe/colonne
+g-4                            → spazio grande tra righe/colonne
+g-5                            → spazio molto grande tra righe/colonne
+
+gx-0                           → nessuno spazio orizzontale tra colonne
+gx-1                           → spazio orizzontale piccolo
+gx-2                           → spazio orizzontale medio-piccolo
+gx-3                           → spazio orizzontale medio
+gx-4                           → spazio orizzontale grande
+gx-5                           → spazio orizzontale molto grande
+
+gy-0                           → nessuno spazio verticale tra righe
+gy-1                           → spazio verticale piccolo
+gy-2                           → spazio verticale medio-piccolo
+gy-3                           → spazio verticale medio
+gy-4                           → spazio verticale grande
+gy-5                           → spazio verticale molto grande
+
+
+/* =========================
+   BUTTONS
+   ========================= */
+
+btn                            → classe base per bottone
+btn-primary                    → bottone blu
+btn-secondary                  → bottone grigio
+btn-success                    → bottone verde
+btn-danger                     → bottone rosso
+btn-warning                    → bottone giallo/arancione
+btn-info                       → bottone azzurro
+btn-light                      → bottone chiaro
+btn-dark                       → bottone scuro
+btn-link                       → bottone stile link
+
+btn-outline-primary            → bottone con bordo blu
+btn-outline-secondary          → bottone con bordo grigio
+btn-outline-success            → bottone con bordo verde
+btn-outline-danger             → bottone con bordo rosso
+btn-outline-warning            → bottone con bordo giallo/arancione
+btn-outline-info               → bottone con bordo azzurro
+btn-outline-light              → bottone con bordo chiaro
+btn-outline-dark               → bottone con bordo scuro
+
+btn-sm                         → bottone piccolo
+btn-lg                         → bottone grande
+
+
+/* =========================
+   CARDS
+   ========================= */
+
+card                           → card Bootstrap
+card-header                    → intestazione card
+card-body                      → corpo card
+card-footer                    → fondo card
+card-title                     → titolo card
+card-text                      → testo card
+card-img-top                   → immagine sopra nella card
+card-img-bottom                → immagine sotto nella card
+
+
+/* =========================
+   BADGES / ALERTS
+   ========================= */
+
+badge                          → badge base
+rounded-pill                   → badge/pulsante a pillola
+
+alert                          → alert base
+alert-primary                  → alert blu
+alert-success                  → alert verde
+alert-danger                   → alert rosso
+alert-warning                  → alert giallo/arancione
+alert-info                     → alert azzurro
+
+
+/* =========================
+   FORMS
+   ========================= */
+
+form-control                   → input Bootstrap
+form-select                    → select Bootstrap
+form-check                     → contenitore checkbox/radio
+form-check-input               → checkbox/radio
+form-check-label               → testo checkbox/radio
+input-group                    → gruppo input + bottone
+input-group-text               → testo/icona dentro input group
+
+
+/* =========================
+   TABLES
+   ========================= */
+
+table                          → tabella Bootstrap
+table-hover                    → righe tabella evidenziate al passaggio
+table-striped                  → righe alternate
+table-responsive               → tabella scrollabile su mobile
+
+
+/* =========================
+   NAVBAR
+   ========================= */
+
+navbar                         → navbar Bootstrap
+navbar-expand-lg               → navbar espansa da schermi large in su
+navbar-light                   → navbar per sfondi chiari
+navbar-dark                    → navbar per sfondi scuri
+navbar-brand                   → logo/nome navbar
+navbar-nav                     → lista link navbar
+nav-item                       → elemento navbar
+nav-link                       → link navbar
+navbar-toggler                 → bottone hamburger
+navbar-collapse                → contenitore collassabile navbar
+
+
+/* =========================
+   COLLAPSE / DROPDOWN
+   ========================= */
+
+collapse                       → elemento collassabile
+show                           → elemento collapse aperto
+dropdown                       → dropdown
+dropdown-menu                  → menu dropdown
+dropdown-item                  → voce dropdown
+
+
+/* =========================
+   MODAL
+   ========================= */
+
+modal                          → modale Bootstrap
+modal-dialog                   → contenitore modale
+modal-content                  → contenuto modale
+modal-header                   → header modale
+modal-body                     → corpo modale
+modal-footer                   → footer modale
+
+
+/* =========================
+   OPACITY / Z-INDEX
+   ========================= */
+
+opacity-25                     → opacità 25%
+opacity-50                     → opacità 50%
+opacity-75                     → opacità 75%
+opacity-100                    → opacità 100%
+
+z-0                            → z-index 0
+z-1                            → z-index 1
+z-2                            → z-index 2
+z-3                            → z-index 3
+
+
+/* =========================
+   POINTER / SELECTION
+   ========================= */
+
+user-select-none               → impedisce selezione testo
+pe-none                        → pointer-events: none;
+pe-auto                        → pointer-events: auto;
+
+
+/* =========================
+   TEXT DECORATION / LINE HEIGHT
+   ========================= */
+
+text-decoration-none           → rimuove sottolineatura
+text-decoration-underline      → aggiunge sottolineatura
+
+lh-1                           → line-height molto compatta
+lh-sm                          → line-height piccola
+lh-base                        → line-height normale
+lh-lg                          → line-height grande
+
+
+/* =========================
+   IMAGES / RATIOS
+   ========================= */
+
+img-fluid                      → immagine responsive max-width 100%
+img-thumbnail                  → immagine con bordo stile thumbnail
+
+ratio                          → contenitore con proporzione
+ratio-1x1                      → quadrato
+ratio-4x3                      → formato 4:3
+ratio-16x9                     → formato 16:9
+ratio-21x9                     → formato 21:9
+
+
+/* =========================
+   FIXED / STICKY
+   ========================= */
+
+sticky-top                     → position sticky top, utile per navbar
+fixed-top                      → fissato in alto
+fixed-bottom                   → fissato in basso
+
+
+/* =========================
+   RESPONSIVE UTILITIES
+   ========================= */
+
+d-none d-md-block              → nascosto su mobile, visibile da md in su
+d-block d-md-none              → visibile su mobile, nascosto da md in su
+text-center text-lg-start      → testo centrato su mobile, sinistra su desktop
+flex-column flex-lg-row        → colonna su mobile, riga su desktop
+w-100 w-md-auto                → largo 100% su mobile, automatico da md in su

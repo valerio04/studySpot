@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -60,11 +62,27 @@
                         </div>
 
                         <button class="btn btn-secondary-custom rounded-pill px-4 shadow-sm" type="button" id="near-me-button">
-                            <i class="bi bi-geo-alt"></i> Vicino a me
+                            <i class="fa-solid fa-location-crosshairs"></i> Vicino a me
                         </button>
                     </form>
                 </div>
             </div>
+            
+            <div class="d-flex justify-content-center gap-4 mt-4 flex-wrap">
+                <div>
+                    <span class="fw-bold text-orange">100+</span>
+                    <span class="text-muted small"> spot</span>
+                </div>
+                <div>
+                    <span class="fw-bold text-orange">4</span>
+                    <span class="text-muted small"> categorie</span>
+                </div>
+                <div>
+                    <span class="fw-bold text-orange">Roma</span>
+                    <span class="text-muted small"> e dintorni</span>
+                </div>
+            </div>
+            
             
             <div class="row justify-content-center">
                 <div class="col-md-10 col-lg-8">
@@ -81,30 +99,33 @@
         <div class="row g-4 px-lg-5">
             <div class="col-lg-2">
                 <div class="filter-card p-4 rounded-4 shadow-sm bg-light">
-                    <h4 class="fw-bold mb-4">Filtri:</h4>
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h4 class="fw-bold mb-0">Filtri</h4>
+                        <i class="fa-solid fa-sliders text-orange"></i>
+                    </div>
                     <div class="d-flex flex-column gap-3">
-                        <label class="filter-item d-flex align-items-center justify-content-between">
+                        <label class="filter-item">
                             <div class="d-flex align-items-center gap-2">
                                 <img src="assets/img/cafe-icon.png" width="30" alt="Bar">
                                 <span class="small fw-bold">Bar</span>
                             </div>
                             <input type="checkbox" class="form-check-input" checked>
                         </label>
-                        <label class="filter-item d-flex align-items-center justify-content-between">
+                        <label class="filter-item">
                             <div class="d-flex align-items-center gap-2">
                                 <img src="assets/img/coworking-icon.png" width="30" alt="Library">
                                 <span class="small fw-bold">Coworking</span>
                             </div>
                             <input type="checkbox" class="form-check-input" checked>
                         </label>
-                        <label class="filter-item d-flex align-items-center justify-content-between">
+                        <label class="filter-item">
                             <div class="d-flex align-items-center gap-2">
                                 <img src="assets/img/biblioteca-icon.png" width="30" alt="Library">
                                 <span class="small fw-bold">Biblioteca</span>
                             </div>
                             <input type="checkbox" class="form-check-input" checked>
                         </label>
-                        <label class="filter-item d-flex align-items-center justify-content-between">
+                        <label class="filter-item">
                             <div class="d-flex align-items-center gap-2">
                                 <img src="assets/img/aula_studio-icon.png" width="30" alt="Library">
                                 <span class="small fw-bold">Aula Studio</span>
@@ -174,20 +195,29 @@
                 </div>
             </div>
 
+            
+
             <div class="col-lg-10 position-relative">
                 <div id="map-container" class="rounded-4 overflow-hidden shadow-sm border">
                     <button id="search-here-button" class="search-here-btn" type="button" style="display: none;">
                         Cerca qui
                     </button>
-                    <a href="/add-spot" class="add-spot-btn shadow">
-                        <img src="assets/img/button-icon.png" alt="Add Spot" width="60">
+                   <a href="/add-spot" class="add-spot-btn btn btn-primary-custom rounded-pill shadow fw-bold">
+                        <i class="fa-solid fa-plus me-1"></i>
+                        Aggiungi
                     </a>
                     <div id="map" style="height: 600px; width: 100%;"></div>
                 </div>
 
                 <div class="mt-4">
                     <div class="d-flex align-items-center justify-content-between mb-2">
-                        <h3 class="h5 fw-bold text-dark-blue mb-0">Spot trovati</h3>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div>
+                            <h3 class="h5 fw-bold text-dark-blue mb-0">Spot trovati</h3>
+                            <p class="small text-muted mb-0">Risultati in base alla zona selezionata</p>
+                        </div>
+                        <span id="map-results-count" class="badge rounded-pill bg-light text-dark border"></span>
+                    </div>
                         <span id="map-results-count" class="small text-muted"></span>
                     </div>
                     <div id="map-results-list" class="d-flex gap-3 overflow-auto pb-2"></div>
@@ -198,6 +228,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
     <script src="js/components/spot-card.js"></script>
     <script src="js/search.js"></script>
     <script src="js/map.js"></script>
