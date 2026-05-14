@@ -127,6 +127,7 @@ app.get('/api/me', async (req, res) => {
     }  
 
     const supabaseClient = getSupabase(req, res);
+    //const supabaseClient = supabase;
 
     // prendo i dati dell'utente loggato tramite auth.getUser()
     const { data: { user }, error } = await supabaseClient.auth.getUser();
@@ -1331,6 +1332,42 @@ app.get('/api/spots_search', async (req, res) => {
         .from('spots')
         .select('*')
         .eq('type', type)
+        .gte('latitude', latitude - latOffset)
+        .lte('latitude', latitude + latOffset)
+        .gte('longitude', longitude - lonOffset)
+        .lte('longitude', longitude + lonOffset);
+
+    if (error) {
+        console.error('Errore durante la ricerca degli spot:', error);
+        return res.status(500).json({ error: 'Errore durante la ricerca degli spot' });
+    }
+
+    res.json(spots);
+}); 
+
+app.get('/api/spots_search_all', async (req, res) => {
+    console.log('GET /api/spots_search_all');
+
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+        return res.status(503).json({ error: 'Database non configurato in questo ambiente' });
+    }
+
+    const supabaseClient = getSupabase(req, res);
+
+    const latitude = parseFloat(req.query.latitude);
+    const longitude = parseFloat(req.query.longitude);
+    const radiusKm = 5;
+
+    if (isNaN(latitude) || isNaN(longitude)) {
+        return res.status(400).json({ error: 'Parametri latitude o longitude mancanti o non validi' });
+    }
+
+    const latOffset = (radiusKm / 111); 
+    const lonOffset = (radiusKm / (111 * Math.cos(latitude * (Math.PI / 180))));
+
+    const { data: spots, error } = await supabaseClient
+        .from('spots')
+        .select('*')
         .gte('latitude', latitude - latOffset)
         .lte('latitude', latitude + latOffset)
         .gte('longitude', longitude - lonOffset)

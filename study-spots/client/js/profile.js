@@ -63,7 +63,7 @@ async function caricaTrack(endpoint, trackElement, icon) {
         const response = await fetch(endpoint, { credentials: 'include' });
         const rawData = await response.json();
         const spots = rawData.map(item => item.spots).filter(s => s !== null);
-        renderCards(trackElement, spots, icon);
+        renderCards(trackElement, spots);
     } catch (error) {
         trackElement.innerHTML = `<div class="alert alert-danger w-100">Errore nel caricamento</div>`;
     }
@@ -106,35 +106,15 @@ async function caricaCommenti(endpoint, trackElement) {
 }
 
 // Helper per generare le card degli spot
-function renderCards(container, data, primaryIcon) {
-    container.innerHTML = '';
-    if (!data || data.length === 0) {
-        container.innerHTML = '<div class="text-muted p-3">Nessun spot trovato</div>';
-    
+function renderCards(container, data) {
+    if (window.SpotCard?.renderList) {
+        window.SpotCard.renderList(container, data, {
+            showComments: false,
+            emptyMessage: 'Nessun spot trovato'
+        });
         return;
     }
 
-    data.forEach(spot => {
-        const card = document.createElement('a');
-        card.href = `/spot?id=${encodeURIComponent(spot.id)}`;
-        card.className = "card shadow-sm flex-shrink-0 text-decoration-none text-white border-0";
-        card.style.width = "220px";
-        card.style.backgroundColor = "#9ca4adff"; 
-        
-        card.innerHTML = `
-            <div class="d-flex align-items-center justify-content-center" 
-                 style="height: 100px; font-size: 2.5rem; background-color: #112E51; border-radius: 8px 8px 0 0;">
-                ${primaryIcon}
-            </div>
-            <div class="card-body p-3">
-                <h6 class="card-title text-truncate mb-2 fw-bold text-center">${spot.name || 'Spot'}</h6>
-                <div class="d-flex justify-content-center">
-                    <span class="badge bg-white text-dark shadow-sm">⭐ ${(Number(spot.star_avg ?? 0).toFixed(1))}</span>
-                </div>
-                <div style="color: #112E51; font-size: 0.8rem; font-weight: bold;">Vedi spot →</div>
-            </div>
-        `;
-        container.appendChild(card);
-    });
+    container.innerHTML = '';
 }
 

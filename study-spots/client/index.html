@@ -112,15 +112,85 @@
                             <input type="checkbox" class="form-check-input" checked>
                         </label>
                     </div>
+
+                    <div class="advanced-filters mt-4">
+                        <button class="btn btn-outline-dark-blue w-100 d-flex justify-content-between align-items-center fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#advanced-filters-panel" aria-expanded="false" aria-controls="advanced-filters-panel">
+                            Filtri avanzati
+                            <span class="badge bg-light text-dark">Tag</span>
+                        </button>
+
+                        <div class="collapse mt-3" id="advanced-filters-panel">
+                            <div class="mb-3">
+                                <p class="text-uppercase small fw-bold text-secondary mb-2">Prezzo</p>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <input type="checkbox" class="btn-check" id="tag-price-1">
+                                    <label class="btn btn-outline-secondary btn-sm" for="tag-price-1">€</label>
+
+                                    <input type="checkbox" class="btn-check" id="tag-price-2">
+                                    <label class="btn btn-outline-secondary btn-sm" for="tag-price-2">€€</label>
+
+                                    <input type="checkbox" class="btn-check" id="tag-price-3">
+                                    <label class="btn btn-outline-secondary btn-sm" for="tag-price-3">€€€</label>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <p class="text-uppercase small fw-bold text-secondary mb-2">Ambiente</p>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <input type="checkbox" class="btn-check" id="tag-outdoor">
+                                    <label class="btn btn-outline-secondary btn-sm" for="tag-outdoor">All'aperto</label>
+
+                                    <input type="checkbox" class="btn-check" id="tag-indoor">
+                                    <label class="btn btn-outline-secondary btn-sm" for="tag-indoor">Al chiuso</label>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <p class="text-uppercase small fw-bold text-secondary mb-2">Servizi</p>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <input type="checkbox" class="btn-check" id="tag-outlets">
+                                    <label class="btn btn-outline-secondary btn-sm" for="tag-outlets">Prese elettriche</label>
+
+                                    <input type="checkbox" class="btn-check" id="tag-quiet">
+                                    <label class="btn btn-outline-secondary btn-sm" for="tag-quiet">Silenzioso</label>
+                                </div>
+                            </div>
+
+                            <div>
+                                <p class="text-uppercase small fw-bold text-secondary mb-2">Affollamento</p>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <input type="checkbox" class="btn-check" id="tag-crowd-low">
+                                    <label class="btn btn-outline-secondary btn-sm" for="tag-crowd-low">Poco affollato</label>
+
+                                    <input type="checkbox" class="btn-check" id="tag-crowd-mid">
+                                    <label class="btn btn-outline-secondary btn-sm" for="tag-crowd-mid">Medio</label>
+
+                                    <input type="checkbox" class="btn-check" id="tag-crowd-high">
+                                    <label class="btn btn-outline-secondary btn-sm" for="tag-crowd-high">Molto affollato</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="col-lg-10 position-relative">
                 <div id="map-container" class="rounded-4 overflow-hidden shadow-sm border">
+                    <button id="search-here-button" class="search-here-btn" type="button" style="display: none;">
+                        Cerca qui
+                    </button>
                     <a href="/add-spot" class="add-spot-btn shadow">
                         <img src="assets/img/button-icon.png" alt="Add Spot" width="60">
                     </a>
                     <div id="map" style="height: 600px; width: 100%;"></div>
+                </div>
+
+                <div class="mt-4">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <h3 class="h5 fw-bold text-dark-blue mb-0">Spot trovati</h3>
+                        <span id="map-results-count" class="small text-muted"></span>
+                    </div>
+                    <div id="map-results-list" class="d-flex gap-3 overflow-auto pb-2"></div>
                 </div>
             </div>
         </div>
@@ -128,6 +198,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/components/spot-card.js"></script>
     <script src="js/search.js"></script>
     <script src="js/map.js"></script>
     <script src="js/checkAuth.js"></script>

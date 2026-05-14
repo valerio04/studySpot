@@ -151,6 +151,27 @@ h1, h2, h3, h4, .nome-logo {
     width: 100%;
 }
 
+.search-here-btn {
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1001;
+    background: #ffffff;
+    color: var(--dark-blue);
+    border: 2px solid var(--dark-blue);
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-weight: 700;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s ease;
+}
+
+.search-here-btn:hover {
+    background: var(--dark-blue);
+    color: #ffffff;
+}
+
 .add-spot-btn {
     position: absolute;
     top: 15px;
@@ -166,6 +187,11 @@ h1, h2, h3, h4, .nome-logo {
 .filter-card {
     border: 1px solid rgba(0,0,0,0.05);
     height: fit-content;
+}
+
+.advanced-filters {
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    padding-top: 16px;
 }
 
 .filter-item {
