@@ -1435,19 +1435,49 @@ app.get('/api/spots_search_all', async (req, res) => {
     const lonOffset = (radiusKm / (111 * Math.cos(latitude * (Math.PI / 180))));
 
     const { data: spots, error } = await supabaseClient
-        .from('spots')
-        .select('*')
-        .gte('latitude', latitude - latOffset)
-        .lte('latitude', latitude + latOffset)
-        .gte('longitude', longitude - lonOffset)
-        .lte('longitude', longitude + lonOffset);
+    .from('spots')
+    .select(`
+        id,
+        name,
+        address,
+        latitude,
+        longitude,
+        type,
+        star_count,
+        star_avg,
+        comment_count,
+        spot_photos (
+            numero_foto,
+            link_foto
+        )
+    `)
+    .gte('latitude', latitude - latOffset)
+    .lte('latitude', latitude + latOffset)
+    .gte('longitude', longitude - lonOffset)
+    .lte('longitude', longitude + lonOffset);
 
     if (error) {
         console.error('Errore durante la ricerca degli spot:', error);
         return res.status(500).json({ error: 'Errore durante la ricerca degli spot' });
     }
 
-    res.json(spots);
+    const formattedSpots = (spots || []).map(spot => {
+        const photos = spot.spot_photos || [];
+
+        const mainPhoto =
+            photos.find(photo => photo.numero_foto === 1) ||
+            photos[0];
+
+        return {
+            ...spot,
+            copertina: mainPhoto ? mainPhoto.link_foto : null,
+            spot_photos: undefined
+        };
+    });
+
+    res.json(formattedSpots);
+
+   
 }); 
 
 

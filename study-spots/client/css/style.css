@@ -1323,7 +1323,3 @@ img:not([src]), img[src=""] {
     visibility: hidden;
 }
 
-img {
-    background-color: #eee;
-    font-size: 0; /* Nasconde il testo alt se l'immagine non c'è, mantenendo il layout */
-}
