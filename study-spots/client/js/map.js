@@ -1,5 +1,5 @@
 // Inizializza la mappa
-const map = L.map('map').setView([41.9028, 12.4964], 13); // Roma di default
+const map = L.map('map',{ scrollWheelZoom: false}).setView([41.9028, 12.4964], 13); // Roma di default
 
 // Layer di base
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
