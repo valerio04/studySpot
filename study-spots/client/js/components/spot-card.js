@@ -27,12 +27,15 @@
             badges.push(`<span class="badge badge-custom text-dark-blue border border-dark-blue">💬 ${commentCount}</span>`);
         }
 
+        const mediaHTML = foto 
+            ? `<img src="${foto}" class="card-img-top" alt="${name}" style="object-fit: cover;">`
+            : `<div class="card-img-top-placeholder bg-dark-blue d-flex align-items-center justify-content-center">
+                <img src="../assets/img/logo.png" alt="Logo" style="width: 40px; opacity: 0.5; filter: brightness(0) invert(1);">
+            </div>`;
+
         card.innerHTML = `
             <div class="position-relative">
-                <img src="${foto}" 
-                    class="card-img-top" 
-                    alt="${name}" 
-                    style="object-fit: cover;">
+                ${mediaHTML}
             </div>
             <div class="p-3">
                 <h3 class="h6 fw-bold text-dark-blue mb-1">${name}</h3>
