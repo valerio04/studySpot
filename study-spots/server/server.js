@@ -1107,7 +1107,7 @@ app.get('/api/info-spot/:id', async (req, res) =>{
     const { data: spot, error: spotError } = await supabaseClient
             .from('spots')
             .select(`aggiunti(user_id), spot_photos (link_foto), 
-                name, address, type, star_avg, star_count`)
+                latitude, longitude, name, address, type, star_avg, star_count`)
             .eq('id', idSpot)
             .maybeSingle();
 
