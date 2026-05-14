@@ -213,6 +213,18 @@ h1, h2, h3, h4, .nome-logo {
 
     white-space: nowrap;
     overflow: hidden;
+
+    background: white;
+    border: 1px solid rgba(17, 46, 81, 0.08);
+    border-radius: 14px;
+    padding: 10px 12px;
+    transition: all 0.2s ease;
+}
+
+
+.filter-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(17, 46, 81, 0.08);
 }
 
 .filter-item > div {
