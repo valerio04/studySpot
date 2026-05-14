@@ -1,6 +1,10 @@
 
 const form = document.getElementById('add-spot');
 
+// FOTO
+const photoInput = document.getElementById('photos');
+const previewContainer = document.getElementById('image-preview');
+let fileList = []; // Array persistente dei file compressi
 
 
 
@@ -32,6 +36,70 @@ async function checkIfAuthenticated() {
 };
 
 
+photoInput.addEventListener('change', async (event) => {
+    const selectedFiles = Array.from(event.target.files);
+    
+    // Controllo limite massimo
+    if (fileList.length + selectedFiles.length > 5) {
+        alert("Puoi inserire al massimo 5 foto in totale.");
+        photoInput.value = ""; // Reset dell'input
+        return;
+    }
+
+    const options = {
+        maxSizeMB: 0.8,
+        maxWidthOrHeight: 1280,
+        useWebWorker: true
+    };
+
+    for (const file of selectedFiles) {
+        try {
+            const compressedBlob = await imageCompression(file, options);
+            const compressedFile = new File([compressedBlob], file.name, { type: file.type });
+            
+            // Aggiungiamo all'array globale
+            fileList.push(compressedFile);
+            
+            // Creiamo l'anteprima con tasto "rimuovi"
+            renderPreview(compressedFile, fileList.length - 1);
+            
+        } catch (error) {
+            console.error("Errore compressione:", error);
+        }
+    }
+    
+    // Reset dell'input file per permettere di selezionare di nuovo lo stesso file se rimosso
+    photoInput.value = "";
+});
+
+function renderPreview(file, index) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const div = document.createElement('div');
+        div.className = "position-relative";
+        div.style.width = "80px";
+        div.innerHTML = `
+            <img src="${e.target.result}" class="rounded border" style="width:80px; height:80px; object-fit:cover;">
+            <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 rounded-circle p-0" 
+                    style="width:20px; height:20px; line-height:1;" onclick="removeImage(${index})">
+                &times;
+            </button>
+        `;
+        previewContainer.appendChild(div);
+    };
+    reader.readAsDataURL(file);
+}
+
+// Funzione per rimuovere l'immagine
+window.removeImage = (index) => {
+    fileList.splice(index, 1); // Rimuovi dall'array
+    refreshPreviews(); // Ridisegna tutto per aggiornare gli indici
+};
+
+function refreshPreviews() {
+    previewContainer.innerHTML = "";
+    fileList.forEach((file, index) => renderPreview(file, index));
+}
 
 async function creaSpot(event) {
     event.preventDefault();
@@ -106,16 +174,35 @@ async function creaSpot(event) {
         crowd,
         schedule,
         rating,
-        comment
+        comment,
+        photos: fileList
     };
+
+    // --- CONVERSIONE spotData -> FormData ---
+    // Questo è il passaggio chiave per poter inviare file e testi insieme
+    const finalData = new FormData();
+    
+    for (const key in spotData) {
+        if (key === 'photos') {
+            // Aggiungiamo ogni file singolarmente al FormData
+            spotData.photos.forEach(file => {
+                finalData.append('photos', file);
+            });
+        } else if (key === 'schedule') {
+            // Stringifichiamo schedule poiché deve essere una stringa JSON
+            finalData.append(key, JSON.stringify(spotData[key]));
+        } else {
+            // Aggiungiamo gli altri campi testuali
+            finalData.append(key, spotData[key]);
+        }
+    }
+
+    console.log(finalData);
 
     try {
         const response = await fetch('/api/add-spot', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(spotData),
+            body: finalData,
             credentials: 'include'
         });
 

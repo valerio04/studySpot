@@ -435,33 +435,59 @@ h1, h2, h3, h4, .nome-logo {
 
 .btn-action:hover { background: #dad9d9; }
 
-/* Galleria a Griglia */
 .spot-gallery {
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 10px;
-    height: 400px;
+    grid-template-columns: 1.5fr 1fr; /* Proporzione più bilanciata */
+    gap: 12px;
+    height: 450px; /* Aumentata leggermente l'altezza */
     margin-bottom: 30px;
+}
+
+/* Foto Principale (Sinistra) */
+.gallery-main {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 20px 0 0 20px; /* Arrotondamento solo a sinistra */
 }
 
 .gallery-main img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    border-radius: 15px 0 0 15px;
+    object-fit: cover; /* Fondamentale: non schiaccia la foto */
+    transition: transform 0.5s ease;
 }
 
+/* Griglia Foto Secondarie (Destra) */
 .gallery-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
-    gap: 10px;
+    gap: 12px;
 }
 
 .gallery-grid img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    cursor: pointer;
+    transition: filter 0.3s ease;
+}
+
+.gallery-grid img:hover {
+    filter: brightness(0.8);
+}
+
+/* Arrotondamenti specifici per gli angoli della griglia destra */
+.gallery-grid img:nth-child(2) { border-top-right-radius: 20px; }
+.gallery-grid img:nth-child(4) { border-bottom-right-radius: 20px; }
+
+/* Se c'è solo una foto principale e la griglia è vuota */
+.spot-gallery:has(.gallery-grid:empty) {
+    grid-template-columns: 1fr;
+}
+.spot-gallery:has(.gallery-grid:empty) .gallery-main {
+    border-radius: 20px;
 }
 
 .last-photo-container {
@@ -1003,7 +1029,27 @@ body:has(#login) body:has(#register) {
     }
 }
 
+@media (max-width: 768px) {
+    .spot-gallery {
+        grid-template-columns: 1fr; /* Una colonna sola */
+        grid-template-rows: 250px 150px; /* Foto principale sopra, griglia sotto */
+        height: auto;
+    }
 
+    .gallery-main {
+        border-radius: 20px 20px 0 0; /* Arrotonda sopra */
+    }
+
+    .gallery-grid {
+        grid-template-columns: repeat(4, 1fr); /* 4 foto piccole in riga */
+        grid-template-rows: 1fr;
+        height: 80px;
+    }
+
+    .gallery-grid img {
+        border-radius: 8px !important; /* Arrotondamento uniforme su mobile */
+    }
+}
 
 .nav-avatar {
     width: 38px;
@@ -1023,4 +1069,14 @@ body:has(#login) body:has(#register) {
 .nav-avatar:hover {
     transform: scale(1.1);
     border-color: var(--dark-blue);
+}
+
+/* Nasconde l'icona dell'immagine rotta e mostra lo sfondo grigio */
+img:not([src]), img[src=""] {
+    visibility: hidden;
+}
+
+img {
+    background-color: #eee;
+    font-size: 0; /* Nasconde il testo alt se l'immagine non c'è, mantenendo il layout */
 }

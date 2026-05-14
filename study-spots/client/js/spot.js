@@ -10,7 +10,8 @@ const hoursList = document.querySelector('.card-body ul');
 const reviewList = document.querySelector('.review-list');
 const mapsLink = document.querySelector('.google-maps-link');
 const nearbyGrid = document.getElementById('nearby-spots-grid');
-
+const fotoPrincipaleContainer = document.getElementById('foto-principale');
+const grigliaFotoContainer = document.getElementById('griglia-foto');
 const btnSalva = document.getElementById('salva');
 const btnRemove = document.getElementById('btn-delete-spot');
 const formRecensione = document.querySelector('.add-review-box form');
@@ -126,6 +127,25 @@ async function popolaPagina(spot) {
     if (spotTitle) spotTitle.textContent = spot.name;
     if (spotAddress) spotAddress.textContent = spot.address;
     if (spotRatingText) spotRatingText.textContent = `${spot.star_avg || 0} (${spot.star_count || 0} recensioni)`;
+    
+    // Gestione Foto
+    const photos = spot.spot_photos || [];
+    const fallbackImg = 'https://via.placeholder.com/800x450?text=Nessuna+Foto';
+
+    // Foto Principale
+    fotoPrincipaleContainer.innerHTML = `<img src="${photos[0]?.link_foto || fallbackImg}" alt="${spot.name}" style="width:100%; height:100%; object-fit:cover;">`;
+
+    // Griglia altre foto (dalla seconda in poi)
+    if (grigliaFotoContainer) {
+        grigliaFotoContainer.innerHTML = '';
+        const secondaryPhotos = photos.slice(1, 5); // Prendi fino a 4 foto extra
+        secondaryPhotos.forEach(p => {
+            const img = document.createElement('img');
+            img.src = p.link_foto;
+            img.alt = "Dettaglio spot";
+            grigliaFotoContainer.appendChild(img);
+        });
+    };
 
     // Aggiorna le stelle in base alla media
     popolaStelle(spot.star_avg || 0);

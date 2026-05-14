@@ -2,6 +2,31 @@ require('dotenv').config({ path: require('path').join(__dirname, 'key.env') }); 
 const express = require('express') //importiamo express
 const app = express() //app è un oggetto con cui poi chiamiamo alcuni metodi
 
+const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
+// Prova questa specifica sintassi se la precedente è fallita:
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+
+// Configurazione Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+// Configurazione Storage per multer
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'study_spots',
+    allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+    // Ulteriore compressione lato server (trasformazione Cloudinary)
+    transformation: [{ width: 1000, crop: "limit", quality: "auto", fetch_format: "auto" }]
+  },
+});
+
+// Middleware multer configurato
+const upload = multer({ storage });
 
 // Legge il corpo delle richieste in formato JSON e lo mette in req.body
 app.use(express.json());
@@ -602,7 +627,7 @@ app.post('/api/add-comment', async (req, res) => {
 
 // ======== API: ADD SPOT ========
 
-app.post('/api/add-spot', async (req, res) =>{
+app.post('/api/add-spot', upload.array('photos', 5), async (req, res) =>{
     console.log('POST /api/add-spot');
 
     if (!SUPABASE_URL || !SUPABASE_KEY) {
@@ -636,6 +661,17 @@ app.post('/api/add-spot', async (req, res) =>{
     
 
     try {
+        // Parsa schedule da stringa JSON a oggetto
+        let parsedSchedule = null;
+        if (schedule && schedule !== 'null') {
+            try {
+                parsedSchedule = JSON.parse(schedule);
+            } catch (parseErr) {
+                console.warn('Errore nel parsing di schedule:', parseErr);
+                parsedSchedule = null;
+            }
+        }
+
         let spotId;
         // Inserisce il nuovo spot nel database
         const { data: spot, error: spotError } = await supabaseClient
@@ -658,6 +694,21 @@ app.post('/api/add-spot', async (req, res) =>{
         }
         
         spotId = spot.id;
+
+        // 3. INSERIMENTO FOTO (Tabella spot_photos)
+        if (req.files && req.files.length > 0) {
+            const photosToInsert = req.files.map((file, index) => ({
+                spot_id: spotId,
+                numero_foto: index + 1,
+                link_foto: file.path // URL fornito da Cloudinary via multer-storage-cloudinary
+            }));
+
+            const { error: photosError } = await supabaseClient
+                .from('spot_photos')
+                .insert(photosToInsert);
+
+            if (photosError) console.error('Errore salvataggio foto:', photosError);
+        }
 
         // --- SEZIONE TAG CORRETTA ---
         const tags = [price, environment, outlets, quiet, crowd].filter(tag => tag !== undefined && tag !== null);
@@ -696,8 +747,8 @@ app.post('/api/add-spot', async (req, res) =>{
 
 
         // Inserisce gli orari associati allo spot
-        if (schedule) {
-            for (const [day, info] of Object.entries(schedule)) {
+        if (parsedSchedule) {
+            for (const [day, info] of Object.entries(parsedSchedule)) {
 
                 let hourId;
 
@@ -818,7 +869,17 @@ app.get('/api/spots/top-activ', async (req, res) => {
         // 1. Recuperiamo i dati (senza ordinamento SQL perché ci serve la somma di due colonne)
         const { data, error } = await supabase
             .from('spots')
-            .select('id, name, address, type, star_avg, star_count, comment_count');
+            .select(`
+                id, 
+                name, 
+                address, 
+                type, 
+                star_avg, 
+                star_count, 
+                comment_count,
+                spot_photos (link_foto) 
+            `)
+            .eq('spot_photos.numero_foto', 1); // Prende solo la foto principale
 
         if (error) {
             console.error('Errore Supabase:', error);
@@ -829,6 +890,9 @@ app.get('/api/spots/top-activ', async (req, res) => {
         const sortedSpots = (data || [])
             .map(spot => ({
                 ...spot,
+                copertina: spot.spot_photos?.[0]?.link_foto || null,
+                // Rimuoviamo l'oggetto originale se non ci serve più
+                spot_photos: undefined,
                 // Assicuriamoci che siano numeri per evitare errori (es. null + null)
                 total_activity: (Number(spot.star_count) || 0) + (Number(spot.comment_count) || 0)
             }))
@@ -859,13 +923,15 @@ app.get('/api/spots/top-rated', async (req, res) => {
         const { data, error } = await supabase
             .from('spots')
             .select(`
-                id,
-                name,
-                address,
-                type,
-                star_avg,
-                star_count
-            `);
+                id, 
+                name, 
+                address, 
+                type, 
+                star_avg, 
+                star_count, 
+                spot_photos (link_foto) 
+            `)
+            .eq('spot_photos.numero_foto', 1); // Prende solo la foto principale
 
         if (error) {
             console.error('Errore durante il recupero spot piu votati:', error);
@@ -875,6 +941,9 @@ app.get('/api/spots/top-rated', async (req, res) => {
         //serve solo a garantire che star_avg e star_count siano numeri, in modo da evitare problemi 
         const spots = (data || []).map(spot => ({
             ...spot,
+            copertina: spot.spot_photos?.[0]?.link_foto || null,
+            // Rimuoviamo l'oggetto originale se non ci serve più
+            spot_photos: undefined,
             star_avg: Number(spot.star_avg) || 0,
             star_count: Number(spot.star_count) || 0
         }));
@@ -1037,7 +1106,7 @@ app.get('/api/info-spot/:id', async (req, res) =>{
 
     const { data: spot, error: spotError } = await supabaseClient
             .from('spots')
-            .select(`aggiunti(user_id),
+            .select(`aggiunti(user_id), spot_photos (link_foto), 
                 name, address, type, star_avg, star_count`)
             .eq('id', idSpot)
             .maybeSingle();

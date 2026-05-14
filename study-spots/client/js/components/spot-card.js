@@ -10,6 +10,7 @@
         const rating = Number.isFinite(starAvg) ? starAvg.toFixed(1) : '0.0';
         const starCount = spot?.star_count ?? 0;
         const commentCount = spot?.comment_count ?? 0;
+        const foto = spot?.copertina ?? 0;
 
         const showVotes = options.showVotes !== false;
         const showComments = options.showComments === true;
@@ -27,7 +28,12 @@
         }
 
         card.innerHTML = `
-            <div class="card-img-top-placeholder" style="background-color: var(--dark-blue);"></div>
+            <div class="position-relative">
+                <img src="${foto}" 
+                    class="card-img-top" 
+                    alt="${name}" 
+                    style="object-fit: cover;">
+            </div>
             <div class="p-3">
                 <h3 class="h6 fw-bold text-dark-blue mb-1">${name}</h3>
                 ${showType && typeLabel ? `<div class="mb-2"><span class="badge badge-custom text-dark-blue border border-dark-blue">${typeLabel}</span></div>` : ''}
