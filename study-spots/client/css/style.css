@@ -1,17 +1,65 @@
 /* =========================================
    1. VARIABILI E BASE
    ========================================= */
+
 :root {
-    --dark-blue: #112E51;
-    --orange-accent: #FF6600;
-    --light-gray: #f1f1f1;
-    --secondary-blue: #5b7da6;
+    /* COLORI PRINCIPALI DEL TEMA */
+    --dark-blue: #2B2142;
+    --orange-accent: #FF8A3D;
+    --orange-accent-dark: #e65c00;
+    --secondary-blue: #8D7DB8;
+    --light-gray: #f5f2fa;
+    --page-background: #f7f3fb;
+
+    /* COLORI BASE */
+    --white: #FFFFFF;
+    --soft-white: #ffffff;
+    --black: #1E1E24;
+
+    /* GRIGI */
+    --hover-gray: #dad9d9;
+    --muted-gray: #6c757d;
+    --muted-light: #adb5bd;
+    --soft-border: #eee;
+    --divider: #ddd;
+    --page-light: #f8f9fa;
+    --card-hover: #fdfdfd;
+    --input-border: #e0e0e0;
+
+    /* STATI */
+    --danger: #ff4d4d;
+    --danger-dark: #cc0000;
+    --success: #2A9D8F;
+    --star-yellow: #f1c40f;
+    --star-empty: #d2d6dc;
+
+    /* FORM / RECENSIONI */
+    --review-border: #eef0f2;
+    --review-title: #2c3e50;
+    --textarea-border: #cbd5e1;
+    --login-gradient-end: #e9ecef;
+
+    /* MARKER MAPPA */
+    --marker-bar: #E76F51;
+    --marker-biblio: #1E1E24;
+    --marker-co: #6C63FF;
+    --marker-au: #2A9D8F;
+    --marker-user: #1E90FF;
+
+    /* GRADIENTI / COLORI DERIVATI */
+    --bar-light: #F4A261;
+    --co-light: #9B8CFF;
+    --au-light: #52B788;
+    --biblio-light: #4a4a4a;
+
+    --placeholder-gray: #f0f0f0;
 }
+
 
 body {
     font-family: 'Nunito', sans-serif;
     color: var(--dark-blue);
-    background-color: #FFFFFF;
+    background-color: var(--page-background);
 }
 
 h1, h2, h3, h4, .nome-logo {
@@ -70,14 +118,14 @@ h1, h2, h3, h4, .nome-logo {
    ========================================= */
 .btn-primary-custom {
     background-color: var(--dark-blue);
-    color: white;
+    color: var(--white);
     border: none;
     transition: all 0.3s;
 }
 
 .btn-primary-custom:hover {
     background-color: var(--orange-accent);
-    color: white;
+    color: var(--white);
 }
 
 .btn-outline-primary-custom {
@@ -88,12 +136,12 @@ h1, h2, h3, h4, .nome-logo {
 
 .btn-outline-primary-custom:hover {
     background-color: var(--dark-blue);
-    color: white;
+    color: var(--white);
 }
 
 .btn-secondary-custom {
     background-color: var(--secondary-blue);
-    color: white;
+    color: var(--white);
     border: none;
     height: 46px; /* Allineamento con input */
     transition: all 0.3s ease;
@@ -101,7 +149,7 @@ h1, h2, h3, h4, .nome-logo {
 
 .btn-secondary-custom:hover {
     background-color: var(--orange-accent);
-    color: white;
+    color: var(--white);
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
@@ -133,7 +181,7 @@ h1, h2, h3, h4, .nome-logo {
 }
 
 .custom-table tbody tr:hover {
-    background-color: #dad9d9 !important;
+    background-color: var(--hover-gray) !important;
     color: var(--orange-accent);
 }
 
@@ -157,7 +205,7 @@ h1, h2, h3, h4, .nome-logo {
     left: 50%;
     transform: translateX(-50%);
     z-index: 1001;
-    background: #ffffff;
+    background: var(--soft-white);
     color: var(--dark-blue);
     border: 2px solid var(--dark-blue);
     border-radius: 999px;
@@ -169,7 +217,7 @@ h1, h2, h3, h4, .nome-logo {
 
 .search-here-btn:hover {
     background: var(--dark-blue);
-    color: #ffffff;
+    color: var(--white);
 }
 
 .add-spot-btn {
@@ -214,7 +262,7 @@ h1, h2, h3, h4, .nome-logo {
     white-space: nowrap;
     overflow: hidden;
 
-    background: white;
+    background: var(--white);
     border: 1px solid rgba(17, 46, 81, 0.08);
     border-radius: 14px;
     padding: 10px 12px;
@@ -290,26 +338,26 @@ h1, h2, h3, h4, .nome-logo {
     align-items: center;
     justify-content: center;
 
-    color: white;
+    color: var(--white);
     font-size: 13px;
 
     flex-shrink: 0;
 }
 
 .filter-icon-bar {
-    background-color: #FF6600;
+    background-color: var(--marker-bar);
 }
 
 .filter-icon-biblio {
-    background-color: #112E51;
+    background-color: var(--marker-biblio);
 }
 
 .filter-icon-co {
-    background-color: #7B61FF;
+    background-color: var(--marker-co);
 }
 
 .filter-icon-au {
-    background-color: #2EAD67;
+    background-color: var(--marker-au);
 }
 /* =========================================
    CUSTOM MAP MARKERS
@@ -324,9 +372,9 @@ h1, h2, h3, h4, .nome-logo {
     align-items: center;
     justify-content: center;
 
-    border: 3px solid white;
+    border: 3px solid var(--white);
 
-    color: white;
+    color: var(--white);
     font-size: 16px;
 
     box-shadow: 0 4px 12px rgba(0,0,0,0.25);
@@ -343,19 +391,19 @@ h1, h2, h3, h4, .nome-logo {
 
 /* Colori categorie */
 .marker-bar {
-    background-color: #FF6600;
+    background-color: var(--marker-bar);
 }
 
 .marker-biblio {
-    background-color: #112E51;
+    background-color: var(--marker-biblio);
 }
 
 .marker-co {
-    background-color: #7B61FF;
+    background-color: var(--marker-co);
 }
 
 .marker-au {
-    background-color: #2EAD67;
+    background-color: var(--marker-au);
 }
 
 /* Marker posizione utente */
@@ -364,9 +412,9 @@ h1, h2, h3, h4, .nome-logo {
     height: 22px;
     border-radius: 50%;
 
-    background-color: #1E90FF;
+    background-color: var(--marker-user);
 
-    border: 4px solid white;
+    border: 4px solid var(--white);
 
     box-shadow:
         0 0 0 8px rgba(30,144,255,0.25),
@@ -412,7 +460,7 @@ h1, h2, h3, h4, .nome-logo {
 }
 
 .leaflet-popup-close-button {
-    color: white !important;
+    color: var(--white) !important;
     font-size: 22px !important;
     font-weight: 800;
     padding: 10px 12px 0 0 !important;
@@ -434,23 +482,19 @@ h1, h2, h3, h4, .nome-logo {
 
 /* colori categoria */
 .popup-bar {
-    background: linear-gradient(135deg, #FF6600, #ff8a3d);
+    background: linear-gradient(135deg, var(--marker-bar), var(--bar-light));
 }
 
 .popup-biblio {
-    background: linear-gradient(135deg, #112E51, #245d9c);
+    background: linear-gradient(135deg, var(--marker-biblio), var(--biblio-light));
 }
 
 .popup-co {
-    background: linear-gradient(135deg, #6f42c1, #9b72ef);
+    background: linear-gradient(135deg, var(--marker-co), var(--co-light));
 }
 
 .popup-au {
-    background: linear-gradient(135deg, #198754, #35b779);
-}
-
-.popup-default {
-    background: linear-gradient(135deg, #112E51, #5b7da6);
+    background: linear-gradient(135deg, var(--marker-au), var(--au-light));
 }
 /* =========================================
    MARKER CLUSTER CUSTOM
@@ -473,9 +517,9 @@ h1, h2, h3, h4, .nome-logo {
 
     background: var(--orange-accent);
 
-    border: 3px solid white;
+    border: 3px solid var(--white);
 
-    color: white;
+    color: var(--white);
 
     font-weight: 800;
     font-size: 15px;
@@ -502,10 +546,10 @@ h1, h2, h3, h4, .nome-logo {
 
 /* Card utente personale */
 .page-ranking .ranking-card-user {
-    background: linear-gradient(135deg, var(--dark-blue) 0%, #1a4a82 100%);
+    background: linear-gradient(135deg, var(--dark-blue) 0%,var(--secondary-blue) 100%);
     border-radius: 20px;
     padding: 20px 30px;
-    color: white;
+    color: var(--white);
     position: relative;
     overflow: hidden;
     border: none;
@@ -538,22 +582,22 @@ h1, h2, h3, h4, .nome-logo {
 
 /* Tabella Wrapper */
 .page-ranking .ranking-wrapper {
-    background: white;
+    background: var(--white);
     border-radius: 24px;
     overflow: hidden;
     border: 1px solid rgba(0,0,0,0.05);
 }
 
 .page-ranking .ranking-header {
-    background-color: #f8f9fa;
+    background-color: var(--page-light);
     padding: 25px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--soft-border);
 }
 
 /* Stile Tabella */
 .page-ranking .custom-ranking-table thead th {
     border: none;
-    color: #6c757d;
+    color: var(--muted-gray);
     text-transform: uppercase;
     font-size: 0.75rem;
     letter-spacing: 1px;
@@ -565,7 +609,7 @@ h1, h2, h3, h4, .nome-logo {
 }
 
 .page-ranking .custom-ranking-table tbody tr:hover {
-    background-color: #fdfdfd !important;
+    background-color: var(--card-hover) !important;
     transform: scale(1.005);
 }
 
@@ -602,7 +646,7 @@ h1, h2, h3, h4, .nome-logo {
 .page-ranking .points-text::after {
     content: ' pts';
     font-size: 0.75rem;
-    color: #adb5bd;
+    color: var(--muted-light);
     font-weight: 400;
 }
 
@@ -633,7 +677,7 @@ h1, h2, h3, h4, .nome-logo {
 .spot-card-modern {
     min-width: 260px;
     max-width: 260px;
-    background: #FFFFFF;
+    background: var(--white);
     border: 1px solid var(--light-gray);
     border-radius: 1rem;
     overflow: hidden;
@@ -652,7 +696,7 @@ h1, h2, h3, h4, .nome-logo {
 }
 
 .badge-custom {
-    background-color: #FFFFFF;
+    background-color: var(--white);
     font-size: 0.75rem;
     font-weight: 700;
     padding: 0.4rem 0.7rem;
@@ -715,7 +759,7 @@ h1, h2, h3, h4, .nome-logo {
     transition: 0.3s;
 }
 
-.btn-action:hover { background: #dad9d9; }
+.btn-action:hover { background: var(--hover-gray); }
 
 .spot-gallery {
     display: grid;
@@ -804,7 +848,7 @@ h1, h2, h3, h4, .nome-logo {
 .sidebar-info { flex: 1 1 320px; }
 
 .description-card, .hours-card, .reviews-section {
-    background: #fff;
+    background: var(--white);
     padding: 20px;
     border-radius: 15px;
     margin-bottom: 30px;
@@ -826,14 +870,14 @@ h1, h2, h3, h4, .nome-logo {
     display: flex;
     justify-content: space-between;
     padding: 8px 0;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--divider);
     white-space: nowrap;
 }
 .current-day { font-weight: bold; color: var(--dark-blue); }
 
 /* Recensioni */
 .review-item {
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--soft-border);
     padding: 15px 0;
 }
 .review-user {
@@ -846,8 +890,8 @@ h1, h2, h3, h4, .nome-logo {
 
 /* Stile per il form di inserimento recensione */
 .add-review-box {
-    background-color: #f8f9fa;
-    border: 1px solid #eef0f2;
+    background-color: var(--page-light);
+    border: 1px solid var(--review-border);
     border-radius: 12px;
     padding: 20px;
     margin-bottom: 30px;
@@ -858,7 +902,7 @@ h1, h2, h3, h4, .nome-logo {
     margin-top: 0;
     margin-bottom: 10px;
     font-size: 1.1rem;
-    color: #2c3e50;
+    color: var(--review-title);
 }
 
 /* Sistema di valutazione a stelle interattivo (CSS puro) */
@@ -874,7 +918,7 @@ h1, h2, h3, h4, .nome-logo {
 
 .star-rating label {
     font-size: 24px;
-    color: #d2d6dc;
+    color: var(--star-empty);
     cursor: pointer;
     padding: 0 2px;
     transition: color 0.2s ease-in-out;
@@ -883,14 +927,14 @@ h1, h2, h3, h4, .nome-logo {
 .star-rating label:hover,
 .star-rating label:hover ~ label,
 .star-rating input:checked ~ label {
-    color: #f1c40f;
+    color: var(--star-yellow);
 }
 
 /* Area di testo per la recensione */
 .review-textarea {
     width: 100%;
     padding: 12px 15px;
-    border: 1px solid #cbd5e1;
+    border: 1px solid var(--textarea-border);
     border-radius: 8px;
     font-family: 'Nunito', sans-serif;
     font-size: 0.95rem;
@@ -903,14 +947,14 @@ h1, h2, h3, h4, .nome-logo {
 
 .review-textarea:focus {
     outline: none;
-    border-color: #0056b3;
+    border-color: var(--dark-blue);
     box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
 }
 
 /* Pulsante Invia */
 .btn-submit-review {
-    background-color: #0056b3;
-    color: white;
+    background-color: var(--dark-blue);
+    color: var(--white);
     border: none;
     padding: 10px 20px;
     border-radius: 8px;
@@ -924,7 +968,7 @@ h1, h2, h3, h4, .nome-logo {
 }
 
 .btn-submit-review:hover {
-    background-color: #004494;
+    background-color: var(--secondary-blue);
     transform: translateY(-1px);
 }
 
@@ -933,8 +977,8 @@ h1, h2, h3, h4, .nome-logo {
     display: block;
     width: 100%;
     background-color: transparent;
-    color: #0056b3;
-    border: 2px solid #0056b3;
+    color: var(--dark-blue);
+    border: 2px solid var(--dark-blue);
     padding: 12px 20px;
     border-radius: 8px;
     font-weight: 700;
@@ -947,18 +991,18 @@ h1, h2, h3, h4, .nome-logo {
 }
 
 .btn-show-all-reviews:hover {
-    background-color: #0056b3;
-    color: white;
+    background-color: var(--dark-blue);
+    color: var(--white);
     box-shadow: 0 4px 10px rgba(0, 86, 179, 0.2);
 }
 
 .btn-danger {
-    background-color: #ff4d4d;
-    color: white;
+    background-color: var(--danger);
+    color: var(--white);
 }
 
 .btn-danger:hover {
-    background-color: #cc0000;
+    background-color: var(--danger-dark);
 }
 
 .btn-danger img {
@@ -968,7 +1012,7 @@ h1, h2, h3, h4, .nome-logo {
 /* Stato "Salvato" del pulsante */
 .btn-save.saved {
     background-color: var(--orange-accent) !important;
-    color: #FFFFFF !important;
+    color: var(--white) !important;
     border-color: var(--orange-accent) !important;
 }
 
@@ -979,7 +1023,7 @@ h1, h2, h3, h4, .nome-logo {
 
 /* Effetto hover quando è già salvato (leggermente più scuro) */
 .btn-save.saved:hover {
-    background-color: #e65c00 !important;
+    background-color: var(--orange-accent-dark) !important;
     opacity: 0.9;
 }
 
@@ -996,7 +1040,7 @@ h1, h2, h3, h4, .nome-logo {
 .tag {
     display: inline-block;
     background-color: var(--dark-blue);
-    color: #FFFFFF;
+    color: var(--white);
     padding: 8px 16px;
     border-radius: 20px;
     font-size: 0.9rem;
@@ -1035,7 +1079,7 @@ h1, h2, h3, h4, .nome-logo {
 }
 
 .nearby-spot-card {
-    background: #FFFFFF;
+    background: var(--white);
     border: 1px solid var(--light-gray);
     border-radius: 15px;
     overflow: hidden;
@@ -1057,7 +1101,7 @@ h1, h2, h3, h4, .nome-logo {
 .nearby-spot-card-img {
     width: 100%;
     height: 180px;
-    background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+    background: linear-gradient(135deg, var(--placeholder-gray) 0%, var(--input-border) 100%);
     object-fit: cover;
 }
 
@@ -1100,7 +1144,7 @@ h1, h2, h3, h4, .nome-logo {
 
 /* Floating labels personalizzate */
 .custom-input {
-    border: 1px solid #e0e0e0 !important;
+    border: 1px solid var(--input-border) !important;
     border-radius: 12px !important;
     padding-left: 1rem !important;
 }
@@ -1127,8 +1171,9 @@ main .row > div {
 }
 
 /* Sfondo della pagina login più soft */
-body:has(#login) body:has(#register) {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+body:has(#login),
+body:has(#register) { 
+    background: linear-gradient(135deg, var(--page-light) 0%, var(--login-gradient-end) 100%);
 }
 
 /* =========================================
@@ -1140,14 +1185,14 @@ body:has(#login) body:has(#register) {
     width: 100px;
     height: 100px;
     background-color: var(--orange-accent);
-    color: white;
+    color: var(--white);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 2.5rem;
     font-weight: 700;
     border-radius: 50%;
-    border: 5px solid white;
+    border: 5px solid var(--white);
     font-family: 'Quicksand', sans-serif;
 }
 
@@ -1155,7 +1200,7 @@ body:has(#login) body:has(#register) {
     position: absolute;
     bottom: 5px;
     right: 5px;
-    background: white;
+    background: var(--white);
     width: 32px;
     height: 32px;
     border-radius: 50%;
@@ -1337,7 +1382,7 @@ body:has(#login) body:has(#register) {
     width: 38px;
     height: 38px;
     background-color: var(--orange-accent);
-    color: white;
+    color: var(--white);
     border-radius: 50%;
     display: flex;
     align-items: center;
