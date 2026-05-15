@@ -276,6 +276,41 @@ h1, h2, h3, h4, .nome-logo {
     border-color: var(--orange-accent);
 }
 
+
+
+
+
+
+.filter-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: white;
+    font-size: 13px;
+
+    flex-shrink: 0;
+}
+
+.filter-icon-bar {
+    background-color: #FF6600;
+}
+
+.filter-icon-biblio {
+    background-color: #112E51;
+}
+
+.filter-icon-co {
+    background-color: #7B61FF;
+}
+
+.filter-icon-au {
+    background-color: #2EAD67;
+}
 /* =========================================
    CUSTOM MAP MARKERS
    ========================================= */

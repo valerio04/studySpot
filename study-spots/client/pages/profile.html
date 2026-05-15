@@ -66,16 +66,21 @@
                             <span class="text-uppercase small fw-bold text-muted d-block mb-1">Punteggio Totale</span>
                             <h2 class="h4 fw-bold text-orange mb-0"><span id="display-points">0</span> Punti</h2>
                         </div>
+                            <div class="d-grid gap-2">
+                                <button type="button" id="edit-btn" class="btn btn-outline-primary-custom fw-bold">
+                                    <i class="fas fa-edit me-2"></i>Modifica Profilo
+                                </button>
 
-                        <div class="d-grid gap-2">
-                            <button type="button" id="edit-btn" class="btn btn-outline-primary-custom fw-bold">
-                                <i class="fas fa-edit me-2"></i>Modifica Profilo
-                            </button>
-                            <div id="edit-actions" class="d-flex gap-2" style="display: none !important;">
-                                <button type="submit" form="profile-form" id="save-btn" class="btn btn-success flex-grow-1 fw-bold">Salva</button>
-                                <button type="button" id="cancel-btn" class="btn btn-danger flex-grow-1 fw-bold">Annulla</button>
+                                <div id="edit-actions" class="gap-2" hidden>
+                                    <button type="submit" form="profile-form" id="save-btn" class="btn btn-success flex-grow-1 fw-bold">
+                                        Salva
+                                    </button>
+
+                                    <button type="button" id="cancel-btn" class="btn btn-danger flex-grow-1 fw-bold">
+                                        Annulla
+                                    </button>
+                                </div>
                             </div>
-                        </div>
                     </div>
                 </div>
 
@@ -142,6 +147,9 @@
                                         <input type="password" id="password" name="password" class="form-control custom-input" placeholder="Password" value="********" disabled>
                                         <label for="password">Password</label>
                                     </div>
+                                     <small class="text-muted">
+                                        La modifica della password non è disponibile da questa pagina.
+                                    </small>
                                 </div>
                             </div>
                         </form>

@@ -507,6 +507,7 @@ app.get('/api/profile',async (req,res)=>{
 
 //=================API: modifica profilo ================
 
+
 app.post('/api/modify-profile', async (req, res) => {
     console.log('POST /api/modify-profile');
 
@@ -515,53 +516,48 @@ app.post('/api/modify-profile', async (req, res) => {
     }
 
     const supabaseClient = getSupabase(req, res);
-    
-    // 1. Recupera l'utente autenticato
+
     const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
 
     if (userError || !user) {
-        return res.status(401).json({ error: "Utente non autenticato" });
+        return res.status(401).json({ error: 'Utente non autenticato' });
     }
 
-    const {nome, cognome, username, email, password} = req.body;
+    const { name, surname, username, email } = req.body;
+
+    if (!name || !surname || !username || !email) {
+        return res.status(400).json({ error: 'Tutti i campi sono obbligatori' });
+    }
 
     try {
-        // --- PARTE 1: Aggiornamento Email e Password (Auth) ---
-        const authUpdates = {};
-        if (email) authUpdates.email = email;
-        if (password) authUpdates.password = password;
+        const { error: updateAuthError } = await supabaseClient.auth.updateUser({
+            email: email
+        });
 
-        if (Object.keys(authUpdates).length > 0) {
-            const { error: updateAuthError } = await supabaseClient.auth.updateUser(authUpdates);
-            if (updateAuthError) {
-                console.error('Errore inserimento commento:', updateAuthError);
-                return res.status(500).json({ error: 'Errore durante l\'inserimento del commento' });
-            }
+        if (updateAuthError) {
+            console.error('Errore aggiornamento email:', updateAuthError);
+            return res.status(500).json({ error: 'Errore durante la modifica della email' });
         }
 
-        // --- PARTE 2: Aggiornamento Nome, Cognome, Username (Tabella Profiles) ---
-        const profileUpdates = {};
-        if (nome !== undefined) profileUpdates.nome = nome;
-        if (cognome !== undefined) profileUpdates.cognome = cognome;
-        if (username !== undefined) profileUpdates.username = username;
+        const { error: updateProfileError } = await supabaseClient
+            .from('profiles')
+            .update({
+                name: name,
+                surname: surname,
+                username: username
+            })
+            .eq('user_id', user.id);
 
-        if (Object.keys(profileUpdates).length > 0) {
-            const { error: updateProfileError } = await supabaseClient
-                .from('profiles')
-                .update(profileUpdates)
-                .eq('id', user.id); // L'ID del profilo coincide con l'ID di Auth
-
-            if (updateProfileError) {
-                console.error('Errore inserimento commento:', updateProfileError);
-                return res.status(500).json({ error: 'Errore durante l\'inserimento del commento' });
-            }
+        if (updateProfileError) {
+            console.error('Errore aggiornamento profilo:', updateProfileError);
+            return res.status(500).json({ error: 'Errore durante la modifica del profilo' });
         }
 
-        res.json({ message: "Profilo aggiornato con successo" });
+        res.json({ message: 'Profilo aggiornato con successo' });
 
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: 'Errore interno del server' });
     }
 });
 
