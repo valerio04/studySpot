@@ -191,40 +191,40 @@ async function updateReportStatus(reportId, status) {
  */
 async function cercaSpotUtente() {
     const query = document.getElementById('user-search-query').value;
+
     if (!query) {
-        showAlert('Inserisci un username o email da cercare.', 'danger');
+        showAlert('Inserisci uno username da cercare.', 'danger');
         return;
     }
 
     try {
         const response = await fetch(`/api/admin/search-user-spots?query=${encodeURIComponent(query)}`);
+
         if (!response.ok) {
-             const err = await response.json();
-             throw new Error(err.error || 'Utente non trovato');
+            const err = await response.json();
+            throw new Error(err.error || 'Utente non trovato');
         }
+
         const data = await response.json();
-        
-        userSpotsResults.innerHTML = ''; // Pulisci risultati precedenti
-        if (data.spots.length === 0) {
+
+        if (!data.spots || data.spots.length === 0) {
             userSpotsResults.innerHTML = `<div class="text-muted">L'utente ${data.user.username} non ha creato spot.</div>`;
             return;
         }
 
-        data.spots.forEach(spot => {
-            const card = document.createElement('a');
-            card.href = `/spot?id=${spot.id}`;
-            card.className = "card shadow-sm flex-shrink-0 text-decoration-none text-dark";
-            card.style.width = "220px";
-            card.innerHTML = `
-                <div class="card-body">
-                    <h6 class="card-title text-truncate">${spot.name}</h6>
-                    <p class="card-text small text-truncate">${spot.address}</p>
-                    <span class="badge bg-primary">${spot.type}</span>
-                    <span class="badge bg-warning text-dark">⭐ ${Number(spot.star_avg || 0).toFixed(1)}</span>
-                </div>
-            `;
-            userSpotsResults.appendChild(card);
+        const spots = data.spots.map(function (spot) {
+            return normalizzaSpotPerCard(spot);
         });
+
+        if (window.SpotCard && window.SpotCard.renderList) {
+            window.SpotCard.renderList(userSpotsResults, spots, {
+                showComments: true,
+                emptyMessage: 'Nessuno spot trovato'
+            });
+            return;
+        }
+
+        userSpotsResults.innerHTML = '<div class="text-danger">Componente SpotCard non caricato.</div>';
 
     } catch (error) {
         showAlert(error.message, 'danger');
@@ -237,38 +237,36 @@ async function cercaSpotUtente() {
  */
 async function cercaSpotPerID() {
     const spotId = document.getElementById('spot-id-query').value;
+
     if (!spotId || isNaN(spotId)) {
         showAlert('Inserisci un ID numerico valido.', 'danger');
         return;
     }
 
-    // Pulisci i risultati precedenti
     singleSpotResult.innerHTML = '';
 
     try {
         const response = await fetch(`/api/info-spot/${spotId}`);
-        
-        // Se la risposta non è OK (es. 404 Not Found), gestiamo l'errore
+
         if (!response.ok) {
             singleSpotResult.innerHTML = '<div class="text-muted">Spot non trovato.</div>';
             return;
         }
-        
-        const spot = await response.json();
 
-        // Se tutto va bene, creiamo la card
-        singleSpotResult.innerHTML = `
-            <div class="card shadow-sm">
-                <div class="card-header">Risultato per ID: <strong>${spot.id}</strong></div>
-                <div class="card-body">
-                    <h5 class="card-title">${spot.name}</h5>
-                    <p class="card-text text-muted">${spot.address}</p>
-                    <a href="/spot?id=${spot.id}" class="btn btn-sm btn-outline-primary">Vai alla pagina dello spot</a>
-                </div>
-            </div>
-        `;
+        const spot = await response.json();
+        const spotCardData = normalizzaSpotPerCard(spot);
+
+        if (window.SpotCard && window.SpotCard.renderList) {
+            window.SpotCard.renderList(singleSpotResult, [spotCardData], {
+                showComments: true,
+                emptyMessage: 'Spot non trovato'
+            });
+            return;
+        }
+
+        singleSpotResult.innerHTML = '<div class="text-danger">Componente SpotCard non caricato.</div>';
+
     } catch (error) {
-        // Gestisce errori di rete o altri problemi imprevisti
         showAlert('Si è verificato un errore di rete.', 'danger');
         singleSpotResult.innerHTML = '<div class="text-danger">Impossibile completare la ricerca.</div>';
     }
@@ -308,4 +306,19 @@ async function rimuoviTuttiSpot() {
     } catch (error) {
         showAlert(error.message, 'danger');
     }
+}
+
+function normalizzaSpotPerCard(spot) {
+    const foto = spot.copertina || spot.spot_photos?.[0]?.link_foto || null;
+
+    return {
+        id: spot.id,
+        name: spot.name,
+        address: spot.address,
+        type: spot.type,
+        star_avg: spot.star_avg,
+        star_count: spot.star_count,
+        comment_count: spot.comment_count,
+        copertina: foto
+    };
 }

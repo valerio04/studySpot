@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contatti - StudySpot</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Quicksand:wght@700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm py-2">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+                <img src="../assets/img/logo.png" alt="Logo" height="45">
+                <span class="nome-logo h3 mb-0">StudySpot</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto gap-lg-4">
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold text-dark-blue" href="/">Mappa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold text-dark-blue" href="/ranking">Classifica</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold text-dark-blue" href="/list">Spot</a>
+                    </li>
+                    <li class="nav-item" id="admin-menu-item" style="display:none;">
+                        <a class="nav-link fw-bold text-dark-blue" href="/admin">Admin</a>
+                    </li>
+                </ul>
+
+                <div class="user-actions-container d-flex align-items-center gap-2">
+                    <a id="btn-login" href="/login" class="btn btn-primary-custom fw-bold" style="display:none;">Accedi</a>
+                    <a id="btn-signup" href="/register" class="btn btn-outline-primary-custom fw-bold" style="display:none;">Registrati</a>
+                    <span id="user-info" class="me-2" style="display:none;">Benvenuto, <span id="username" class="fw-bold"></span>!</span>
+                    <a id="btn-profile" href="/profile" class="text-dark-blue fs-4" style="display:none;">
+                        <i class="fa-solid fa-circle-user"></i>
+                    </a>
+                    <button id="btn-logout" class="btn btn-sm btn-outline-danger" style="display:none;">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container py-5">
+
+        <section class="text-center mb-5">
+            <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle shadow-sm mb-4"
+                 style="width: 95px; height: 95px;">
+                <i class="fa-solid fa-envelope text-orange" style="font-size: 2.5rem;"></i>
+            </div>
+
+            <h1 class="display-5 fw-bold text-dark-blue mb-3">Contattaci</h1>
+
+            <p class="text-muted mx-auto" style="max-width: 650px;">
+                Hai trovato un problema, vuoi darci un consiglio o vuoi semplicemente scriverci?
+                Qui trovi tutti i modi per contattare il team di StudySpot.
+            </p>
+        </section>
+
+        <section class="row g-4 justify-content-center">
+
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+                    <div class="card-body p-4 p-md-5">
+
+                        <h2 class="h4 fw-bold text-dark-blue mb-4">
+                            <i class="fa-solid fa-paper-plane text-orange me-2"></i>
+                            Scrivici
+                        </h2>
+
+                        <form id="contact-form">
+                            <div class="mb-3">
+                                <label for="contact-name" class="form-label fw-bold">Nome</label>
+                                <input
+                                    type="text"
+                                    id="contact-name"
+                                    class="form-control"
+                                    placeholder="Il tuo nome"
+                                    required
+                                >
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="contact-email" class="form-label fw-bold">Email</label>
+                                <input
+                                    type="email"
+                                    id="contact-email"
+                                    class="form-control"
+                                    placeholder="nome@email.com"
+                                    required
+                                >
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="contact-subject" class="form-label fw-bold">Motivo</label>
+                                <select id="contact-subject" class="form-select" required>
+                                    <option value="">Seleziona un motivo</option>
+                                    <option value="bug">Bug o problema tecnico</option>
+                                    <option value="suggerimento">Suggerimento</option>
+                                    <option value="spot">Problema con uno spot</option>
+                                    <option value="altro">Altro</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="contact-message" class="form-label fw-bold">Messaggio</label>
+                                <textarea
+                                    id="contact-message"
+                                    class="form-control"
+                                    rows="5"
+                                    placeholder="Scrivi qui il tuo messaggio..."
+                                    required
+                                ></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary-custom rounded-pill px-4 fw-bold w-100">
+                                <i class="fa-solid fa-paper-plane me-1"></i>
+                                Invia messaggio
+                            </button>
+
+                            <div id="contact-feedback" class="small fw-bold mt-3"></div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+                    <div class="card-body p-4 p-md-5">
+
+                        <h2 class="h4 fw-bold text-dark-blue mb-4">
+                            <i class="fa-solid fa-circle-info text-orange me-2"></i>
+                            Informazioni utili
+                        </h2>
+
+                        <div class="d-flex flex-column gap-4">
+
+                            <div class="d-flex gap-3">
+                                <div class="icon-shape bg-light text-orange flex-shrink-0">
+                                    <i class="fa-solid fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <h3 class="h6 fw-bold mb-1">Email</h3>
+                                    <p class="text-muted small mb-0">
+                                        studyspot.support@gmail.com
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="d-flex gap-3">
+                                <div class="icon-shape bg-light text-orange flex-shrink-0">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                </div>
+                                <div>
+                                    <h3 class="h6 fw-bold mb-1">Zona</h3>
+                                    <p class="text-muted small mb-0">
+                                        Roma e dintorni
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="d-flex gap-3">
+                                <div class="icon-shape bg-light text-orange flex-shrink-0">
+                                    <i class="fa-solid fa-clock"></i>
+                                </div>
+                                <div>
+                                    <h3 class="h6 fw-bold mb-1">Risposta</h3>
+                                    <p class="text-muted small mb-0">
+                                        Cerchiamo di rispondere appena possibile.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-light border mb-0">
+                                <i class="fa-solid fa-triangle-exclamation text-orange me-1"></i>
+                                Per segnalare problemi specifici di uno spot, usa anche la sezione
+                                “Segnala questo contenuto” nella pagina dello spot.
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer class="bg-white pt-5 pb-3 border-top mt-5">
+        <div class="container">
+
+            <div class="row g-4 mb-4">
+                <div class="col-lg-6 col-md-12">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <img src="../assets/img/logo.png" alt="Logo" height="40">
+                        <span class="nome-logo h4 mb-0">StudySpot</span>
+                    </div>
+
+                    <p class="text-muted small mb-3">
+                        La piattaforma dedicata agli studenti per scoprire i migliori posti dove studiare a Roma e dintorni.
+                    </p>
+
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-dark-blue fs-5">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-dark-blue fs-5">
+                            <i class="fa-brands fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-dark-blue fs-5">
+                            <i class="fa-brands fa-linkedin"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="fw-bold text-dark-blue mb-3">Naviga</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="/" class="text-decoration-none text-muted small">Mappa</a></li>
+                        <li class="mb-2"><a href="/ranking" class="text-decoration-none text-muted small">Classifica</a></li>
+                        <li class="mb-2"><a href="/list" class="text-decoration-none text-muted small">Lista Spot</a></li>
+                        <li class="mb-2"><a href="/add-spot" class="text-decoration-none text-muted small">Aggiungi Posto</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="fw-bold text-dark-blue mb-3">Supporto</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="/contact" class="text-decoration-none text-muted small">Contattaci</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr class="my-4 text-muted opacity-25">
+
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="small text-muted mb-0">© 2026 StudySpot. Tutti i diritti riservati.</p>
+                </div>
+
+                <div class="col-md-6 text-center text-md-end mt-2 mt-md-0">
+                    <p class="small text-muted mb-0">
+                        Made by @Chircu Andrei Valentin & @Valerio Da Corte
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/checkAuth.js"></script>
+</body>
+</html>

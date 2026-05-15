@@ -1323,3 +1323,39 @@ img:not([src]), img[src=""] {
     visibility: hidden;
 }
 
+/*=================================
+    13. spot-card.css - STILI SPECIFICI PER LE CARDS DEGLI SPOT
+    ========================================= */
+
+.spot-card-modern {
+    height: 340px;
+}
+
+.spot-card-media {
+    height: 150px;
+}
+
+.spot-card-content {
+    height: 190px;
+}
+
+.spot-card-title,
+.spot-card-address {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.spot-card-title {
+    -webkit-line-clamp: 2;
+}
+
+.spot-card-address {
+    -webkit-line-clamp: 2;
+}
+
+.spot-card-placeholder-logo {
+    width: 40px;
+    opacity: 0.5;
+    filter: brightness(0) invert(1);
+}

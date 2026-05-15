@@ -99,6 +99,10 @@ app.get("/list",(req,res)=>{
     res.sendFile(path.join(ROOT,'pages','list.html'))
 })
 
+app.get('/contact', (req, res) => {
+    res.sendFile(path.join(ROOT, 'pages', 'contact.html'));
+});
+
 
 //QUERY SU DATABASE
 //Queste righe sono di setup, dipendono dal servizio di DB
@@ -1666,7 +1670,17 @@ app.get('/api/admin/search-user-spots', async (req, res) => {
     // 3. Prendi gli spot creati da lui tramite la tabella 'aggiunti'
     const { data: spots, error: sError } = await supabaseClient
         .from('aggiunti')
-        .select('spots(id, name, address, type, star_avg)')
+        .select(`spots(
+                id,
+                name,
+                address,
+                type,
+                star_avg,
+                star_count,
+                comment_count,
+                spot_photos(link_foto)
+            )
+        `)
         .eq('user_id', targetProfile.user_id);
 
     if (sError) return res.status(500).json({ error: sError.message });
@@ -1778,7 +1792,9 @@ app.post('/api/ordina-frullato/:id', async (req, res) => {
 
 
 
-
+app.use((req, res) => {
+    res.status(404).sendFile(path.join(ROOT, 'pages', '404.html'));
+});
 
 //AVVIO 
 const server = app.listen(3004, '0.0.0.0', ()=>{

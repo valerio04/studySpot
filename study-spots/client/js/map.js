@@ -286,11 +286,12 @@ function createSpotIcon(type) {
 function addMarker(lat, lng, popupText) {
     if (currentMarker) map.removeLayer(currentMarker);
     currentMarker = L.marker([lat, lng], {
-        icon: createUserIcon()
+        icon: createUserIcon(),
+        zIndexOffset: 1000
         })
         .addTo(map)
-        .bindPopup(popupText)
-        .openPopup();
+        //.bindPopup(popupText)
+        //.openPopup();
 }
 
 function centerMap(lat, lng) {

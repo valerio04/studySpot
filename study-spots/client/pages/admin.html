@@ -129,7 +129,7 @@
                         <button onclick="cercaSpotPerID()" class="btn btn-secondary w-100">Trova Spot</button>
                     </div>
                 </div>
-                <div id="single-spot-result" class="mt-3">
+                <div id="single-spot-result" class="mt-3 d-flex gap-3 flex-wrap"></div>
                     <!-- Qui appare la singola card dello spot -->
                 </div>
             </div>
@@ -168,9 +168,9 @@
 
                 <div class="col-lg-2 col-md-6">
                     <h5 class="fw-bold text-dark-blue mb-3">Supporto</h5>
-                    <ul class="list-unstyled">
+                    <ul class="list-unstyled">  
                         <li class="mb-2"><a href="#" class="text-decoration-none text-muted small">FAQ</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted small">Contattaci</a></li>
+                        <a href="/contact" class="text-decoration-none text-muted small">Contattaci</a>
                     </ul>
                 </div>
                 
@@ -212,6 +212,7 @@
     <!-- Script necessari -->
     <script src="js/checkAuth.js"></script>
     <script src="js/admin.js"></script>
+    <script src="js/components/spot-card.js"></script>
 
     
 </body>
