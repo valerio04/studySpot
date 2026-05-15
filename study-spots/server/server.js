@@ -1191,6 +1191,7 @@ app.get('/api/info-spot/:id', async (req, res) =>{
 });
 //===================================================================
 
+
 //=================API: salva spot (per la lista dei preferiti) ===============
 app.post('/api/salva-spot', async (req, res) =>{
     console.log('POST /api/salva-spot');

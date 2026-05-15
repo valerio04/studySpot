@@ -130,10 +130,10 @@ async function popolaPagina(spot) {
     
     // Gestione Foto
     const photos = spot.spot_photos || [];
-    const fallbackImg = 'https://via.placeholder.com/800x450?text=Nessuna+Foto';
+    //const fallbackImg = 'https://via.placeholder.com/800x450?text=Nessuna+Foto';
 
     // Foto Principale
-    fotoPrincipaleContainer.innerHTML = `<img src="${photos[0]?.link_foto || fallbackImg}" alt="${spot.name}" style="width:100%; height:100%; object-fit:cover;">`;
+    fotoPrincipaleContainer.innerHTML = `<img src="${photos[0]?.link_foto || ""}" alt="${spot.name}" style="width:100%; height:100%; object-fit:cover;">`;
 
     // Griglia altre foto (dalla seconda in poi)
     if (grigliaFotoContainer) {
@@ -172,12 +172,37 @@ async function popolaPagina(spot) {
     // 5. Recensioni
     popolaRecensioni(spot.recensioni);
 
-    // 6. Nearby Spots
-    if (spot.spotsVicini) {
-        popolaSpotVicini(spot.spotsVicini);
+    const response_vicini = await fetch(`/api/spots_search_all?latitude=${spot.latitude}&longitude=${spot.longitude}`);
+
+    if (!response_vicini.ok) {
+        throw new Error('Errore durante il recupero dei dati dello spot.');
     }
+
+    const spotsVicini = await response_vicini.json();
+    console.log("Spot Vicini",spotsVicini);
+    renderSpotCards(nearbyGrid, spotsVicini, { showComments: false });
 }
 
+function renderSpotCards(trackElement, spots, options = {}) {
+    if (!trackElement) return;
+
+    // Se il componente SpotCard è caricato, usalo
+    if (window.SpotCard && typeof window.SpotCard.renderList === 'function') {
+        window.SpotCard.renderList(trackElement, spots, {
+            showComments: options.showComments === true,
+            emptyMessage: options.emptyMessage || 'Nessuno spot nelle vicinanze'
+        });
+    } else {
+        // Fallback manuale se il componente non è ancora pronto
+        console.warn("Componente SpotCard non trovato, uso fallback manuale");
+        trackElement.innerHTML = spots.map(spot => `
+            <div class="nearby-spot-card" onclick="window.location.href='/pages/spot.html?id=${spot.id}'">
+                <h3>${spot.name}</h3>
+                <p>${spot.address || ''}</p>
+            </div>
+        `).join('');
+    }
+}
 //================= Funzioni di Popolamento Specifiche =================
 
 /**
@@ -299,7 +324,7 @@ function mostraReviewsAggiuntive() {
 
         reviewItem.innerHTML = `
             <div class="review-user">
-                <img src="${rec.user_img || '../assets/img/profile.png'}" alt="Avatar">
+                <i class="fa-solid fa-circle-user"></i>
                 <div>
                     <strong>${rec.username || 'Utente'}</strong>
                     <span class="stars-small">${stelle}</span>

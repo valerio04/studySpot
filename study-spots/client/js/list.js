@@ -41,6 +41,7 @@ async function caricaTopCommented() {
 		}
 
 		const spots = await response.json();
+		console.log(spots);
 		renderSpotCards(topCommentedTrack, spots, { showComments: true });
 	} catch (error) {
 		console.error('Errore caricamento top activ:', error);
