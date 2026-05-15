@@ -1482,24 +1482,55 @@ app.get('/api/spots_search_all', async (req, res) => {
 }); 
 
 
+
 //=================API: report problemi per utenti================
 app.post('/api/reports', async (req, res) => {
     const supabaseClient = getSupabase(req, res);
 
-    // 1. Verifica autenticazione
     const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
-    if (userError || !user) return res.status(401).json({ error: "Effettua il login per segnalare" });
 
-    const { spot_id, reported_user_id, message, report_type } = req.body;
+    if (userError || !user) {
+        return res.status(401).json({ error: "Effettua il login per segnalare" });
+    }
 
-    // 2. Inserimento nel DB
+    const { spot_id, reported_username, message, report_type } = req.body;
+
+    if (!message || message.trim() === '') {
+        return res.status(400).json({ error: "Il messaggio della segnalazione è obbligatorio" });
+    }
+
+    let reportedUserId = null;
+
+    if (reported_username && reported_username.trim() !== '') {
+        const { data: reportedProfile, error: reportedError } = await supabaseClient
+            .from('profiles')
+            .select('user_id')
+            .eq('username', reported_username.trim())
+            .maybeSingle();
+
+        if (reportedError) {
+            console.error('Errore ricerca utente segnalato:', reportedError);
+            return res.status(500).json({ error: "Errore durante la ricerca dell'utente" });
+        }
+
+        if (!reportedProfile) {
+            return res.status(404).json({ error: "Username utente non trovato" });
+        }
+
+        reportedUserId = reportedProfile.user_id;
+    }
+
+    if (reportedUserId && reportedUserId === user.id) {
+        return res.status(400).json({ error: "Non puoi segnalare te stesso" });
+    }
+
     const { error } = await supabaseClient
         .from('reports')
         .insert([{
             reporter_user_id: user.id,
             spot_id: spot_id || null,
-            reported_user_id: reported_user_id || null,
-            message: message,
+            reported_user_id: reportedUserId,
+            message: message.trim(),
             report_type: report_type || 'generale'
         }]);
 
