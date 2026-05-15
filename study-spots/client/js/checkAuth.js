@@ -4,6 +4,7 @@ async function checkAuth() {
     const btnLogout = document.getElementById('btn-logout');
     const userInfo = document.getElementById('user-info');
     const usernameSpan = document.getElementById('username');
+    const adminMenuItem = document.getElementById('admin-menu-item');
     // Su alcune pagine il link profilo potrebbe non avere id="btn-profile".
     const profileBtn = document.getElementById('btn-profile');
     try {
@@ -16,6 +17,7 @@ async function checkAuth() {
             // L'utente è loggato (Stato 200)
             const user = await response.json();
             console.log("Utente autenticato:", user);
+            if (user.profile.role === "admin") adminMenuItem.style.setProperty('display', 'list-item', 'important');
             if (usernameSpan) usernameSpan.textContent = user.profile.name; // o user.email
             
             if (userInfo) userInfo.style.display = 'inline';
