@@ -139,8 +139,8 @@ async function creaSpot(event) {
     // Tag
     const price = formData.get('price');
     const environment = formData.get('environment');
-    const outlets = formData.get('outlets') ? 'outlets' : null;
-    const quiet = formData.get('quiet') ? 'quiet' : null;
+    const outlets = formData.get('outlets');
+    const quiet = formData.get('quiet');
     const crowd = formData.get('crowd');
 
     // Orari

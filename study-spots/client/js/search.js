@@ -3,7 +3,7 @@ const API_URL = 'https://nominatim.openstreetmap.org/search';
 // Aggiungi un listener per l'input di ricerca
 const searchInput = document.getElementById('search-input');
 const clearSearchBtn = document.getElementById('clear-search');
-
+const tableBody = document.getElementById('results-body');
 
 searchInput.addEventListener('input', handleInput);
 searchInput.addEventListener('input', toggleClearButton);
@@ -64,7 +64,6 @@ function createTableRow(result) {
 }
 
 function updateResultsTable(results) {
-    const tableBody = document.getElementById('results-body');
     tableBody.innerHTML = '';
     
     if (results.length === 0) return;
@@ -97,6 +96,15 @@ clearSearchBtn.addEventListener('click', () => {
 
     // Opzionale: Se vuoi scatenare un evento di ricerca vuoto/aggiornamento mappa integrato nel tuo search.js
     searchInput.dispatchEvent(new Event('input'));
+});
+
+searchInput.addEventListener('focusout', (event) => {
+    // Controlla se il punto in cui l'utente ha cliccato si trova dentro il box dei suggerimenti
+    const cliccatoDentroSuggerimenti = tableBody.contains(event.relatedTarget);
+
+    if (!cliccatoDentroSuggerimenti) {
+        tableBody.style.display = 'none';
+    }
 });
 
 // Controllo iniziale (es. se la pagina viene ricaricata mantenendo i vecchi dati nel form)

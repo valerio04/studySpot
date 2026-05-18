@@ -156,7 +156,7 @@ async function popolaPagina(spot) {
         spot.tags.forEach(tag => {
             const span = document.createElement('span');
             span.className = 'tag';
-            span.textContent = tag;
+            span.textContent = tags(tag);
             tagsContainer.appendChild(span);
         });
     }
@@ -181,6 +181,19 @@ async function popolaPagina(spot) {
     const spotsVicini = await response_vicini.json();
     console.log("Spot Vicini",spotsVicini);
     renderSpotCards(nearbyGrid, spotsVicini, { showComments: false });
+}
+
+function tags(tag) {
+    const tagMap = {
+        'outdoor': "🌳 All'aperto",
+        'indoor': '🏠 Al chiuso',
+        'outlets': '🔌 Prese di corrente disponibili',
+        'quiet': '🤫 Ambiente Silenzioso',
+        'poco affollato': '👤 Poco affollato',
+        'abbastanza affollato': '👥 Medio',
+        'molto affollato': '🫂 Molto affollato'
+    };
+    return tagMap[tag.toLowerCase()] || tag;
 }
 
 function renderSpotCards(trackElement, spots, options = {}) {
@@ -230,23 +243,39 @@ function popolaOrari(hours) {
     if (!hoursList) return;
     hoursList.innerHTML = '';
 
-    const oggiIndice = new Date().getDay();
+    // Nota: in JavaScript 0 è Domenica, 1 è Lunedì, ecc.
+    // Sistemiamo l'array in modo che l'indice combaci con new Date().getDay()
     const giorniSettimana = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    
+    const oggiIndice = new Date().getDay();
     const giornoOggiTesto = giorniSettimana[oggiIndice];
 
-    hours.forEach(item => {
+    // Ordine di visualizzazione desiderato (es. partendo da Lunedì a Domenica)
+    const ordineVisualizzazione = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+    // Cicliamo sull'ordine fisso dei giorni della settimana
+    ordineVisualizzazione.forEach(giorno => {
         const li = document.createElement('li');
         
-        const apertura = item.open_time.substring(0, 5);
-        const chiusura = item.close_time.substring(0, 5);
-        const orarioTesto = (apertura === chiusura) ? 'Chiuso' : `${apertura} - ${chiusura}`;
+        // Cerchiamo dentro l'array 'hours' se c'è un record per il giorno corrente del ciclo
+        const infoGiorno = hours.find(item => item.day_of_week.toLowerCase() === giorno);
 
-        // Check if this is today
-        if (item.day_of_week.toLowerCase() === giornoOggiTesto) {
+        let orarioTesto = 'Chiuso'; // Di base impostiamo a Chiuso se non trova il giorno nel DB
+
+        // Se il giorno esiste nell'array 'hours', estraiamo gli orari
+        if (infoGiorno) {
+            const apertura = infoGiorno.open_time.substring(0, 5);
+            const chiusura = infoGiorno.close_time.substring(0, 5);
+            
+            orarioTesto = (apertura === chiusura) ? 'Chiuso' : `${apertura} - ${chiusura}`;
+        }
+
+        // Check se questo giorno del ciclo corrisponde a oggi
+        if (giorno === giornoOggiTesto) {
             li.classList.add('current-day');
         }
 
-        li.innerHTML = `<span class="fw-bold">${capitalizeDayName(item.day_of_week)}:</span> <span>${orarioTesto}</span>`;
+        li.innerHTML = `<span class="fw-bold">${capitalizeDayName(giorno)}:</span> <span>${orarioTesto}</span>`;
         hoursList.appendChild(li);
     });
 }

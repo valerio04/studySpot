@@ -242,7 +242,7 @@ async function caricaCommenti(endpoint, trackElement) {
             card.href = '/spot?id=' + commento.spot_id;
             card.className = 'card shadow-sm flex-shrink-0 text-decoration-none text-dark border-0';
             card.style.width = '250px';
-            card.style.backgroundColor = '#b3b6b9ff';
+            card.style.backgroundColor = '#fdfdfd';
 
             card.innerHTML = `
                 <div class="card-body p-3">

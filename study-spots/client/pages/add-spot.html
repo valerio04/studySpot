@@ -63,11 +63,15 @@
                             
                             <div class="mb-4">
                                 <label id="address-label" class="form-label fw-bold">Indirizzo</label>
-                                <input type="text" id="search-input" name="address" class="form-control form-control-lg" placeholder="Cerca via, piazza o area..." required>
-                                <script src="/js/search.js"></script>
+                                <div class="search-wrapper">
+                                    <input type="text" id="search-input" name="address" class="form-control form-control-lg" placeholder="Cerca via, piazza o area..." required>
+                                    <button type="button" id="clear-search" class="clear-search-btn" aria-label="Cancella ricerca">
+                                        <i class="fa-solid fa-xmark fs-5"></i>
+                                    </button>
+                                </div>
                                 <div class="search-results mt-2">
                                     <table class="table table-sm custom-table">
-                                        <tbody id="results-body"></tbody>
+                                        <tbody id="results-body" tabindex="-1"></tbody>
                                     </table>
                                 </div>
                             </div>
@@ -317,5 +321,6 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.min.js"></script>
     <script src="/js/add-spot.js"></script>
     <script src="../js/checkAuth.js"></script>
+    <script src="/js/search.js"></script>
 </body>
 </html>

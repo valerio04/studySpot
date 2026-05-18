@@ -124,7 +124,34 @@ else {
 }
 
 
+const getSupabase = (req, res) => {
+  return createServerClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_KEY,
+    {
+      cookies: {
+        getAll() {
+          return parseCookieHeader(req.headers.cookie ?? '')
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            
+            // Personalizza la durata qui (es. 1 giorno)
+            const customOptions = {
+              ...options,
+              maxAge: 86400, // Durata in secondi (86400 secondi = 24 ore)
+              // Puoi usare anche expires: new Date(Date.now() + ...), ma maxAge è più comodo
+            };
 
+            res.appendHeader('Set-Cookie', serializeCookieHeader(name, value, customOptions))
+          })
+        },
+      },
+    }
+  )
+}
+
+/*
 // Funzione helper per creare il client Supabase per ogni richiesta
 const getSupabase = (req, res) => {
   return createServerClient(
@@ -144,7 +171,7 @@ const getSupabase = (req, res) => {
     }
   )
 }
-
+*/
 
 // ==========API: ME (Ottieni i dati dell'utente corrente)===========
 app.get('/api/me', async (req, res) => {
