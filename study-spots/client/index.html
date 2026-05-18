@@ -58,7 +58,12 @@
                 <div class="col-md-10 col-lg-8">
                     <form class="d-flex flex-wrap justify-content-center gap-3 mb-3">
                         <div class="input-group" style="max-width: 500px; flex-grow: 1;">
-                            <input type="text" id="search-input" class="form-control rounded-start-pill border-dark-blue px-4" placeholder="Cerca un luogo...">
+                            <div class="search-wrapper">
+                                <input type="text" id="search-input" class="form-control rounded-start-pill border-dark-blue px-4 h-100" placeholder="Cerca un luogo...">
+                                <button type="button" id="clear-search" class="clear-search-btn" aria-label="Cancella ricerca">
+                                    <i class="fa-solid fa-xmark fs-5"></i>
+                                </button>
+                            </div>
                             <button class="btn btn-primary-custom px-4 rounded-end-pill" type="button" id="search-button">Cerca</button>
                         </div>
 
@@ -66,6 +71,17 @@
                             <i class="fa-solid fa-location-crosshairs"></i> Vicino a me
                         </button>
                     </form>
+                </div>
+            </div>
+            
+            <div class="row justify-content-center">
+                <div class="col-md-10 col-lg-8">
+                    <div class="table-responsive">
+                        <table class="table table-hover mt-3 custom-table">
+                            <tbody id="results-body">
+                                </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             
@@ -81,18 +97,6 @@
                 <div>
                     <span class="fw-bold text-orange">Roma</span>
                     <span class="text-muted small"> e dintorni</span>
-                </div>
-            </div>
-            
-            
-            <div class="row justify-content-center">
-                <div class="col-md-10 col-lg-8">
-                    <div class="table-responsive">
-                        <table class="table table-hover mt-3 custom-table">
-                            <tbody id="results-body">
-                                </tbody>
-                        </table>
-                    </div>
                 </div>
             </div>
         </section>

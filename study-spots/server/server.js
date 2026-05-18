@@ -1018,7 +1018,65 @@ app.get('/api/spots/top-rated', async (req, res) => {
   }
 ]*/
 
+//============== API: ottieni spot piu attivi==============
+//(spot con piu voti indipendentemnte dal voto )
+app.get('/api/spots/economici', async (req, res) => {
+    console.log('GET /api/spots/economici');
 
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+        return res.status(503).json({ error: 'Database non configurato' });
+    }
+
+    const limit = Math.min(parseInt(req.query.limit, 10) || 10, 100);
+
+    try {
+        // 1. Recuperiamo i dati (senza ordinamento SQL perché ci serve la somma di due colonne)
+        const { data, error } = await supabase
+            .from('spots')
+            .select(`
+                id, 
+                name, 
+                address, 
+                type, 
+                star_avg, 
+                star_count, 
+                comment_count,
+                spot_photos (link_foto),
+                spot_tags(tags(name))
+            `)
+            .eq('spot_photos.numero_foto', 1); // Prende solo la foto principale
+
+        if (error) {
+            console.error('Errore Supabase:', error);
+            return res.status(500).json({ error: 'Errore durante il recupero degli spot' });
+        }
+
+        // 2. Filtriamo gli spot usando la logica dell'if/ciclo for
+        const spotEconomici = data.filter(spot => {
+            let haTagDollaro = false;
+
+            if (spot.spot_tags) {
+                for (const elemento of spot.spot_tags) {
+                    if (elemento.tags && elemento.tags.name === '$') {
+                        haTagDollaro = true;
+                        break; 
+                    }
+                }
+            }
+            
+            // Il filter tiene l'elemento solo se restituisci true
+            return haTagDollaro; 
+        });
+
+        // 3. Applichiamo il limite richiesto dall'utente (visto che filtriamo lato codice)
+        const risultatiLimitati = spotEconomici.slice(0, limit);
+
+        return res.json(risultatiLimitati);
+    } catch (err) {
+        console.error('Errore inatteso:', err);
+        return res.status(500).json({ error: 'Errore interno del server' });
+    }
+});
 
 
 

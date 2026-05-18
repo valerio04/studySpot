@@ -2,9 +2,11 @@
 
 const topRatedTrack = document.getElementById('top-rated-track');
 const topCommentedTrack = document.getElementById('top-activ-track');
+const economiciTrack = document.getElementById('economici-track')
 
 document.addEventListener('DOMContentLoaded', caricaTopRated);
 document.addEventListener('DOMContentLoaded', caricaTopCommented);
+document.addEventListener('DOMContentLoaded', caricaEconomici);
 
 async function caricaTopRated() {
 	if (!topRatedTrack) return;
@@ -46,6 +48,28 @@ async function caricaTopCommented() {
 	} catch (error) {
 		console.error('Errore caricamento top activ:', error);
 		renderSpotCards(topCommentedTrack, [], { emptyMessage: 'Nessun dato disponibile' });
+	}
+}
+
+async function caricaEconomici() {
+	if (!economiciTrack) return;
+
+	try {
+		const response = await fetch('/api/spots/economici?limit=10', {
+			method: 'GET',
+			credentials: 'include'
+		});
+
+		if (!response.ok) {
+			throw new Error('Errore durante il recupero degli spot economici.');
+		}
+
+		const spots = await response.json();
+		console.log("Economici",spots);
+        renderSpotCards(economiciTrack, spots, { showComments: false });
+	} catch (error) {
+		console.error('Errore caricamento top rated:', error);
+        renderSpotCards(economiciTrack, [], { emptyMessage: 'Nessun dato disponibile' });
 	}
 }
 

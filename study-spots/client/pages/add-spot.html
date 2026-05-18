@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
+
 </head>
 <body>
 
@@ -19,7 +20,7 @@
         <div class="container-fluid px-4">
             <a class="navbar-brand d-flex align-items-center gap-2" href="/">
                 <img src="../assets/img/logo.png" alt="Logo" height="45">
-                <span class="nome-logo h3 mb-0">StudySpot</span>
+                <span class="nome-logo h3 mb-0 text-dark-blue">StudySpot</span>
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -49,46 +50,49 @@
 
     <main class="container py-5">
         <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-7">
-                <div class="card shadow-sm border-0 rounded-4">
-                    <div class="card-body p-5">
-                        <h1 class="h3 fw-bold text-center mb-4 text-dark-blue">Insert spot's informations</h1>
+            <div class="col-md-9 col-lg-7">
+                <div class="card shadow-sm border-0 rounded-4 bg-white">
+                    <div class="card-body p-4 p-sm-5">
+                        <h1 class="h2 fw-bold text-center mb-4 text-dark-blue">Inserisci le info dello Spot</h1>
                         <form id="add-spot">
-                            <div class="mb-3">
-                                <input type="text" id="name-place" name="name-place" class="form-control form-control-lg" placeholder="Name Spot" required>
+                            
+                            <div class="mb-4">
+                                <label for="name-place" class="form-label fw-bold">Nome dello Spot</label>
+                                <input type="text" id="name-place" name="name-place" class="form-control form-control-lg" placeholder="Es. Biblioteca Centrale" required>
                             </div>
                             
-                            <div class="mb-3">
-                                <input type="text" id="search-input" name="address" class="form-control form-control-lg" placeholder="Address" required>
+                            <div class="mb-4">
+                                <label id="address-label" class="form-label fw-bold">Indirizzo</label>
+                                <input type="text" id="search-input" name="address" class="form-control form-control-lg" placeholder="Cerca via, piazza o area..." required>
                                 <script src="/js/search.js"></script>
                                 <div class="search-results mt-2">
-                                    <table class="table table-sm">
+                                    <table class="table table-sm custom-table">
                                         <tbody id="results-body"></tbody>
                                     </table>
                                 </div>
                             </div>
                             
-                            <div class="mb-3">
-                                <label for="category" class="form-label fw-bold">Category</label>
+                            <div class="mb-4">
+                                <label for="category" class="form-label fw-bold">Categoria</label>
                                 <select id="category" name="category" class="form-select form-select-lg">
-                                    <option value="bar">Bar</option>
-                                    <option value="co">Coworking</option>
-                                    <option value="biblio">Biblioteca</option>
-                                    <option value="au">Aula Studio</option>
+                                    <option value="bar">☕ Bar / Caffetteria</option>
+                                    <option value="co">🏢 Coworking</option>
+                                    <option value="biblio">📚 Biblioteca</option>
+                                    <option value="au">✍️ Aula Studio</option>
                                 </select>
                             </div>
 
                             <div class="mb-4">
-                                <label class="form-label fw-bold">Prezzo</label>
+                                <label class="form-label fw-bold">Fascia di Prezzo</label>
                                 <div class="btn-group d-flex w-100" role="group">
                                     <input type="radio" class="btn-check" id="price1" name="price" value="$">
-                                    <label class="btn btn-outline-secondary flex-fill" for="price1">$</label>
+                                    <label class="btn btn-outline-custom-group flex-fill py-2" for="price1">È economico ($)</label>
                                     
                                     <input type="radio" class="btn-check" id="price2" name="price" value="$$">
-                                    <label class="btn btn-outline-secondary flex-fill" for="price2">$$</label>
+                                    <label class="btn btn-outline-custom-group flex-fill py-2" for="price2">Nella media ($$)</label>
                                     
                                     <input type="radio" class="btn-check" id="price3" name="price" value="$$$">
-                                    <label class="btn btn-outline-secondary flex-fill" for="price3">$$$</label>
+                                    <label class="btn btn-outline-custom-group flex-fill py-2" for="price3">Costoso ($$$)</label>
                                 </div>
                             </div>
 
@@ -96,110 +100,98 @@
                                 <label class="form-label fw-bold">Ambiente</label>
                                 <div class="btn-group d-flex w-100" role="group">
                                     <input type="radio" class="btn-check" id="outdoor" name="environment" value="outdoor">
-                                    <label class="btn btn-outline-secondary flex-fill" for="outdoor">🌳 All'aperto</label>
+                                    <label class="btn btn-outline-custom-group flex-fill py-2" for="outdoor">🌳 All'aperto</label>
                                     
                                     <input type="radio" class="btn-check" id="indoor" name="environment" value="indoor">
-                                    <label class="btn btn-outline-secondary flex-fill" for="indoor">🏠 Al chiuso</label>
+                                    <label class="btn btn-outline-custom-group flex-fill py-2" for="indoor">🏠 Al chiuso</label>
                                 </div>
                             </div>
 
                             <div class="mb-4">
                                 <label class="form-label fw-bold">Servizi e Atmosfera</label>
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="outlets" name="outlets" value="yes">
-                                    <label class="form-check-label" for="outlets">🔌 Prese di corrente</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="quiet" name="silenzioso" value="yes">
-                                    <label class="form-check-label" for="quiet">🤫 Silenzioso</label>
+                                <div class="d-flex flex-column gap-2 mt-1">
+                                    <div class="form-check custom-checkbox">
+                                        <input type="checkbox" class="form-check-input" id="outlets" name="outlets" value="yes">
+                                        <label class="form-check-label fw-semibold" for="outlets">🔌 Prese di corrente disponibili</label>
+                                    </div>
+                                    <div class="form-check custom-checkbox">
+                                        <input type="checkbox" class="form-check-input" id="quiet" name="silenzioso" value="yes">
+                                        <label class="form-check-label fw-semibold" for="quiet">🤫 Ambiente Silenzioso / Adatto alla concentrazione</label>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="mb-4">
-                                <label class="form-label fw-bold">Affollamento</label>
+                                <label class="form-label fw-bold">Livello di Affollamento tipico</label>
                                 <div class="btn-group d-flex w-100" role="group">
                                     <input type="radio" class="btn-check" id="crowd1" name="crowd" value="poco affollato">
-                                    <label class="btn btn-outline-secondary flex-fill" for="crowd1">👤</label>
+                                    <label class="btn btn-outline-custom-group flex-fill py-2" for="crowd1">👤 Poco affollato</label>
                                     
                                     <input type="radio" class="btn-check" id="crowd2" name="crowd" value="abbastanza affollato">
-                                    <label class="btn btn-outline-secondary flex-fill" for="crowd2">👥</label>
+                                    <label class="btn btn-outline-custom-group flex-fill py-2" for="crowd2">👥 Medio</label>
                                     
                                     <input type="radio" class="btn-check" id="crowd3" name="crowd" value="molto affollato">
-                                    <label class="btn btn-outline-secondary flex-fill" for="crowd3">🫂</label>
+                                    <label class="btn btn-outline-custom-group flex-fill py-2" for="crowd3">🫂 Molto affollato</label>
                                 </div>
                             </div>
 
                             <div class="mb-4">
-                                <label class="form-label fw-bold">Orari (Facoltativo)</label>
-                                <div class="schedule-container">
-                                    <div class="row mb-3">
-                                        <div class="col-12">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <label for="monday-open" class="col-3 form-label mb-0">Lunedì</label>
-                                                <input type="time" id="monday-open" name="monday-open" class="form-control form-control-sm" value="09:00">
-                                                <span>-</span>
-                                                <input type="time" id="monday-close" name="monday-close" class="form-control form-control-sm" value="20:00">
-                                            </div>
+                                <label class="form-label fw-bold mb-2">Orari di Apertura (Facoltativo)</label>
+                                <div class="schedule-container d-flex flex-column gap-2">
+                                    <div class="row align-items-center schedule-row g-2 m-0">
+                                        <label for="monday-open" class="col-3 form-label mb-0 fw-bold small text-dark-blue">Lunedì</label>
+                                        <div class="col-9 d-flex align-items-center gap-2">
+                                            <input type="time" id="monday-open" name="monday-open" class="form-control form-control-sm border-0 bg-light text-center" value="09:00">
+                                            <span class="text-muted">-</span>
+                                            <input type="time" id="monday-close" name="monday-close" class="form-control form-control-sm border-0 bg-light text-center" value="20:00">
                                         </div>
                                     </div>
-                                    <div class="row mb-3">
-                                        <div class="col-12">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <label for="tuesday-open" class="col-3 form-label mb-0">Martedì</label>
-                                                <input type="time" id="tuesday-open" name="tuesday-open" class="form-control form-control-sm" value="08:00">
-                                                <span>-</span>
-                                                <input type="time" id="tuesday-close" name="tuesday-close" class="form-control form-control-sm" value="20:00">
-                                            </div>
+                                    <div class="row align-items-center schedule-row g-2 m-0">
+                                        <label for="tuesday-open" class="col-3 form-label mb-0 fw-bold small text-dark-blue">Martedì</label>
+                                        <div class="col-9 d-flex align-items-center gap-2">
+                                            <input type="time" id="tuesday-open" name="tuesday-open" class="form-control form-control-sm border-0 bg-light text-center" value="08:00">
+                                            <span class="text-muted">-</span>
+                                            <input type="time" id="tuesday-close" name="tuesday-close" class="form-control form-control-sm border-0 bg-light text-center" value="20:00">
                                         </div>
                                     </div>
-                                    <div class="row mb-3">
-                                        <div class="col-12">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <label for="wednesday-open" class="col-3 form-label mb-0">Mercoledì</label>
-                                                <input type="time" id="wednesday-open" name="wednesday-open" class="form-control form-control-sm" value="08:00">
-                                                <span>-</span>
-                                                <input type="time" id="wednesday-close" name="wednesday-close" class="form-control form-control-sm" value="20:00">
-                                            </div>
+                                    <div class="row align-items-center schedule-row g-2 m-0">
+                                        <label for="wednesday-open" class="col-3 form-label mb-0 fw-bold small text-dark-blue">Mercoledì</label>
+                                        <div class="col-9 d-flex align-items-center gap-2">
+                                            <input type="time" id="wednesday-open" name="wednesday-open" class="form-control form-control-sm border-0 bg-light text-center" value="08:00">
+                                            <span class="text-muted">-</span>
+                                            <input type="time" id="wednesday-close" name="wednesday-close" class="form-control form-control-sm border-0 bg-light text-center" value="20:00">
                                         </div>
                                     </div>
-                                    <div class="row mb-3">
-                                        <div class="col-12">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <label for="thursday-open" class="col-3 form-label mb-0">Giovedì</label>
-                                                <input type="time" id="thursday-open" name="thursday-open" class="form-control form-control-sm" value="08:00">
-                                                <span>-</span>
-                                                <input type="time" id="thursday-close" name="thursday-close" class="form-control form-control-sm" value="20:00">
-                                            </div>
+                                    <div class="row align-items-center schedule-row g-2 m-0">
+                                        <label for="thursday-open" class="col-3 form-label mb-0 fw-bold small text-dark-blue">Giovedì</label>
+                                        <div class="col-9 d-flex align-items-center gap-2">
+                                            <input type="time" id="thursday-open" name="thursday-open" class="form-control form-control-sm border-0 bg-light text-center" value="08:00">
+                                            <span class="text-muted">-</span>
+                                            <input type="time" id="thursday-close" name="thursday-close" class="form-control form-control-sm border-0 bg-light text-center" value="20:00">
                                         </div>
                                     </div>
-                                    <div class="row mb-3">
-                                        <div class="col-12">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <label for="friday-open" class="col-3 form-label mb-0">Venerdì</label>
-                                                <input type="time" id="friday-open" name="friday-open" class="form-control form-control-sm" value="08:00">
-                                                <span>-</span>
-                                                <input type="time" id="friday-close" name="friday-close" class="form-control form-control-sm" value="20:00">
-                                            </div>
+                                    <div class="row align-items-center schedule-row g-2 m-0">
+                                        <label for="friday-open" class="col-3 form-label mb-0 fw-bold small text-dark-blue">Venerdì</label>
+                                        <div class="col-9 d-flex align-items-center gap-2">
+                                            <input type="time" id="friday-open" name="friday-open" class="form-control form-control-sm border-0 bg-light text-center" value="08:00">
+                                            <span class="text-muted">-</span>
+                                            <input type="time" id="friday-close" name="friday-close" class="form-control form-control-sm border-0 bg-light text-center" value="20:00">
                                         </div>
                                     </div>
-                                    <div class="row mb-3">
-                                        <div class="col-12">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <label for="saturday-open" class="col-3 form-label mb-0">Sabato</label>
-                                                <input type="time" id="saturday-open" name="saturday-open" class="form-control form-control-sm" value="08:00">
-                                                <span>-</span>
-                                                <input type="time" id="saturday-close" name="saturday-close" class="form-control form-control-sm" value="20:00">
-                                            </div>
+                                    <div class="row align-items-center schedule-row g-2 m-0">
+                                        <label for="saturday-open" class="col-3 form-label mb-0 fw-bold small text-dark-blue">Sabato</label>
+                                        <div class="col-9 d-flex align-items-center gap-2">
+                                            <input type="time" id="saturday-open" name="saturday-open" class="form-control form-control-sm border-0 bg-light text-center" value="08:00">
+                                            <span class="text-muted">-</span>
+                                            <input type="time" id="saturday-close" name="saturday-close" class="form-control form-control-sm border-0 bg-light text-center" value="20:00">
                                         </div>
                                     </div>
-                                    <div class="row mb-3">
-                                        <div class="col-12">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <label for="sunday-open" class="col-3 form-label mb-0">Domenica</label>
-                                                <input type="time" id="sunday-open" name="sunday-open" class="form-control form-control-sm" value="08:00">
-                                                <span>-</span>
-                                                <input type="time" id="sunday-close" name="sunday-close" class="form-control form-control-sm" value="20:00">
-                                            </div>
+                                    <div class="row align-items-center schedule-row g-2 m-0">
+                                        <label for="sunday-open" class="col-3 form-label mb-0 fw-bold small text-dark-blue">Domenica</label>
+                                        <div class="col-9 d-flex align-items-center gap-2">
+                                            <input type="time" id="sunday-open" name="sunday-open" class="form-control form-control-sm border-0 bg-light text-center" value="08:00">
+                                            <span class="text-muted">-</span>
+                                            <input type="time" id="sunday-close" name="sunday-close" class="form-control form-control-sm border-0 bg-light text-center" value="20:00">
                                         </div>
                                     </div>
                                 </div>
@@ -208,39 +200,40 @@
                             <div class="mb-4">
                                 <label for="photos" class="form-label fw-bold">Foto dello Spot (Max 5)</label>
                                 <input type="file" id="photos" name="photos" class="form-control" accept="image/*" multiple>
-                                <div id="image-preview" class="d-flex flex-wrap gap-3 mt-2">
-                                </div>
-                                <small class="text-muted">Puoi caricare fino a 5 immagini. Saranno ottimizzate automaticamente.</small>
+                                <div id="image-preview" class="d-flex flex-wrap gap-3 mt-2"></div>
+                                <div class="form-text text-muted">Puoi caricare fino a 5 immagini. Saranno ottimizzate automaticamente dal sistema.</div>
                             </div>
 
                             <div class="mb-4">
-                                <label class="form-label fw-bold">Valutazione</label>
+                                <label class="form-label fw-bold d-block">La tua valutazione generale</label>
                                 <div class="star-rating">
-                                    <input type="radio" class="btn-check" id="star5" name="rating" value="5" required>
-                                    <label class="btn btn-outline-warning" for="star5" title="5 stelle">★</label>
+                                    <input type="radio" id="star5" name="rating" value="5" required>
+                                    <label for="star5" title="5 stelle">★</label>
 
-                                    <input type="radio" class="btn-check" id="star4" name="rating" value="4" required>
-                                    <label class="btn btn-outline-warning" for="star4" title="4 stelle">★</label>
+                                    <input type="radio" id="star4" name="rating" value="4" required>
+                                    <label class="border-0" for="star4" title="4 stelle">★</label>
 
-                                    <input type="radio" class="btn-check" id="star3" name="rating" value="3" required>
-                                    <label class="btn btn-outline-warning" for="star3" title="3 stelle">★</label>
+                                    <input type="radio" id="star3" name="rating" value="3" required>
+                                    <label for="star3" title="3 stelle">★</label>
 
-                                    <input type="radio" class="btn-check" id="star2" name="rating" value="2" required>
-                                    <label class="btn btn-outline-warning" for="star2" title="2 stelle">★</label>
+                                    <input type="radio" id="star2" name="rating" value="2" required>
+                                    <label for="star2" title="2 stelle">★</label>
 
-                                    <input type="radio" class="btn-check" id="star1" name="rating" value="1" required>
-                                    <label class="btn btn-outline-warning" for="star1" title="1 stella">★</label>
+                                    <input type="radio" id="star1" name="rating" value="1" required>
+                                    <label for="star1" title="1 stella">★</label>
                                 </div>
                             </div>
 
                             <div class="mb-4">
-                                <label for="comment" class="form-label fw-bold">Commento</label>
-                                <textarea id="comment" name="comment" class="form-control" placeholder="Lascia un commento (facoltativo)" rows="4"></textarea>
+                                <label for="comment" class="form-label fw-bold">Recensione / Commento</label>
+                                <textarea id="comment" name="comment" class="form-control h-auto" placeholder="Scrivi una breve descrizione o consigli utili per questo spot (orari di punta, qualità del Wi-Fi...)" rows="4"></textarea>
                             </div>
 
-                            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                                <a id="Annulla" href="/" class="btn btn-outline-secondary btn-lg">Cancel</a>
-                                <button type="submit" class="btn btn-primary-custom btn-lg fw-bold">Add Spot</button>
+                            <hr class="my-4 text-muted opacity-25">
+
+                            <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                                <a id="Annulla" href="/" class="btn btn-outline-primary-custom btn-lg fw-bold px-4">Annulla</a>
+                                <button type="submit" class="btn btn-primary-custom btn-lg fw-bold px-5 shadow-sm">Crea Nuovo Spot</button>
                             </div>
                         </form>
                     </div>
@@ -255,7 +248,7 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="d-flex align-items-center gap-2 mb-3">
                         <img src="assets/img/logo.png" alt="Logo" height="40">
-                        <span class="nome-logo h4 mb-0">StudySpot</span>
+                        <span class="nome-logo h4 mb-0 text-dark-blue">StudySpot</span>
                     </div>
                     <p class="text-muted small">
                         La piattaforma dedicata agli studenti per scoprire i migliori posti dove studiare a Roma e dintorni. Biblioteche, bar, coworking e aule studio a portata di click.
@@ -281,7 +274,7 @@
                     <h5 class="fw-bold text-dark-blue mb-3">Supporto</h5>
                     <ul class="list-unstyled">
                         <li class="mb-2"><a href="#" class="text-decoration-none text-muted small">FAQ</a></li>
-                        <a href="#" class="text-decoration-none text-muted small">Contattaci</a>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted small">Contattaci</a></li>
                     </ul>
                 </div>
                 
@@ -301,7 +294,7 @@
                             <span class="text-muted small fw-bold">Valerio Da Corte</span>
                         </div>
                     </div>
-                    <p class="text-muted small mt-3 italic">Progetto creato per supportare la community studentesca romana.</p>
+                    <p class="text-muted small mt-3 fst-italic">Progetto creato per supportare la community studentesca romana.</p>
                 </div>
             </div>
 

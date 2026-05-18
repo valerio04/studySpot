@@ -158,7 +158,7 @@ async function creaSpot(event) {
 
     // Rating e commento
     const rating = formData.get('rating') ? parseInt(formData.get('rating')) : null;
-    const comment = formData.get('comment') || null;
+    const comment = formData.get('comment');
 
     // Costruisci il payload
     const spotData = {

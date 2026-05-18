@@ -1,14 +1,19 @@
 const API_URL = 'https://nominatim.openstreetmap.org/search';
 
 // Aggiungi un listener per l'input di ricerca
-document.getElementById('search-input').addEventListener('input', handleInput);
+const searchInput = document.getElementById('search-input');
+const clearSearchBtn = document.getElementById('clear-search');
+
+
+searchInput.addEventListener('input', handleInput);
+searchInput.addEventListener('input', toggleClearButton);
 
 let debounceTimeout;
 
 function handleInput() {
     clearTimeout(debounceTimeout);
     debounceTimeout = setTimeout(function () {
-        fetchResults(document.getElementById('search-input').value.trim());
+        fetchResults(searchInput.value.trim());
     }, 500); // Ritardo di 500ms
 }
 
@@ -43,7 +48,7 @@ function createTableRow(result) {
     
     row.addEventListener('click', function() {
         // 1. Popola l'input con il nome scelto
-        document.getElementById('search-input').value = result.display_name;
+        searchInput.value = result.display_name;
         
         // 2. Salva le coordinate globali per map.js
         window.selectedLatitude = parseFloat(result.lat);
@@ -69,3 +74,30 @@ function updateResultsTable(results) {
         tableBody.appendChild(row);
     });
 }
+
+// Funzione per mostrare/nascondere la X in base al contenuto dell'input
+function toggleClearButton() {
+    if (searchInput.value.trim().length > 0) {
+        clearSearchBtn.style.display = 'block';
+    } else {
+        clearSearchBtn.style.display = 'none';
+    }
+};
+
+// Resetta l'input quando si clicca sulla X
+clearSearchBtn.addEventListener('click', () => {
+    searchInput.value = '';
+    clearSearchBtn.style.display = 'none';
+    searchInput.focus();
+    
+    // Se hai una tabella dei suggerimenti o risultati attivi sotto la barra, la ripulisce
+    if (resultsBody) {
+        resultsBody.innerHTML = '';
+    }
+
+    // Opzionale: Se vuoi scatenare un evento di ricerca vuoto/aggiornamento mappa integrato nel tuo search.js
+    searchInput.dispatchEvent(new Event('input'));
+});
+
+// Controllo iniziale (es. se la pagina viene ricaricata mantenendo i vecchi dati nel form)
+toggleClearButton();

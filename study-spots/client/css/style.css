@@ -1439,3 +1439,92 @@ img:not([src]), img[src=""] {
     opacity: 0.5;
     filter: brightness(0) invert(1);
 }
+
+/*=================================
+    13. add-spot
+    ========================================= */
+
+
+/* Personalizzazione pulsanti di selezione (Prezzo, Ambiente, Affollamento) */
+.btn-check:checked + .btn-outline-custom-group {
+    background-color: var(--orange-accent);
+    border-color: var(--orange-accent);
+    color: var(--white);
+}
+.btn-outline-custom-group {
+    border: 1px solid var(--input-border);
+    color: var(--dark-blue);
+    background-color: var(--white);
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+.btn-outline-custom-group:hover {
+    background-color: var(--light-gray);
+    color: var(--dark-blue);
+    border-color: var(--muted-light);
+}
+
+/* Sistema di Rating a Stelle Moderno */
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 4px;
+}
+.star-rating input {
+    display: none;
+}
+.star-rating label {
+    font-size: 2rem;
+    color: var(--star-empty);
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: var(--star-yellow);
+}
+
+/* Container orari */
+.schedule-row {
+    background-color: var(--white);
+    border: 1px solid var(--soft-border);
+    border-radius: 10px;
+    padding: 8px 12px;
+    transition: border-color 0.2s;
+}
+.schedule-row:focus-within {
+    border-color: var(--orange-accent);
+}
+
+
+/* Stili per il pulsante di cancellazione (X) nella barra di ricerca */
+.search-wrapper {
+    position: relative;
+    flex-grow: 1;
+}
+
+.clear-search-btn {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--muted-gray, #6c757d);
+    padding: 0;
+    z-index: 5;
+    cursor: pointer;
+    display: none; /* Nascosto di default, mostrato via JS */
+    transition: color 0.2s ease;
+}
+
+.clear-search-btn:hover {
+    color: var(--orange-accent, #FF8A3D);
+}
+
+/* Padding extra a destra dell'input per non sovrapporsi alla X */
+#search-input {
+    padding-right: 40px !important;
+}
