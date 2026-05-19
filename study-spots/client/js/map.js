@@ -18,9 +18,12 @@ const spotsLayer = L.markerClusterGroup({
 
 map.addLayer(spotsLayer);
 let currentMarker = null; // Marker della posizione cercata
+
 const searchHereButton = document.getElementById('search-here-button');
 const mapResultsList = document.getElementById('map-results-list');
 const mapResultsCount = document.getElementById('map-results-count');
+const filterCheckboxes = document.querySelectorAll('.form-check-input, .btn-check');
+
 let lastSearchCenter = null;
 const tagFilterMap = {
     'tag-price-1': '$',
@@ -45,8 +48,11 @@ document.getElementById('near-me-button').addEventListener('click', async () => 
     getUserLocation();         // Questa è asincrona tramite callback, vedi sotto
 });
 
+filterCheckboxes.forEach((checkbox) => {
+    checkbox.addEventListener('change', scheduleFilterUpdate);
+});
+
 // Aggiorna gli spot quando cambiano i filtri (con debounce per evitare troppe richieste)
-const filterCheckboxes = document.querySelectorAll('.form-check-input, .btn-check');
 let filterUpdateTimer = null;
 
 const scheduleFilterUpdate = () => {
@@ -56,10 +62,6 @@ const scheduleFilterUpdate = () => {
         visualizeSpotOnMap();
     }, 250);
 };
-
-filterCheckboxes.forEach((checkbox) => {
-    checkbox.addEventListener('change', scheduleFilterUpdate);
-});
 
 if (searchHereButton) {
     searchHereButton.addEventListener('click', () => {

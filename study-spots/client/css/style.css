@@ -95,9 +95,7 @@ h1, h2, h3, h4, .nome-logo {
 }
 
 /* Effetto Hover Testo Arancione */
-.navbar-nav .nav-link:hover {
-    color: var(--orange-accent) !important;
-}
+.navbar-nav .nav-link:hover { color: var(--orange-accent) !important; }
 
 /* Linea Arancione Sotto i Link al passaggio */
 .navbar-nav .nav-link::after {
@@ -109,8 +107,26 @@ h1, h2, h3, h4, .nome-logo {
     transition: width .3s;
 }
 
-.navbar-nav .nav-link:hover::after {
-    width: 100%;
+.navbar-nav .nav-link:hover::after { width: 100%; }
+
+.nav-avatar {
+    width: 38px;
+    height: 38px;
+    background-color: var(--orange-accent);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-family: 'Quicksand', sans-serif;
+    transition: transform 0.2s;
+    border: 2px solid transparent;
+}
+
+.nav-avatar:hover {
+    transform: scale(1.1);
+    border-color: var(--dark-blue);
 }
 
 /* =========================================
@@ -185,6 +201,36 @@ h1, h2, h3, h4, .nome-logo {
     color: var(--orange-accent);
 }
 
+/* Stili per il pulsante di cancellazione (X) nella barra di ricerca */
+.search-wrapper {
+    position: relative;
+    flex-grow: 1;
+}
+
+.clear-search-btn {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--muted-gray, #6c757d);
+    padding: 0;
+    z-index: 5;
+    cursor: pointer;
+    display: none; /* Nascosto di default, mostrato via JS */
+    transition: color 0.2s ease;
+}
+
+.clear-search-btn:hover {
+    color: var(--orange-accent, #FF8A3D);
+}
+
+/* Padding extra a destra dell'input per non sovrapporsi alla X */
+#search-input {
+    padding-right: 40px !important;
+}
+
 /* =========================================
    5. MAPPA E FILTRI
    ========================================= */
@@ -192,6 +238,8 @@ h1, h2, h3, h4, .nome-logo {
     position: relative;
     border: 2px solid var(--light-gray);
     border-radius: 1rem;
+    width: 100%;
+    overflow: hidden;
 }
 
 #map {
@@ -235,18 +283,13 @@ h1, h2, h3, h4, .nome-logo {
 .filter-card {
     border: 1px solid rgba(0,0,0,0.05);
     height: fit-content;
+    min-width: 220px;          /* larghezza minima sidebar */
+    overflow: hidden;          /* niente elementi fuori */
 }
 
 .advanced-filters {
     border-top: 1px solid rgba(0, 0, 0, 0.06);
     padding-top: 16px;
-}
-
-.filter-card {
-    border: 1px solid rgba(0,0,0,0.05);
-    height: fit-content;
-    min-width: 220px;          /* larghezza minima sidebar */
-    overflow: hidden;          /* niente elementi fuori */
 }
 
 .filter-item {
@@ -314,19 +357,10 @@ h1, h2, h3, h4, .nome-logo {
     flex: 1;
 }
 
-#map-container {
-    width: 100%;
-    overflow: hidden;
-}
-
 .form-check-input:checked {
     background-color: var(--orange-accent);
     border-color: var(--orange-accent);
 }
-
-
-
-
 
 
 .filter-icon {
@@ -444,7 +478,7 @@ h1, h2, h3, h4, .nome-logo {
 }
 
 /* =========================================
-   MAP POPUP - BOOTSTRAP BASED
+   6. MAP POPUP - BOOTSTRAP BASED
    ========================================= */
 
 .leaflet-popup-content-wrapper {
@@ -497,7 +531,7 @@ h1, h2, h3, h4, .nome-logo {
     background: linear-gradient(135deg, var(--marker-au), var(--au-light));
 }
 /* =========================================
-   MARKER CLUSTER CUSTOM
+   7. MARKER CLUSTER CUSTOM
    ========================================= */
 
 .marker-cluster-small,
@@ -541,7 +575,7 @@ h1, h2, h3, h4, .nome-logo {
 }
 
 /* =========================================
-   6. RANKING (CLASSIFICA) - SCOPED
+   8. RANKING (CLASSIFICA) - SCOPED
    ========================================= */
 
 /* Card utente personale */
@@ -651,14 +685,18 @@ h1, h2, h3, h4, .nome-logo {
 }
 
 /* =========================================
-   7. COLLEZIONI E CAROSELLI (LIST PAGE)
+   9. COLLEZIONI E CAROSELLI (LIST PAGE)
    ========================================= */
 
 /* Traccia a scorrimento orizzontale */
 .carousel-track {
     overflow-x: auto;
+    overflow-y: hidden;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
+    display: flex;
+    gap: 20px;
+    padding-bottom: 10px;
 }
 
 /* Nasconde scrollbar per estetica ma mantiene funzionalità */
@@ -703,13 +741,9 @@ h1, h2, h3, h4, .nome-logo {
     border-radius: 20px;
 }
 
-.vedi-tutti-link:hover {
-    opacity: 0.8;
-    text-decoration: underline !important;
-}
 
 /* =========================================
-   9. SPOT DETAIL PAGE (formerly spot.css)
+   10. SPOT DETAIL PAGE (formerly spot.css)
    ========================================= */
 
 /* Layout Generale */
@@ -1028,7 +1062,7 @@ h1, h2, h3, h4, .nome-logo {
 }
 
 /* =========================================
-   10. TAGS/PILLOLE STYLING
+   11. TAGS/PILLOLE STYLING
    ========================================= */
 .micro-tags {
     display: flex;
@@ -1056,7 +1090,7 @@ h1, h2, h3, h4, .nome-logo {
 }
 
 /* =========================================
-   11. NEARBY SPOTS CAROUSEL
+   12. NEARBY SPOTS CAROUSEL
    ========================================= */
 .nearby-section {
     margin-top: 50px;
@@ -1067,77 +1101,8 @@ h1, h2, h3, h4, .nome-logo {
     margin-bottom: 20px;
 }
 
-/* Carousel track for horizontal scrolling */
-.carousel-track {
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    display: flex;
-    gap: 20px;
-    padding-bottom: 10px;
-}
-
-.nearby-spot-card {
-    background: var(--white);
-    border: 1px solid var(--light-gray);
-    border-radius: 15px;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
-    min-width: 260px;
-    max-width: 260px;
-    height: fit-content;
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-}
-
-.nearby-spot-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 25px rgba(17, 46, 81, 0.15);
-}
-
-.nearby-spot-card-img {
-    width: 100%;
-    height: 180px;
-    background: linear-gradient(135deg, var(--placeholder-gray) 0%, var(--input-border) 100%);
-    object-fit: cover;
-}
-
-.nearby-spot-card-content {
-    padding: 15px;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.nearby-spot-card-content h3 {
-    font-size: 1.1rem;
-    color: var(--dark-blue);
-    margin: 0 0 8px 0;
-    font-family: 'Quicksand', sans-serif;
-    font-weight: 700;
-}
-
-.nearby-spot-card-content .address-small {
-    color: var(--secondary-blue);
-    font-size: 0.85rem;
-    margin-bottom: 10px;
-}
-
-.nearby-spot-card-content .micro-tags {
-    margin: 0;
-    gap: 6px;
-}
-
-.nearby-spot-card-content .tag {
-    font-size: 0.75rem;
-    padding: 5px 10px;
-}
-
 /* =========================================
-   9. LOGIN 
+   13. LOGIN 
    ========================================= */
 
 /* --- LOGIN ENHANCEMENTS --- */
@@ -1177,7 +1142,7 @@ body:has(#register) {
 }
 
 /* =========================================
-   9. PROFILE 
+   14. PROFILE AND UTILITIES
    ========================================= */
 .mt-n4 { margin-top: -3.5rem !important; }
 
@@ -1221,8 +1186,104 @@ body:has(#register) {
     font-size: 1.2rem;
 }
 
+/*=================================
+    15. SPOT-CARD - STILI SPECIFICI PER LE CARDS DEGLI SPOT
+    ========================================= */
+
+.spot-card-modern {
+    height: 340px;
+}
+
+.spot-card-media {
+    height: 150px;
+}
+
+.spot-card-content {
+    height: 190px;
+}
+
+.spot-card-title,
+.spot-card-address {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.spot-card-title {
+    -webkit-line-clamp: 2;
+}
+
+.spot-card-address {
+    -webkit-line-clamp: 2;
+}
+
+.spot-card-placeholder-logo {
+    width: 40px;
+    opacity: 0.5;
+    filter: brightness(0) invert(1);
+}
+
+/*=================================
+    16. ADD-SPOT PAGE
+    ========================================= */
+
+
+/* Personalizzazione pulsanti di selezione (Prezzo, Ambiente, Affollamento) */
+.btn-check:checked + .btn-outline-custom-group {
+    background-color: var(--orange-accent);
+    border-color: var(--orange-accent);
+    color: var(--white);
+}
+.btn-outline-custom-group {
+    border: 1px solid var(--input-border);
+    color: var(--dark-blue);
+    background-color: var(--white);
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+.btn-outline-custom-group:hover {
+    background-color: var(--light-gray);
+    color: var(--dark-blue);
+    border-color: var(--muted-light);
+}
+
+/* Sistema di Rating a Stelle Moderno */
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 4px;
+}
+.star-rating input {
+    display: none;
+}
+.star-rating label {
+    font-size: 2rem;
+    color: var(--star-empty);
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: var(--star-yellow);
+}
+
+/* Container orari */
+.schedule-row {
+    background-color: var(--white);
+    border: 1px solid var(--soft-border);
+    border-radius: 10px;
+    padding: 8px 12px;
+    transition: border-color 0.2s;
+}
+.schedule-row:focus-within {
+    border-color: var(--orange-accent);
+}
+
+
 /* =========================================
-   12. RESPONSIVE MOBILE STYLES
+   17. RESPONSIVE MOBILE STYLES
    ========================================= */
 @media (max-width: 991px) {
     .filter-card {
@@ -1378,153 +1439,8 @@ body:has(#register) {
     }
 }
 
-.nav-avatar {
-    width: 38px;
-    height: 38px;
-    background-color: var(--orange-accent);
-    color: var(--white);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-family: 'Quicksand', sans-serif;
-    transition: transform 0.2s;
-    border: 2px solid transparent;
-}
-
-.nav-avatar:hover {
-    transform: scale(1.1);
-    border-color: var(--dark-blue);
-}
-
 /* Nasconde l'icona dell'immagine rotta e mostra lo sfondo grigio */
 img:not([src]), img[src=""] {
     visibility: hidden;
 }
 
-/*=================================
-    13. spot-card.css - STILI SPECIFICI PER LE CARDS DEGLI SPOT
-    ========================================= */
-
-.spot-card-modern {
-    height: 340px;
-}
-
-.spot-card-media {
-    height: 150px;
-}
-
-.spot-card-content {
-    height: 190px;
-}
-
-.spot-card-title,
-.spot-card-address {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.spot-card-title {
-    -webkit-line-clamp: 2;
-}
-
-.spot-card-address {
-    -webkit-line-clamp: 2;
-}
-
-.spot-card-placeholder-logo {
-    width: 40px;
-    opacity: 0.5;
-    filter: brightness(0) invert(1);
-}
-
-/*=================================
-    13. add-spot
-    ========================================= */
-
-
-/* Personalizzazione pulsanti di selezione (Prezzo, Ambiente, Affollamento) */
-.btn-check:checked + .btn-outline-custom-group {
-    background-color: var(--orange-accent);
-    border-color: var(--orange-accent);
-    color: var(--white);
-}
-.btn-outline-custom-group {
-    border: 1px solid var(--input-border);
-    color: var(--dark-blue);
-    background-color: var(--white);
-    font-weight: 600;
-    transition: all 0.2s ease;
-}
-.btn-outline-custom-group:hover {
-    background-color: var(--light-gray);
-    color: var(--dark-blue);
-    border-color: var(--muted-light);
-}
-
-/* Sistema di Rating a Stelle Moderno */
-.star-rating {
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: flex-end;
-    gap: 4px;
-}
-.star-rating input {
-    display: none;
-}
-.star-rating label {
-    font-size: 2rem;
-    color: var(--star-empty);
-    cursor: pointer;
-    transition: color 0.2s ease;
-}
-.star-rating input:checked ~ label,
-.star-rating label:hover,
-.star-rating label:hover ~ label {
-    color: var(--star-yellow);
-}
-
-/* Container orari */
-.schedule-row {
-    background-color: var(--white);
-    border: 1px solid var(--soft-border);
-    border-radius: 10px;
-    padding: 8px 12px;
-    transition: border-color 0.2s;
-}
-.schedule-row:focus-within {
-    border-color: var(--orange-accent);
-}
-
-
-/* Stili per il pulsante di cancellazione (X) nella barra di ricerca */
-.search-wrapper {
-    position: relative;
-    flex-grow: 1;
-}
-
-.clear-search-btn {
-    position: absolute;
-    right: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: var(--muted-gray, #6c757d);
-    padding: 0;
-    z-index: 5;
-    cursor: pointer;
-    display: none; /* Nascosto di default, mostrato via JS */
-    transition: color 0.2s ease;
-}
-
-.clear-search-btn:hover {
-    color: var(--orange-accent, #FF8A3D);
-}
-
-/* Padding extra a destra dell'input per non sovrapporsi alla X */
-#search-input {
-    padding-right: 40px !important;
-}

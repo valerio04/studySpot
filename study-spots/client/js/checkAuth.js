@@ -1,12 +1,12 @@
+const btnLogin = document.getElementById('btn-login');
+const btnSignup = document.getElementById('btn-signup');
+const btnLogout = document.getElementById('btn-logout');
+const userInfo = document.getElementById('user-info');
+const usernameSpan = document.getElementById('username');
+const adminMenuItem = document.getElementById('admin-menu-item');
+// Su alcune pagine il link profilo potrebbe non avere id="btn-profile".
+const profileBtn = document.getElementById('btn-profile');
 async function checkAuth() {
-    const btnLogin = document.getElementById('btn-login');
-    const btnSignup = document.getElementById('btn-signup');
-    const btnLogout = document.getElementById('btn-logout');
-    const userInfo = document.getElementById('user-info');
-    const usernameSpan = document.getElementById('username');
-    const adminMenuItem = document.getElementById('admin-menu-item');
-    // Su alcune pagine il link profilo potrebbe non avere id="btn-profile".
-    const profileBtn = document.getElementById('btn-profile');
     try {
         // Chiamiamo l'endpoint che abbiamo creato prima
         const response = await fetch('/api/me',
@@ -17,8 +17,9 @@ async function checkAuth() {
             // L'utente è loggato (Stato 200)
             const user = await response.json();
             console.log("Utente autenticato:", user);
-            if (user.profile.role === "admin") adminMenuItem.style.setProperty('display', 'list-item', 'important');
-            if (usernameSpan) usernameSpan.textContent = user.profile.name; // o user.email
+
+            if (user.profile.role === "admin") adminMenuItem.style.display = 'inline';
+            if (usernameSpan) usernameSpan.textContent = user.profile.name; 
             
             if (userInfo) userInfo.style.display = 'inline';
             if (profileBtn) profileBtn.style.display = 'inline';
@@ -40,13 +41,11 @@ async function checkAuth() {
 
 checkAuth();
 
-const btnLogout = document.getElementById('btn-logout');
-
 if (btnLogout) {
     btnLogout.addEventListener('click', async () => {
         const response = await fetch('/api/logout', { method: 'POST' });
         if (response.ok) {
-            window.location.href = '/'; // Ricarica la pagina o vai in home
+            window.location.href = '/'; // vai in home
         }
     });
 }

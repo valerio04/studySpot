@@ -209,7 +209,7 @@ function renderSpotCards(trackElement, spots, options = {}) {
         // Fallback manuale se il componente non è ancora pronto
         console.warn("Componente SpotCard non trovato, uso fallback manuale");
         trackElement.innerHTML = spots.map(spot => `
-            <div class="nearby-spot-card" onclick="window.location.href='/pages/spot.html?id=${spot.id}'">
+            <div class="spot-card-modern" onclick="window.location.href='/pages/spot.html?id=${spot.id}'">
                 <h3>${spot.name}</h3>
                 <p>${spot.address || ''}</p>
             </div>
@@ -378,15 +378,15 @@ function popolaSpotVicini(spotsVicini) {
     
     spotsVicini.forEach(spot => {
         const card = document.createElement('div');
-        card.className = 'nearby-spot-card';
+        card.className = 'spot-card-modern';
         
         const tagsHtml = spot.tags && spot.tags.length > 0 
             ? spot.tags.map(tag => `<span class="tag">${tag}</span>`).join('')
             : '';
         
         card.innerHTML = `
-            <img src="${spot.image || ''}" alt="${spot.name}" class="nearby-spot-card-img" onerror="this.style.display='none'">
-            <div class="nearby-spot-card-content">
+            <img src="${spot.image || ''}" alt="${spot.name}" class="spot-card-modern-img" onerror="this.style.display='none'">
+            <div class="spot-card-modern-content">
                 <h3>${spot.name}</h3>
                 ${spot.address ? `<p class="address-small">${spot.address}</p>` : ''}
                 ${tagsHtml ? `<div class="micro-tags">${tagsHtml}</div>` : ''}
