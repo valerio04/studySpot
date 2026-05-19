@@ -9,8 +9,11 @@ searchInput.addEventListener('input', handleInput);
 searchInput.addEventListener('input', toggleClearButton);
 
 let debounceTimeout;
+let abortController; // Serve per annullare le richieste di rete obsolete
 
 function handleInput() {
+    toggleClearButton(); // Controlla la X ad ogni carattere inserito
+
     clearTimeout(debounceTimeout);
     debounceTimeout = setTimeout(function () {
         fetchResults(searchInput.value.trim());
@@ -22,18 +25,28 @@ async function fetchResults(query) {
         updateResultsTable([]);
         return;
     }
+
+    // Se c'è una richiesta HTTP precedente ancora in corso, la cancelliamo
+    if (abortController) {
+        abortController.abort();
+    }
+    abortController = new AbortController();
+
     try {
-        const results = await fetchFromAPI(query);
+        const results = await fetchFromAPI(query, abortController.signal);
         updateResultsTable(results);
     } catch (error) {
-        console.error('Errore di rete:', error.message);
+        // Ignoriamo l'errore se la richiesta è stata semplicemente annullata da noi
+        if (error.name !== 'AbortError') {
+            console.error('Errore di rete:', error.message);
+        }
     }
 }
 
-async function fetchFromAPI(query) {
+async function fetchFromAPI(query, signal) {
     // Aggiungiamo limit=5 per non intasare la tabella su mobile
     const url = `${API_URL}?q=${encodeURIComponent(query)}&format=json&limit=5`;
-    const response = await fetch(url);
+    const response = await fetch(url, { signal });    
     if (!response.ok) throw new Error(`Errore HTTP: ${response.status}`);
     return response.json();
 }
@@ -46,7 +59,8 @@ function createTableRow(result) {
     
     row.innerHTML = `<td class="py-2 px-3">${result.display_name}</td>`;
     
-    row.addEventListener('click', function() {
+    row.addEventListener('mousedown', function(event) {
+        event.preventDefault();
         // 1. Popola l'input con il nome scelto
         searchInput.value = result.display_name;
         
@@ -54,11 +68,7 @@ function createTableRow(result) {
         window.selectedLatitude = parseFloat(result.lat);
         window.selectedLongitude = parseFloat(result.lon);
         
-        // 3. Pulisce la tabella dei suggerimenti
-        document.getElementById('results-body').innerHTML = '';
-        
-        // Opzionale: Se vuoi che la mappa si sposti subito dopo il click sul suggerimento,
-        // potresti chiamare qui una funzione globale, ma solitamente l'utente clicca poi su "Search"
+        updateResultsTable([]);
     });
     return row;
 }
@@ -66,7 +76,13 @@ function createTableRow(result) {
 function updateResultsTable(results) {
     tableBody.innerHTML = '';
     
-    if (results.length === 0) return;
+    if (results.length === 0) {
+        tableBody.style.display = 'none';
+        return;
+    }
+
+    // Ripristina la visibilità (ereditata o da CSS) se ci sono elementi da mostrare
+    tableBody.style.display = ''; 
 
     results.forEach(function(result) {
         const row = createTableRow(result);
@@ -83,27 +99,24 @@ function toggleClearButton() {
     }
 };
 
-// Resetta l'input quando si clicca sulla X
 clearSearchBtn.addEventListener('click', () => {
     searchInput.value = '';
     clearSearchBtn.style.display = 'none';
     searchInput.focus();
-    
-    // Se hai una tabella dei suggerimenti o risultati attivi sotto la barra, la ripulisce
-    if (tableBody) {
-        tableBody.innerHTML = '';
-    }
-
-    // Opzionale: Se vuoi scatenare un evento di ricerca vuoto/aggiornamento mappa integrato nel tuo search.js
-    searchInput.dispatchEvent(new Event('input'));
+    updateResultsTable([]);
 });
 
-searchInput.addEventListener('focusout', (event) => {
-    // Controlla se il punto in cui l'utente ha cliccato si trova dentro il box dei suggerimenti
-    const cliccatoDentroSuggerimenti = tableBody.contains(event.relatedTarget);
-
-    if (!cliccatoDentroSuggerimenti) {
+// Gestione robusta della chiusura: se l'utente clicca ovunque fuori dalla ricerca, nascondi i suggerimenti
+document.addEventListener('click', (event) => {
+    if (!searchInput.contains(event.target) && !tableBody.contains(event.target)) {
         tableBody.style.display = 'none';
+    }
+});
+
+// Se l'utente clicca di nuovo dentro l'input e ci sono vecchi risultati, mostrali di nuovo
+searchInput.addEventListener('focus', () => {
+    if (tableBody.children.length > 0) {
+        tableBody.style.display = '';
     }
 });
 
