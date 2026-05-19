@@ -38,7 +38,7 @@ async function caricaClassifica() {
 
 
  // Popola le righe della tabella classifica
- //Array di oggetti {username, points, num_aggiunti, num_commenti}
+ // Array di oggetti {username, points, num_aggiunti, num_commenti}
  
 function popolaClassifica(ranking) {
     if (!rankingBody) return;

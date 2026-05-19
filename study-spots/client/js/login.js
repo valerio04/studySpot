@@ -24,7 +24,7 @@ async function gestisciSubmit(event) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(datiUtente),
-            credentials: 'include' // oppure 'include'
+            credentials: 'include' 
         });
 
         const data = await response.json();
