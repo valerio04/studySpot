@@ -23,8 +23,7 @@ async function registrazione(event) {
 
     // controllo password
     if (password !== confirmPassword) {
-        message.textContent = 'Le password non coincidono.';
-        message.style.color = 'red';
+        showSystemError('Le password non coincidono.');
         return;
     }
 
@@ -42,23 +41,20 @@ async function registrazione(event) {
             credentials: 'include'
         });
         
+        const result = await response.json();
+        
         if (!response.ok) {
-            message.textContent = result.error || 'Errore durante la registrazione.';
-            message.style.color = 'red';
+            showSystemError(result.error || 'Errore durante la registrazione.');
             return;
         }
-
-        const result = await response.json();
-        // console.log('Risultato JSON:', result);
         
-        message.textContent = 'Registrazione completata con successo.';
-        //message.textContent = 'Registrazione completata. Controlla la tua email per confermare.';
-        message.style.color = 'green';
+        // console.log('Risultato JSON:', result);
+        showSystemSuccess('Registrazione completata con successo.');
+        //showSystemSuccess('Registrazione completata. Controlla la tua email per confermare.');
         form.reset();
     } catch (error) {
         console.error('Errore durante la registrazione:', error.message);
-        message.textContent = "Si è verificato un errore. Riprova più tardi.";
-        message.style.color = "red";
+        showSystemError("Si è verificato un errore. Riprova più tardi.");
     }
 }
 
@@ -73,3 +69,17 @@ function raccogliDatiUtente(form) {
         points: formData.get('points') || 0
     };
 }
+
+// 1. Intercetta tutti gli errori standard di JavaScript (es. variabili inesistenti, crash improvvisi)
+window.addEventListener('error', function (event) {
+    // Evita che l'errore standard blocchi tutto o appaia brutto, e usa il tuo popup!
+    showSystemError(event.message);
+    
+});
+
+// 2. Intercetta gli errori delle Promise/Chiamate asincrone non gestite (es. fetch che falliscono senza catch)
+window.addEventListener('unhandledrejection', function (event) {
+    // event.reason contiene l'oggetto Errore lanciato dentro la Promise
+    const messaggio = event.reason.message || "Si è verificato un errore asincrono.";
+    showSystemError(messaggio);
+});

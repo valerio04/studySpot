@@ -48,8 +48,7 @@ if (btnShowMoreReviews) {
 
 async function inizializzaPagina() {
     if (!currentSpotId) {
-        console.error("ID dello spot non trovato nell'URL");
-        return;
+        showSystemError("ID dello spot non trovato nell'URL");
     }
     
     // Carichiamo i dati dello spot e lo stato del salvataggio in parallelo
@@ -75,7 +74,7 @@ async function controllaStatoSalvataggio() {
             }
         }
     } catch (error) {
-        console.error('Errore controllo salvataggio:', error);
+        showSystemError('Errore controllo salvataggio');
     }
 }
 //================= Carica i dati dello spot da /api/info-spot/:id =================
@@ -97,7 +96,7 @@ async function caricaDatiSpot() {
         popolaPagina(dataSpot);
 
     } catch (error) {
-        console.error('Errore caricamento spot:', error);
+        showSystemError('Errore caricamento spot');
         // Feedback visivo in caso di errore
         if (spotTitle) spotTitle.textContent = "Errore nel caricamento";
     }
@@ -113,15 +112,16 @@ async function popolaPagina(spot) {
         });
 
     if (!response.ok) {
-        throw new Error('Errore durante il recupero dei dati dello spot.');
+        console.log("non loggato");
     }
+    else{
+        const user = await response.json();
+        console.log("verifica utente role", user);
 
-    const user = await response.json();
-    console.log("verifica utente role", user);
-
-    if (spot.isOwner || user.profile.role == 'admin') {
-        btnRemove.style.display = 'inline';
-        console.log('isOwner');
+        if (spot.isOwner || user.profile.role == 'admin') {
+            btnRemove.style.display = 'inline';
+            console.log('isOwner');
+        }
     }
     if (Title) Title.textContent = spot.name;
     if (spotTitle) spotTitle.textContent = spot.name;
@@ -422,10 +422,12 @@ async function gestisciSalvataggio() {
             // Invertiamo lo stato grafico
             applicaStatoSalvato(!giaSalvato);
             const msg = giaSalvato ? "Rimosso dai preferiti" : "Salvato nei preferiti!";
-            console.log(msg);
+            showSystemSuccess(msg);
         } else if (response.status === 401) {
-            alert("Effettua il login per gestire i preferiti.");
-            window.location.href = '/login';
+            showSystemError("Effettua il login per gestire i preferiti.");
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 2000);
         }
     } catch (error) {
         console.error("Errore durante l'operazione di salvataggio:", error);
@@ -452,7 +454,7 @@ async function gestisciInvioRecensione(e) {
     const commentText = document.querySelector('.review-textarea').value;
 
     if (!ratingInput) {
-        alert("Seleziona una valutazione.");
+        showSystemError("Seleziona una valutazione.");
         return;
     }
 
@@ -468,11 +470,15 @@ async function gestisciInvioRecensione(e) {
         });
 
         if (response.ok) {
-            alert("Recensione pubblicata!");
-            location.reload();
+            showSystemSuccess("Recensione pubblicata!");
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
         } else if (response.status === 401) {
-            alert("Accedi per recensire.");
-            window.location.href = '/login';
+            showSystemError("Accedi per recensire.");
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 2000);
         } else {
             const err = await response.json();
             throw new Error(err.error);
@@ -495,17 +501,33 @@ async function gestisciCancellazione() {
         });
 
         if (response.ok) {
-            alert("Spot eliminato con successo.");
+            showSystemSuccess("Spot eliminato con successo.");
             // Reindirizza l'utente alla home o alla mappa dopo l'eliminazione
-            window.location.href = '/'; 
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 1500);
         } else if (response.status === 401 || response.status === 403) {
-            alert("Non hai i permessi necessari per eliminare questo spot.");
+            showSystemError("Non hai i permessi necessari per eliminare questo spot.");
         } else {
             const err = await response.json();
             throw new Error(err.error || "Errore durante la cancellazione");
         }
     } catch (error) {
         console.error("Errore cancellazione spot:", error);
-        alert("Si è verificato un errore: " + error.message);
+        showSystemError("Si è verificato un errore: " + error.message);
     }
 }
+
+// 1. Intercetta tutti gli errori standard di JavaScript (es. variabili inesistenti, crash improvvisi)
+window.addEventListener('error', function (event) {
+    // Evita che l'errore standard blocchi tutto o appaia brutto, e usa il tuo popup!
+    showSystemError(event.message);
+    
+});
+
+// 2. Intercetta gli errori delle Promise/Chiamate asincrone non gestite (es. fetch che falliscono senza catch)
+window.addEventListener('unhandledrejection', function (event) {
+    // event.reason contiene l'oggetto Errore lanciato dentro la Promise
+    const messaggio = event.reason.message || "Si è verificato un errore asincrono.";
+    showSystemError(messaggio);
+});

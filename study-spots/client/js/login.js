@@ -31,20 +31,16 @@ async function gestisciSubmit(event) {
 
         if (response.ok) {
             showSystemSuccess("Login effettuato con successo.");
-            message.textContent = "Login effettuato con successo.";
-            message.style.color = "green";
             setTimeout(() => {
                 window.location.href = '/';
             }, 3000);
         } else {
-            showSystemError("Errore durante il login.");
-            message.textContent = data.error || "Errore durante il login.";
-            message.style.color = "red";
+            const errorMsg = data.error || "Errore durante il login.";
+            showSystemError(errorMsg);
         }
     } catch (error) {
         console.error('Errore durante il login:', error);
-        message.textContent = "Si è verificato un errore. Riprova più tardi.";
-        message.style.color = "red";
+        showSystemError("Si è verificato un errore. Riprova più tardi.");
     }
 }
 

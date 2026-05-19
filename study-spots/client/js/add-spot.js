@@ -24,8 +24,10 @@ async function checkIfAuthenticated() {
         const response = await fetch('/api/me', { credentials: 'include' });
         
         if (response.status === 401) {
-            alert("Devi essere autenticato per accedere a questa pagina.");
-            window.location.href = '/login';
+            showSystemError("Devi essere autenticato per accedere a questa pagina.");
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 2000);
         }
     } catch (err) {
         console.log("Errore controllo auth iniziale");
@@ -38,7 +40,7 @@ photoInput.addEventListener('change', async (event) => {
     
     // Controllo limite massimo
     if (fileList.length + selectedFiles.length > 5) {
-        alert("Puoi inserire al massimo 5 foto in totale.");
+        showSystemError("Puoi inserire al massimo 5 foto in totale.");
         photoInput.value = ""; // Reset dell'input
         return;
     }
@@ -121,8 +123,7 @@ async function creaSpot(event) {
                 latitude = parseFloat(geoData[0].lat);
                 longitude = parseFloat(geoData[0].lon);
             } else {
-                message.textContent = "Indirizzo non trovato. Seleziona un suggerimento dalla lista.";
-                message.style.color = 'red';
+                showSystemError("Indirizzo non trovato. Seleziona un suggerimento dalla lista.");
                 return;
             }
         } catch (err) {
@@ -205,29 +206,44 @@ async function creaSpot(event) {
 
         // --- GESTIONE 401 (Sessione scaduta o non loggato) ---
         if (response.status === 401) {
-            alert("Sessione scaduta o non valida. Effettua nuovamente il login.");
-            window.location.href = '/login';
+            showSystemError("Sessione scaduta o non valida. Effettua nuovamente il login.");
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 2000);
             return;
         }
 
-        if (!response.ok) {
-            message.textContent = result.error || 'Errore durante l\'aggiunta dello spot.';
-            message.style.color = 'red';
-            return;
-        }
         const result = await response.json();
+        
+        if (!response.ok) {
+            showSystemError(result.error || 'Errore durante l\'aggiunta dello spot.');
+            return;
+        }
 
-        message.textContent = 'Spot aggiunto con successo! Tornando alla mappa...';
-        message.style.color = 'green';
+        showSystemSuccess('Spot aggiunto con successo! Tornando alla mappa...');
         form.reset();
         setTimeout(() => {
                 window.location.href = '/'; // Torna alla home
             }, 2000);
 
     } catch (error) {
-        message.textContent = 'Errore di rete: ' + error.message;
-        message.style.color = 'red';
+        showSystemError('Errore di rete: ' + error.message);
         console.error('Errore catch:', error);
     }
 
 }
+
+
+// 1. Intercetta tutti gli errori standard di JavaScript (es. variabili inesistenti, crash improvvisi)
+window.addEventListener('error', function (event) {
+    // Evita che l'errore standard blocchi tutto o appaia brutto, e usa il tuo popup!
+    showSystemError(event.message);
+    
+});
+
+// 2. Intercetta gli errori delle Promise/Chiamate asincrone non gestite (es. fetch che falliscono senza catch)
+window.addEventListener('unhandledrejection', function (event) {
+    // event.reason contiene l'oggetto Errore lanciato dentro la Promise
+    const messaggio = event.reason.message || "Si è verificato un errore asincrono.";
+    showSystemError(messaggio);
+});

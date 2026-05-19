@@ -90,7 +90,7 @@ function getUserLocation() {
                 visualizeSpotOnMap();
             },
             function (error) {
-                alert('Errore nel recupero della posizione.');
+                showSystemError('Errore nel recupero della posizione.');
             }
         );
     }
@@ -98,12 +98,18 @@ function getUserLocation() {
 
 async function searchLocation() {
     const searchInput = document.getElementById('search-input').value.trim();
-    if (!searchInput) return alert('Inserisci un luogo.');
+    if (!searchInput) {
+        showSystemError('Inserisci un luogo.');
+        return;
+    }
 
     try {
         const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchInput)}&format=json`);
         const data = await response.json();
-        if (data.length === 0) return alert('Nessun risultato.');
+        if (data.length === 0) {
+            showSystemError('Nessun risultato.');
+            return;
+        }
 
         window.selectedLatitude = parseFloat(data[0].lat);
         window.selectedLongitude = parseFloat(data[0].lon);
@@ -123,7 +129,7 @@ async function visualizeSpotOnMap() {
     const lng = window.selectedLongitude;
 
     if (!lat || !lng) {
-        alert("Per favore, cerca prima una posizione o usa 'Near me'");
+        showSystemError("Per favore, cerca prima una posizione o usa 'Near me'");
         return;
     }
 
@@ -436,3 +442,17 @@ function renderMapResults(items) {
         });
     }
 }
+
+// 1. Intercetta tutti gli errori standard di JavaScript (es. variabili inesistenti, crash improvvisi)
+window.addEventListener('error', function (event) {
+    // Evita che l'errore standard blocchi tutto o appaia brutto, e usa il tuo popup!
+    showSystemError(event.message);
+    
+});
+
+// 2. Intercetta gli errori delle Promise/Chiamate asincrone non gestite (es. fetch che falliscono senza catch)
+window.addEventListener('unhandledrejection', function (event) {
+    // event.reason contiene l'oggetto Errore lanciato dentro la Promise
+    const messaggio = event.reason.message || "Si è verificato un errore asincrono.";
+    showSystemError(messaggio);
+});

@@ -144,6 +144,7 @@ async function sendReport(payload, feedbackElement, form) {
         }
 
         showReportFeedback(feedbackElement, result.message || 'Segnalazione inviata con successo.', 'success');
+        showSystemSuccess(result.message || 'Segnalazione inviata con successo.');
         form.reset();
         resetReportFormsVisibility();
 
@@ -200,3 +201,17 @@ function resetReportFormsVisibility() {
     }
 }
 
+
+// 1. Intercetta tutti gli errori standard di JavaScript (es. variabili inesistenti, crash improvvisi)
+window.addEventListener('error', function (event) {
+    // Evita che l'errore standard blocchi tutto o appaia brutto, e usa il tuo popup!
+    showSystemError(event.message);
+    
+});
+
+// 2. Intercetta gli errori delle Promise/Chiamate asincrone non gestite (es. fetch che falliscono senza catch)
+window.addEventListener('unhandledrejection', function (event) {
+    // event.reason contiene l'oggetto Errore lanciato dentro la Promise
+    const messaggio = event.reason.message || "Si è verificato un errore asincrono.";
+    showSystemError(messaggio);
+});

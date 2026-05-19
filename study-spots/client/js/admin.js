@@ -38,7 +38,7 @@ async function loadReports() {
         const response = await fetch('/api/admin/reports');
         console.info('Admin reports response:', response.status, response.statusText);
         if (response.status === 401 || response.status === 403) {
-            showAlert(`Accesso negato (${response.status}). Assicurati di essere loggato come admin dalla stessa sessione.`, 'danger');
+            showSystemError(`Accesso negato (${response.status}). Assicurati di essere loggato come admin dalla stessa sessione.`);
             document.querySelector('main').innerHTML = '<h1 class="text-danger text-center">Accesso Negato</h1><p class="text-center">Non hai i permessi per visualizzare questa pagina.</p>';
             return;
         }
@@ -56,11 +56,11 @@ async function loadReports() {
         const reports = await response.json();
         console.info('Admin reports payload:', reports);
         if (!Array.isArray(reports)) {
-            showAlert('Risposta API non valida: atteso array di report.', 'danger');
+            showSystemError('Risposta API non valida: atteso array di report.');
             return;
         }
         if (reports.length === 0) {
-            showAlert('Nessuna segnalazione trovata. Controlla lo status nel DB (pendente/inviato).', 'warning');
+            showSystemError('Nessuna segnalazione trovata. Controlla lo status nel DB (pendente/inviato).');
         }
         
         // Pulisci tutte le sezioni
@@ -98,7 +98,7 @@ async function loadReports() {
         }
 
     } catch (error) {
-        showAlert(`Impossibile caricare le segnalazioni: ${error.message}`, 'danger');
+        showSystemError(`Impossibile caricare le segnalazioni: ${error.message}`);
         if (generalReportsTrack) {
             generalReportsTrack.innerHTML = `<div class="text-danger">${error.message}</div>`;
         }
@@ -171,7 +171,7 @@ async function updateReportStatus(reportId, status) {
 
         if (!response.ok) throw new Error('Errore durante l\'aggiornamento.');
 
-        showAlert('Segnalazione aggiornata con successo!');
+        showSystemSuccess('Segnalazione aggiornata con successo!');
         
         // Rimuovi la card dall'interfaccia con un'animazione
         const cardToRemove = document.getElementById(`report-${reportId}`);
@@ -182,7 +182,7 @@ async function updateReportStatus(reportId, status) {
         }
 
     } catch (error) {
-        showAlert(error.message, 'danger');
+        showSystemError(error.message);
     }
 }
 
@@ -193,7 +193,7 @@ async function cercaSpotUtente() {
     const query = document.getElementById('user-search-query').value;
 
     if (!query) {
-        showAlert('Inserisci uno username da cercare.', 'danger');
+        showSystemError('Inserisci uno username da cercare.');
         return;
     }
 
@@ -227,7 +227,7 @@ async function cercaSpotUtente() {
         userSpotsResults.innerHTML = '<div class="text-danger">Componente SpotCard non caricato.</div>';
 
     } catch (error) {
-        showAlert(error.message, 'danger');
+        showSystemError(error.message);
         userSpotsResults.innerHTML = `<div class="text-danger">${error.message}</div>`;
     }
 }
@@ -239,7 +239,7 @@ async function cercaSpotPerID() {
     const spotId = document.getElementById('spot-id-query').value;
 
     if (!spotId || isNaN(spotId)) {
-        showAlert('Inserisci un ID numerico valido.', 'danger');
+        showSystemError('Inserisci un ID numerico valido.');
         return;
     }
 
@@ -267,7 +267,7 @@ async function cercaSpotPerID() {
         singleSpotResult.innerHTML = '<div class="text-danger">Componente SpotCard non caricato.</div>';
 
     } catch (error) {
-        showAlert('Si è verificato un errore di rete.', 'danger');
+        showSystemError('Si è verificato un errore di rete.');
         singleSpotResult.innerHTML = '<div class="text-danger">Impossibile completare la ricerca.</div>';
     }
 }
@@ -279,7 +279,7 @@ async function cercaSpotPerID() {
 async function rimuoviTuttiSpot() {
     const username = document.getElementById('target-username-delete').value;
     if (!username) {
-        showAlert('Inserisci un username nel campo di testo.', 'danger');
+        showSystemError('Inserisci un username nel campo di testo.');
         return;
     }
 
@@ -300,11 +300,11 @@ async function rimuoviTuttiSpot() {
             throw new Error(result.error || 'Errore durante la cancellazione.');
         }
 
-        showAlert(result.message || 'Operazione completata con successo!');
+        showSystemSuccess(result.message || 'Operazione completata con successo!');
         document.getElementById('target-username-delete').value = ''; // Pulisci l'input
 
     } catch (error) {
-        showAlert(error.message, 'danger');
+        showSystemError(error.message);
     }
 }
 
@@ -322,3 +322,17 @@ function normalizzaSpotPerCard(spot) {
         copertina: foto
     };
 }
+
+// 1. Intercetta tutti gli errori standard di JavaScript (es. variabili inesistenti, crash improvvisi)
+window.addEventListener('error', function (event) {
+    // Evita che l'errore standard blocchi tutto o appaia brutto, e usa il tuo popup!
+    showSystemError(event.message);
+    
+});
+
+// 2. Intercetta gli errori delle Promise/Chiamate asincrone non gestite (es. fetch che falliscono senza catch)
+window.addEventListener('unhandledrejection', function (event) {
+    // event.reason contiene l'oggetto Errore lanciato dentro la Promise
+    const messaggio = event.reason.message || "Si è verificato un errore asincrono.";
+    showSystemError(messaggio);
+});

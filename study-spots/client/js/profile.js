@@ -144,7 +144,7 @@ async function salvaModificaProfilo(event) {
     };
 
     if (!datiProfilo.name || !datiProfilo.surname || !datiProfilo.username || !datiProfilo.email) {
-        alert('Compila tutti i campi prima di salvare.');
+        showSystemError('Compila tutti i campi prima di salvare.');
         return;
     }
 
@@ -161,11 +161,11 @@ async function salvaModificaProfilo(event) {
         const result = await response.json();
 
         if (!response.ok) {
-            alert(result.error || 'Errore durante la modifica del profilo.');
+            showSystemError(result.error || 'Errore durante la modifica del profilo.');
             return;
         }
 
-        alert(result.message || 'Profilo aggiornato con successo.');
+        showSystemSuccess(result.message || 'Profilo aggiornato con successo.');
 
         cambiaStatoInput(true);
 
@@ -175,7 +175,7 @@ async function salvaModificaProfilo(event) {
 
     } catch (error) {
         console.error('Errore salvataggio profilo:', error);
-        alert('Errore di rete durante la modifica del profilo.');
+        showSystemError('Errore di rete durante la modifica del profilo.');
     }
 }
 
@@ -279,3 +279,17 @@ function renderCards(container, data) {
 
     container.innerHTML = '';
 }
+
+// 1. Intercetta tutti gli errori standard di JavaScript (es. variabili inesistenti, crash improvvisi)
+window.addEventListener('error', function (event) {
+    // Evita che l'errore standard blocchi tutto o appaia brutto, e usa il tuo popup!
+    showSystemError(event.message);
+    
+});
+
+// 2. Intercetta gli errori delle Promise/Chiamate asincrone non gestite (es. fetch che falliscono senza catch)
+window.addEventListener('unhandledrejection', function (event) {
+    // event.reason contiene l'oggetto Errore lanciato dentro la Promise
+    const messaggio = event.reason.message || "Si è verificato un errore asincrono.";
+    showSystemError(messaggio);
+});
