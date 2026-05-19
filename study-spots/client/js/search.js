@@ -90,8 +90,8 @@ clearSearchBtn.addEventListener('click', () => {
     searchInput.focus();
     
     // Se hai una tabella dei suggerimenti o risultati attivi sotto la barra, la ripulisce
-    if (resultsBody) {
-        resultsBody.innerHTML = '';
+    if (tableBody) {
+        tableBody.innerHTML = '';
     }
 
     // Opzionale: Se vuoi scatenare un evento di ricerca vuoto/aggiornamento mappa integrato nel tuo search.js

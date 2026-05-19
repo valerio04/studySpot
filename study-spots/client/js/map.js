@@ -48,10 +48,6 @@ document.getElementById('near-me-button').addEventListener('click', async () => 
     getUserLocation();         // Questa è asincrona tramite callback, vedi sotto
 });
 
-filterCheckboxes.forEach((checkbox) => {
-    checkbox.addEventListener('change', scheduleFilterUpdate);
-});
-
 // Aggiorna gli spot quando cambiano i filtri (con debounce per evitare troppe richieste)
 let filterUpdateTimer = null;
 
@@ -62,6 +58,10 @@ const scheduleFilterUpdate = () => {
         visualizeSpotOnMap();
     }, 250);
 };
+
+filterCheckboxes.forEach((checkbox) => {
+    checkbox.addEventListener('change', scheduleFilterUpdate);
+});
 
 if (searchHereButton) {
     searchHereButton.addEventListener('click', () => {

@@ -1,12 +1,9 @@
-
 const form = document.getElementById('add-spot');
 
 // FOTO
 const photoInput = document.getElementById('photos');
 const previewContainer = document.getElementById('image-preview');
 let fileList = []; // Array persistente dei file compressi
-
-
 
 // Messaggio di feedback
 let message = document.getElementById('add-spot-message');
@@ -79,7 +76,7 @@ function renderPreview(file, index) {
         div.className = "position-relative";
         div.style.width = "80px";
         div.innerHTML = `
-            <img src="${e.target.result}" class="rounded border" style="width:80px; height:80px; object-fit:cover;">
+            <img src="${e.target.result}" class="rounded border" style="height:80px; object-fit:cover;">
             <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 rounded-circle p-0" 
                     style="width:20px; height:20px; line-height:1;" onclick="removeImage(${index})">
                 &times;
@@ -144,7 +141,6 @@ async function creaSpot(event) {
     const crowd = formData.get('crowd');
 
     // Orari
-    
     const days = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
     let schedule = {};
     days.forEach(day => {
@@ -214,12 +210,12 @@ async function creaSpot(event) {
             return;
         }
 
-        const result = await response.json();
         if (!response.ok) {
             message.textContent = result.error || 'Errore durante l\'aggiunta dello spot.';
             message.style.color = 'red';
             return;
         }
+        const result = await response.json();
 
         message.textContent = 'Spot aggiunto con successo! Tornando alla mappa...';
         message.style.color = 'green';
