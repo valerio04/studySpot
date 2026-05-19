@@ -30,10 +30,14 @@ async function gestisciSubmit(event) {
         const data = await response.json();
 
         if (response.ok) {
+            showSystemSuccess("Login effettuato con successo.");
             message.textContent = "Login effettuato con successo.";
             message.style.color = "green";
-            window.location.href = '/';
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 3000);
         } else {
+            showSystemError("Errore durante il login.");
             message.textContent = data.error || "Errore durante il login.";
             message.style.color = "red";
         }
@@ -46,8 +50,31 @@ async function gestisciSubmit(event) {
 
 function raccogliDatiUtente(form) {
     const formData = new FormData(form);
+    const email = formData.get('email');
+    const password = formData.get('password');
+
+    // Controllo manuale robusto: se i campi sono vuoti o inesistenti
+    if (!email || !password || email.trim() === "" || password.trim() === "") {
+        throw new Error("Tutti i campi sono obbligatori.");
+    }
+
+    // Se è tutto ok, restituiamo l'oggetto (ora lo scope è corretto)
     return {
-        email: formData.get('email').trim(),
-        password: formData.get('password'),
+        email: email.trim(),
+        password: password
     };
 }
+
+// 1. Intercetta tutti gli errori standard di JavaScript (es. variabili inesistenti, crash improvvisi)
+window.addEventListener('error', function (event) {
+    // Evita che l'errore standard blocchi tutto o appaia brutto, e usa il tuo popup!
+    showSystemError(event.message);
+    
+});
+
+// 2. Intercetta gli errori delle Promise/Chiamate asincrone non gestite (es. fetch che falliscono senza catch)
+window.addEventListener('unhandledrejection', function (event) {
+    // event.reason contiene l'oggetto Errore lanciato dentro la Promise
+    const messaggio = event.reason.message || "Si è verificato un errore asincrono.";
+    showSystemError(messaggio);
+});
