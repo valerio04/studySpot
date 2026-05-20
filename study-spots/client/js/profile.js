@@ -208,11 +208,12 @@ async function caricaTrack(endpoint, trackElement) {
         const rawData = await response.json();
         console.log('spot trovati', rawData)
         const spots = rawData.map(function (item) {
-            return item.spots;
+            return item;
         }).filter(function (spot) {
             return spot !== null;
         });
 
+        console.log('spots', spots);
         renderCards(trackElement, spots);
 
     } catch (error) {

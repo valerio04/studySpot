@@ -1411,15 +1411,18 @@ app.get('/api/salvati', async (req, res) => {
         return res.status(500).json({ error: 'Errore durante la ricerca degli spot' });
     }
 
-    const spots = (spot_salvati || []).map(spot => ({
-            ...spot,
-            copertina: spot.spot_photos?.[0]?.link_foto || null,
-            // Rimuoviamo l'oggetto originale se non ci serve più
-            spot_photos: undefined,
-        }));
-    
-    // Nota: spot_salvati sarà un array di oggetti tipo: [{ spots: {...} }, { spots: {...} }]
-    res.json(spot_salvati)
+    const spots = (spot_salvati || []).map(item => ({
+        id: item.spots.id,
+        name: item.spots.name,
+        address: item.spots.address,
+        type: item.spots.type,
+        star_avg: item.spots.star_avg,
+        copertina: item.spots.spot_photos?.[0]?.link_foto || null,
+        // Rimuoviamo l'oggetto originale se non ci serve più
+        spot_photos: undefined,
+    }));
+
+    res.json(spots);
 });
 
 
@@ -1441,17 +1444,27 @@ app.get('/api/aggiunti', async (req, res) => {
     const {data: spot_aggiunti, error: aggiuntiError } = await supabaseClient
         .from('aggiunti')
         .select(`
-            spots (id, name, address, type, star_avg)
+            spots (id, name, address, type, star_avg, spot_photos(link_foto))
             `)
         .eq('user_id',user.id)
+        .eq('spots.spot_photos.numero_foto', 1);
 
     if (aggiuntiError) {
         console.error('Errore durante la ricerca degli spot:', aggiuntiError);
         return res.status(500).json({ error: 'Errore durante la ricerca degli spot' });
     }
+    const spots = (spot_aggiunti || []).map(item => ({
+        id: item.spots.id,
+        name: item.spots.name,
+        address: item.spots.address,
+        type: item.spots.type,
+        star_avg: item.spots.star_avg,
+        copertina: item.spots.spot_photos?.[0]?.link_foto || null,
+        // Rimuoviamo l'oggetto originale se non ci serve più
+        spot_photos: undefined,
+    }));
 
-    // Nota: spot_salvati sarà un array di oggetti tipo: [{ spots: {...} }, { spots: {...} }]
-    res.json(spot_aggiunti)
+    res.json(spots);
 });
 
 app.get('/api/commenti-aggiunti', async (req, res) => {
