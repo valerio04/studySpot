@@ -46,21 +46,29 @@ photoInput.addEventListener('change', async (event) => {
     }
 
     const options = {
-        maxSizeMB: 0.8,
-        maxWidthOrHeight: 1280,
+        maxSizeMB: 1.5,
+        maxWidthOrHeight: 2560,
         useWebWorker: true
     };
-
+    const MAX_SIZE_BYTE = 1.5 * 1024 * 1024;
     for (const file of selectedFiles) {
         try {
-            const compressedBlob = await imageCompression(file, options);
-            const compressedFile = new File([compressedBlob], file.name, { type: file.type });
+            let fileToUpldoad = file;
+
+            // Comprimiamo solo se il file supera il limite massimo consentito
+            if (file.size > MAX_SIZE_BYTE) {
+                const compressedBlob = await imageCompression(file, options);
+                fileToUpldoad = new File([compressedBlob], file.name, { type: file.type });
+            }
+            else {
+                console.log("compressione non necessaria");
+            }
             
             // Aggiungiamo all'array globale
-            fileList.push(compressedFile);
+            fileList.push(fileToUpldoad);
             
             // Creiamo l'anteprima con tasto "rimuovi"
-            renderPreview(compressedFile, fileList.length - 1);
+            renderPreview(fileToUpldoad, fileList.length - 1);
             
         } catch (error) {
             console.error("Errore compressione:", error);
@@ -137,8 +145,8 @@ async function creaSpot(event) {
     // Tag
     const price = formData.get('price');
     const environment = formData.get('environment');
-    const outlets = formData.get('outlets');
-    const quiet = formData.get('quiet');
+    const outlets = formData.get('outlets') ? 'outlets' : null;
+    const quiet = formData.get('quiet') ? 'quiet' : null;
     const crowd = formData.get('crowd');
 
     // Orari
@@ -180,6 +188,10 @@ async function creaSpot(event) {
     const finalData = new FormData();
     
     for (const key in spotData) {
+        if (spotData[key] === null || spotData[key] === undefined) {
+            continue;
+        }
+
         if (key === 'photos') {
             // Aggiungiamo ogni file singolarmente al FormData
             spotData.photos.forEach(file => {

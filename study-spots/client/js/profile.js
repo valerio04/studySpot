@@ -206,6 +206,7 @@ async function caricaTrack(endpoint, trackElement) {
         });
 
         const rawData = await response.json();
+        console.log('spot trovati', rawData)
         const spots = rawData.map(function (item) {
             return item.spots;
         }).filter(function (spot) {

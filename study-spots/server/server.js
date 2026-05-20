@@ -21,7 +21,7 @@ const storage = new CloudinaryStorage({
     folder: 'study_spots',
     allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
     // Ulteriore compressione lato server (trasformazione Cloudinary)
-    transformation: [{ width: 1000, crop: "limit", quality: "auto", fetch_format: "auto" }]
+    transformation: [{ width: 2000, crop: "limit", quality: 85, fetch_format: "auto" }]
   },
 });
 
@@ -1078,8 +1078,15 @@ app.get('/api/spots/economici', async (req, res) => {
             return res.status(500).json({ error: 'Errore durante il recupero degli spot' });
         }
 
+        const spots = (data || []).map(spot => ({
+            ...spot,
+            copertina: spot.spot_photos?.[0]?.link_foto || null,
+            // Rimuoviamo l'oggetto originale se non ci serve più
+            spot_photos: undefined,
+        }));
+
         // 2. Filtriamo gli spot usando la logica dell'if/ciclo for
-        const spotEconomici = data.filter(spot => {
+        const spotEconomici = spots.filter(spot => {
             let haTagDollaro = false;
 
             if (spot.spot_tags) {
@@ -1164,7 +1171,7 @@ app.delete('/api/remove-spot/:id', async (req, res) =>{
 
 //=================API: ottieni tutte le informazioni di uno spot (per la pagina di dettaglio) ===============
 app.get('/api/info-spot/:id', async (req, res) =>{
-    console.log('POST /api/info-spot');
+    console.log('GET /api/info-spot');
 
     if (!SUPABASE_URL || !SUPABASE_KEY) {
         return res.status(503).json({ error: 'Database non configurato in questo ambiente' });
@@ -1191,25 +1198,39 @@ app.get('/api/info-spot/:id', async (req, res) =>{
 
     const { data: spot, error: spotError } = await supabaseClient
             .from('spots')
-            .select(`aggiunti(user_id), spot_photos (link_foto), 
-                latitude, longitude, name, address, type, star_avg, star_count`)
+            .select(`
+                aggiunti(user_id), 
+                spot_photos (link_foto), 
+                latitude, longitude, name, address, type, star_avg, star_count
+                `)
             .eq('id', idSpot)
             .maybeSingle();
+    
+    if (spotError) {
+        console.error('Errore durante il recupero dello spot:', spotError);
+        return res.status(500).json({ error: 'Errore durante il recupero dello spot' });
+    }
 
      if (!spot) {
         return res.status(404).json({ error: 'Spot non trovato' });
     }
-            
-    if (spotError) {
-        console.error('Errore durante l\'inserimento dello spot:', spotError);
-        return res.status(500).json({ error: 'Errore durante l\'inserimento dello spot' });
-    }
     
     console.log(spot.aggiunti);
-    // Aggiunge il campo isOwner per verificare se l'utente loggato è il creatore dello spot
-    if (spot && spot.aggiunti) {
-        console.log('trovato');
-        spot.isOwner = user && user.id === spot.aggiunti.user_id ? true : false;
+    let ownerId = null;
+
+    // Supabase a volte restituisce le relazioni come array, a volte come oggetti.
+    // Questo IF controlla ed estrae l'ID corretto in sicurezza.
+    if (Array.isArray(spot.aggiunti)) {
+        ownerId = spot.aggiunti[0]?.user_id; // Se è un array, prendiamo il primo elemento
+    } else {
+        ownerId = spot.aggiunti?.user_id;    // Se è un oggetto singolo, lo prendiamo direttamente
+    }
+
+    // Ora confrontiamo l'ID dell'utente loggato con quello del creatore dello spot
+    if (user && user.id === ownerId) {
+        spot.isOwner = true;
+    } else {
+        spot.isOwner = false;
     }
 
     if (spot) {
@@ -1380,15 +1401,23 @@ app.get('/api/salvati', async (req, res) => {
     const {data: spot_salvati, error: salvatiError } = await supabaseClient
         .from('salvati')
         .select(`
-            spots (id, name, address, type, star_avg)
+            spots (id, name, address, type, star_avg, spot_photos(link_foto))
             `)
         .eq('user_id',user.id)
+        .eq('spots.spot_photos.numero_foto', 1);
 
     if (salvatiError) {
         console.error('Errore durante la ricerca degli spot:', salvatiError);
         return res.status(500).json({ error: 'Errore durante la ricerca degli spot' });
     }
 
+    const spots = (spot_salvati || []).map(spot => ({
+            ...spot,
+            copertina: spot.spot_photos?.[0]?.link_foto || null,
+            // Rimuoviamo l'oggetto originale se non ci serve più
+            spot_photos: undefined,
+        }));
+    
     // Nota: spot_salvati sarà un array di oggetti tipo: [{ spots: {...} }, { spots: {...} }]
     res.json(spot_salvati)
 });
