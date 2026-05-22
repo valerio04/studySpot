@@ -49,9 +49,9 @@ async function registrazione(event) {
         }
         
         // console.log('Risultato JSON:', result);
-        showSystemSuccess('Registrazione completata con successo.');
-        //showSystemSuccess('Registrazione completata. Controlla la tua email per confermare.');
-        form.reset();
+    showSystemSuccess('Registrazione completata con successo.');
+    form.reset();
+    window.location.href = '/index.html';
     } catch (error) {
         console.error('Errore durante la registrazione:', error.message);
         showSystemError("Si è verificato un errore. Riprova più tardi.");

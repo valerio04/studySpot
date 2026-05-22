@@ -100,13 +100,30 @@
                         </div>
                     </div>
 
-                    <a href="https://maps.google.com" target="_blank" class="google-maps-link">
-                         Visualizza su Google Maps
-                    </a>
+                    
                 </section>
 
                 <section class="reviews-section">
                     <h2>Recensioni</h2>
+                    <div class="card border-0 bg-light rounded-4 p-4 mb-4">
+                            <div class="d-flex justify-content-between align-items-center gap-3 flex-wrap">
+                                <div>
+                                    <h3 class="h5 fw-bold text-dark-blue mb-1">
+                                        Riassunto AI delle recensioni
+                                    </h3>
+                                    <p class="text-muted small mb-0">
+                                        Genera un breve riassunto automatico dei commenti lasciati dagli utenti.
+                                    </p>
+                                </div>
+
+                                <button type="button" id="ai-summary-btn" class="btn btn-primary-custom rounded-pill fw-bold">
+                                    <i class="fa-solid fa-wand-magic-sparkles me-1"></i>
+                                    Genera riassunto
+                                </button>
+                            </div>
+
+                            <div id="ai-summary-result" class="alert alert-light border mt-3 mb-0 d-none"></div>
+                        </div>
 
                     <div class="add-review-box card border-0 p-4 mb-4">
                         <h3 class="h5 fw-bold mb-3">Lascia una recensione</h3>
@@ -171,6 +188,22 @@
                             <li class="closed"><span class="fw-bold">Domenica:</span> <span>Chiuso</span></li>
                             -->
                         </ul>
+                    </div>
+                </div>
+                <div class="card border-0 shadow-sm rounded-4 mt-4">
+                    <div class="card-body">
+                        <h3 class="h5 fw-bold mb-3">Dove si trova</h3>
+
+                        <div class="ratio ratio-4x3 rounded-4 overflow-hidden">
+                            <iframe
+                                id="google-map-frame"
+                                src=""
+                                style="border:0;"
+                                allowfullscreen=""
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
+                        </div>
                     </div>
                 </div>
             </aside>

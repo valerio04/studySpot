@@ -1867,6 +1867,139 @@ app.delete('/api/admin/delete-all-user-spots', async (req, res) => {
     res.json({ success: true, message: `Rimossi ${spotIds.length} spot creati da ${username}` });
 });
 
+
+//=================API: funzione cerca recenzioni spot per ai============
+
+app.post('/api/ai/summary-reviews/:spotId', async (req, res) => {
+    const spotId = req.params.spotId;
+
+    if (!spotId) {
+        return res.status(400).json({ error: 'ID spot mancante' });
+    }
+
+    try {
+        const supabaseClient = getSupabase(req, res);
+
+        const { data: comments, error } = await supabaseClient
+            .from('comments')
+            .select('comment, star')
+            .eq('spot_id', spotId);
+
+        if (error) {
+            console.error('Errore recupero recensioni per AI:', error);
+            return res.status(500).json({
+                error: 'Errore durante il recupero delle recensioni'
+            });
+        }
+
+        // Filtriamo solo le recensioni che hanno un commento testuale non vuoto e formatto per il prompt
+        const recensioniValide = (comments || [])
+            .filter(commento => commento.comment && commento.comment.trim() !== '')
+            .map(commento => `- ${commento.star}/5: ${commento.comment.trim()}`);
+
+        if (recensioniValide.length === 0) {
+            return res.status(400).json({
+                error: 'Non ci sono recensioni testuali da riassumere'
+            });
+        }
+
+
+        const { data: tagsData, error: tagsError } = await supabaseClient
+            .from('spot_tags')
+            .select(`
+                tags (
+                    name
+                )
+            `)
+            .eq('spot_id', spotId);
+
+        if (tagsError) {
+            console.error('Errore recupero tag per AI:', tagsError);
+            return res.status(500).json({
+                error: 'Errore durante il recupero dei tag'
+            });
+        }
+
+        const tags = (tagsData || [])
+            .map(item => item.tags?.name)
+            .filter(Boolean);
+
+        const formattedTags = formattaTagPerAI(tags);
+
+        const prompt = `
+Sei una funzione di riassunto per recensioni di luoghi dove studiare.
+
+Devi produrre un breve testo utile per uno studente.
+Usa le recensioni per riassumere l'esperienza degli utenti.
+Usa i tag SOLO per descrivere le caratteristiche tecniche dello spot.
+Non trasformare i tag in opinioni, problemi o giudizi.
+Non inventare attività, shopping, negozi o dettagli non presenti.
+Se una parola è scritta male, non correggerla inventando significati.
+
+Rispondi SOLO con il riassunto finale.
+Massimo 3 frasi brevi.
+Niente elenchi puntati.
+Niente introduzioni tipo "Ecco il riassunto".
+
+Tag tecnici dello spot:
+${formattedTags.length > 0 ? formattedTags.join(', ') : 'Nessun tag disponibile'}
+
+Recensioni:
+${recensioniValide.join('\n')}
+`;
+        const ollamaResponse = await fetch('http://127.0.0.1:11434/api/generate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                //model: 'llama3.2:1b',
+                model: 'gemma3:1b',
+                prompt: prompt,
+                stream: false,
+                options: {
+                    num_predict: 200,
+                    temperature: 0.1
+                }
+            })
+        });
+
+        if (!ollamaResponse.ok) {
+            return res.status(503).json({
+                error: 'Funzioni AI disattivate. Avvia Ollama per usare il riassunto automatico.'
+            });
+        }
+
+        const ollamaData = await ollamaResponse.json();
+
+        return res.json({
+            success: true,
+            summary: ollamaData.response || 'Nessun riassunto generato.'
+        });
+
+    } catch (error) {
+        console.error('Errore AI/Ollama:', error);
+
+        return res.status(503).json({
+            error: 'Funzioni AI disattivate. Avvia Ollama per usare il riassunto automatico.'
+        });
+    }
+});
+
+function formattaTagPerAI(tags) {
+    return tags
+        .filter(tag => tag !== '$' && tag !== '$$' && tag !== '$$$')
+        .map(tag => {
+            if (tag === 'outdoor') return 'Ambiente: all’aperto';
+            if (tag === 'indoor') return 'Ambiente: al chiuso';
+            if (tag === 'outlets') return 'Prese: disponibili';
+            if (tag === 'quiet') return 'Ambiente: silenzioso';
+            if (tag === 'poco affollato') return 'Affollamento: basso';
+            if (tag === 'abbastanza affollato') return 'Affollamento: medio';
+            if (tag === 'molto affollato') return 'Affollamento: alto';
+            return tag;
+        });
+}
 /*   
 PRENDERE LATITUDINE E LONGITUDINE TRAMITE API DI OPENSTREETMAP. L'UTENTE DEVE INSERIRE SOLO L'INDIRZZO.
 */

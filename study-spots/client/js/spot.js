@@ -8,13 +8,16 @@ const spotRatingText = document.querySelector('.rating-text');
 const tagsContainer = document.querySelector('.micro-tags');
 const hoursList = document.querySelector('.card-body ul');
 const reviewList = document.querySelector('.review-list');
-const mapsLink = document.querySelector('.google-maps-link');
 const nearbyGrid = document.getElementById('nearby-spots-grid');
 const fotoPrincipaleContainer = document.getElementById('foto-principale');
 const grigliaFotoContainer = document.getElementById('griglia-foto');
 const btnSalva = document.getElementById('salva');
 const btnRemove = document.getElementById('btn-delete-spot');
 const formRecensione = document.querySelector('.add-review-box form');
+const googleMapFrame = document.getElementById('google-map-frame');
+
+const aiSummaryBtn = document.getElementById('ai-summary-btn');
+const aiSummaryResult = document.getElementById('ai-summary-result');
 
 // Parametri URL
 const urlParams = new URLSearchParams(window.location.search);
@@ -42,6 +45,10 @@ if (formRecensione) {
 const btnShowMoreReviews = document.querySelector('.btn-show-all-reviews');
 if (btnShowMoreReviews) {
     btnShowMoreReviews.addEventListener('click', mostraReviewsAggiuntive);
+}
+
+if (aiSummaryBtn) {
+    aiSummaryBtn.addEventListener('click', generaRiassuntoAI);
 }
 
 // ================= Funzioni Principali =================
@@ -162,10 +169,11 @@ async function popolaPagina(spot) {
     }
 
     // 3. Link Google Maps
-    if (mapsLink) {
-        mapsLink.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(spot.address)}`;
+    
+    if (googleMapFrame && spot.address) {
+        googleMapFrame.src = `https://www.google.com/maps?q=${encodeURIComponent(spot.address)}&output=embed`;
     }
-
+   
     // 4. Orari di Apertura
     popolaOrari(spot.hours);
 
@@ -518,6 +526,88 @@ async function gestisciCancellazione() {
     }
 }
 
+async function generaRiassuntoAI() {
+    if (!aiSummaryResult) return;
+
+    if (!currentSpotId) {
+        mostraRisultatoAI('ID dello spot non trovato.', 'danger');
+        return;
+    }
+
+    mostraRisultatoAI('Generazione riassunto in corso...', 'muted');
+
+    if (aiSummaryBtn) {
+        aiSummaryBtn.disabled = true;
+    }
+
+    try {
+        const response = await fetch(`/api/ai/summary-reviews/${currentSpotId}`, {
+            method: 'POST',
+            credentials: 'include'
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            mostraRisultatoAI(
+                result.error || 'Funzioni AI disattivate.',
+                'warning'
+            );
+            return;
+        }
+
+        mostraRisultatoAI(
+            result.summary || 'Nessun riassunto generato.',
+            'success'
+        );
+
+    } catch (error) {
+        console.error('Errore riassunto AI:', error);
+        mostraRisultatoAI(
+            'Funzioni AI disattivate. Avvia Ollama per usare il riassunto automatico.',
+            'warning'
+        );
+    } finally {
+        if (aiSummaryBtn) {
+            aiSummaryBtn.disabled = false;
+        }
+    }
+}
+
+function mostraRisultatoAI(message, type) {
+    if (!aiSummaryResult) return;
+
+    aiSummaryResult.textContent = message;
+
+    //rimuove classi di stato precedenti dal risultato
+    aiSummaryResult.classList.remove(
+        'd-none',
+        'alert-success',
+        'alert-danger',
+        'alert-warning',
+        'alert-light'
+    );
+    //sceglie il colore del risultato in base al tipo (success, danger, warning)  
+    if (type === 'success') {
+        aiSummaryResult.classList.add('alert-success');
+        return;
+    }
+
+    if (type === 'danger') {
+        aiSummaryResult.classList.add('alert-danger');
+        return;
+    }
+
+    if (type === 'warning') {
+        aiSummaryResult.classList.add('alert-warning');
+        return;
+    }
+
+    aiSummaryResult.classList.add('alert-light');
+}
+
+
+ 
 // 1. Intercetta tutti gli errori standard di JavaScript (es. variabili inesistenti, crash improvvisi)
 window.addEventListener('error', function (event) {
     // Evita che l'errore standard blocchi tutto o appaia brutto, e usa il tuo popup!
