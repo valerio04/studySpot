@@ -1,10 +1,10 @@
 const API_URL = 'https://nominatim.openstreetmap.org/search';
 
-// Aggiungi un listener per l'input di ricerca
 const searchInput = document.getElementById('search-input');
 const clearSearchBtn = document.getElementById('clear-search');
 const tableBody = document.getElementById('results-body');
 
+// Aggiungi un listener per l'input di ricerca e uno per la x per cancellare il contenuto
 searchInput.addEventListener('input', handleInput);
 searchInput.addEventListener('input', toggleClearButton);
 
@@ -43,6 +43,7 @@ async function fetchResults(query) {
     }
 }
 
+// cerca 5 suggerimenti
 async function fetchFromAPI(query, signal) {
     // Aggiungiamo limit=5 per non intasare la tabella su mobile
     const url = `${API_URL}?q=${encodeURIComponent(query)}&format=json&limit=5`;
@@ -99,6 +100,7 @@ function toggleClearButton() {
     }
 };
 
+// listener per cancellare contenuto della barra di ricerca
 clearSearchBtn.addEventListener('click', () => {
     searchInput.value = '';
     clearSearchBtn.style.display = 'none';

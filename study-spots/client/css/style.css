@@ -60,6 +60,7 @@ body {
     font-family: 'Nunito', sans-serif;
     color: var(--dark-blue);
     background-color: var(--page-background);
+    min-width: 360px;
 }
 
 h1, h2, h3, h4, .nome-logo {

@@ -38,6 +38,13 @@ const tagFilterMap = {
     'tag-crowd-high': 'molto affollato'
 };
 
+window.addEventListener('DOMContentLoaded', () => {
+    const salvato = sessionStorage.getItem('ultimoSpot');
+    if (salvato) {
+        document.getElementById('search-input').value = salvato;
+    }
+})
+
 // Event Listeners dai tuoi bottoni HTML
 document.getElementById('search-button').addEventListener('click', async () => {
     await searchLocation();    // Prima trova la posizione
@@ -98,6 +105,7 @@ function getUserLocation() {
 
 async function searchLocation() {
     const searchInput = document.getElementById('search-input').value.trim();
+    sessionStorage.setItem('ultimoSpot', searchInput);
     if (!searchInput) {
         showSystemError('Inserisci un luogo.');
         return;
