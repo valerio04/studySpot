@@ -1466,6 +1466,26 @@ img:not([src]), img[src=""] {
     }
 }
 
+
+@media (min-width: 992px) {
+    .navbar-brand {
+        width: 230px;
+        flex-shrink: 0;
+    }
+
+    .user-actions-container {
+        width: 260px;
+        min-width: 260px;
+        justify-content: flex-end;
+        flex-shrink: 0;
+    }
+
+    .navbar-nav {
+        flex: 1;
+        justify-content: center;
+    }
+}
+
 /* =========================================
    18. MESSAGGI ERRORE
    ========================================= */

@@ -18,7 +18,8 @@ async function checkAuth() {
             const user = await response.json();
             console.log("Utente autenticato:", user);
 
-            if (user.profile.role === "admin") adminMenuItem.style.display = 'inline';
+            if (adminMenuItem) adminMenuItem.style.visibility = user.profile.role === 'admin' ? 'visible' : 'hidden';
+            
             if (usernameSpan) usernameSpan.textContent = user.profile.name; 
             
             if (userInfo) userInfo.style.display = 'inline';
