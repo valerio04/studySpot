@@ -24,7 +24,7 @@ const mapResultsList = document.getElementById('map-results-list');
 const mapResultsCount = document.getElementById('map-results-count');
 const filterCheckboxes = document.querySelectorAll('.form-check-input, .btn-check');
 
-let lastSearchCenter = null;
+let lastSearchCenter = map.getCenter();
 const tagFilterMap = {
     'tag-price-1': '$',
     'tag-price-2': '$$',
@@ -45,14 +45,22 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 })
 
-// Event Listeners dai tuoi bottoni HTML
+// Event Listeners dei bottoni HTML
 document.getElementById('search-button').addEventListener('click', async () => {
-    await searchLocation();    // Prima trova la posizione
-    visualizeSpotOnMap();      // Poi cerca gli spot
+    const locationFound = await searchLocation();
+
+    if (!locationFound) return;
+
+    await visualizeSpotOnMap();
+    scrollToMap();
 });
 
 document.getElementById('near-me-button').addEventListener('click', async () => {
-    getUserLocation();         // Questa è asincrona tramite callback, vedi sotto
+    const locationFound = await getUserLocation();
+
+    if (!locationFound) return;
+
+    scrollToMap();
 });
 
 // Aggiorna gli spot quando cambiano i filtri (con debounce per evitare troppe richieste)
@@ -95,6 +103,9 @@ function getUserLocation() {
                 
                 // Avvia la ricerca degli spot automaticamente dopo aver trovato la posizione
                 visualizeSpotOnMap();
+
+                // Dopo che ha trovato la posizione, scende alla mappa
+                scrollToMap();
             },
             function (error) {
                 showSystemError('Errore nel recupero della posizione.');
@@ -106,17 +117,19 @@ function getUserLocation() {
 async function searchLocation() {
     const searchInput = document.getElementById('search-input').value.trim();
     sessionStorage.setItem('ultimoSpot', searchInput);
+
     if (!searchInput) {
         showSystemError('Inserisci un luogo.');
-        return;
+        return false;
     }
 
     try {
         const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchInput)}&format=json`);
         const data = await response.json();
+
         if (data.length === 0) {
             showSystemError('Nessun risultato.');
-            return;
+            return false;
         }
 
         window.selectedLatitude = parseFloat(data[0].lat);
@@ -125,11 +138,15 @@ async function searchLocation() {
         centerMap(window.selectedLatitude, window.selectedLongitude);
         addMarker(window.selectedLatitude, window.selectedLongitude, searchInput);
         lastSearchCenter = map.getCenter();
+
+        return true;
+
     } catch (e) {
         console.error(e);
+        showSystemError('Errore durante la ricerca del luogo.');
+        return false;
     }
 }
-
 // ---  VISUALIZZAZIONE SPOT ---
 
 async function visualizeSpotOnMap() {
@@ -314,11 +331,11 @@ function centerMap(lat, lng) {
 
 map.on('moveend', () => {
     if (!searchHereButton) return;
-    if (!lastSearchCenter) return;
 
     const current = map.getCenter();
     const distance = current.distanceTo(lastSearchCenter);
-    if (distance > 50) {
+
+    if (distance > 150) {
         searchHereButton.style.display = 'block';
     } else {
         searchHereButton.style.display = 'none';
@@ -464,3 +481,19 @@ window.addEventListener('unhandledrejection', function (event) {
     const messaggio = event.reason.message || "Si è verificato un errore asincrono.";
     showSystemError(messaggio);
 });
+
+
+function scrollToMap() {
+    const mapContainer = document.getElementById('map-container');
+
+    if (!mapContainer) return;
+
+    mapContainer.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+    });
+
+    setTimeout(() => {
+        map.invalidateSize();
+    }, 400);
+}
