@@ -11,28 +11,8 @@ const alertContainer = document.getElementById('admin-alert-container');
 // Carica i dati quando la pagina è pronta
 document.addEventListener('DOMContentLoaded', loadReports);
 
-//TODO: mettere questo errrore in tute le pag sostutendolo al avecchio
 
-// Mostra un messaggio di alert (successo o errore)
-function showAlert(message, type = 'success') {
-    if (!alertContainer) {
-        console.warn('Admin alert container not found:', message);
-        return;
-    }
-    const wrapper = document.createElement('div');
-    wrapper.innerHTML = `
-        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-            ${message}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    `;
-    alertContainer.append(wrapper);
-    // Rimuovi l'alert dopo 5 secondi
-    setTimeout(() => wrapper.remove(), 5000);
-}
-
-//Carica le segnalazioni pendenti dal backend
- 
+//Carica le segnalazioni pendenti dal backend 
 async function loadReports() {
     try {
         const response = await fetch('/api/admin/reports');
@@ -308,6 +288,7 @@ async function rimuoviTuttiSpot() {
     }
 }
 
+// riorganizza i dati contenuti all'interno del json
 function normalizzaSpotPerCard(spot) {
     const foto = spot.copertina || spot.spot_photos?.[0]?.link_foto || null;
 
