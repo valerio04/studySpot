@@ -1,4 +1,9 @@
-MANUALE RAPIDO PER USARE Bootstrap
+MANUALE RAPIDO PER USARE BOOTSTRAP
+
+Nota:
+- Bootstrap serve per layout, griglia, bottoni, navbar, card, form, spaziature e responsive.
+- Font Awesome invece serve per le icone, ad esempio fa-solid, fa-book, fa-mug-hot, ecc.
+
 
 /* =========================
    DISPLAY
@@ -6,10 +11,14 @@ MANUALE RAPIDO PER USARE Bootstrap
 
 d-flex                         → display: flex;
 d-inline-flex                  → display: inline-flex;
+d-grid                         → display: grid;
 d-block                        → display: block;
 d-inline                       → display: inline;
 d-inline-block                 → display: inline-block;
 d-none                         → display: none;
+
+d-md-flex                      → da schermi medi in poi display: flex;
+d-md-none                      → nascosto da schermi medi in poi, quindi visibile solo su schermi piccoli;
 
 
 /* =========================
@@ -21,6 +30,8 @@ flex-column                    → elementi in colonna
 flex-wrap                      → permette agli elementi di andare a capo
 flex-nowrap                    → impedisce agli elementi di andare a capo
 
+flex-md-row                    → da schermi medi in poi dispone gli elementi in riga
+
 
 /* =========================
    FLEX ALIGNMENT
@@ -30,6 +41,8 @@ align-items-start              → allinea gli elementi in alto
 align-items-center             → centra verticalmente gli elementi
 align-items-end                → allinea gli elementi in basso
 align-items-stretch            → allunga gli elementi verticalmente
+
+align-items-md-center          → da schermi medi in poi centra verticalmente gli elementi
 
 justify-content-start          → allinea a sinistra
 justify-content-center         → centra orizzontalmente
@@ -49,6 +62,8 @@ gap-2                          → spazio piccolo
 gap-3                          → spazio medio
 gap-4                          → spazio grande
 gap-5                          → spazio molto grande
+
+gap-lg-4                       → spazio grande tra elementi da schermi large in poi
 
 
 /* =========================
@@ -73,6 +88,8 @@ mt-2                           → margin-top medio-piccolo
 mt-3                           → margin-top medio
 mt-4                           → margin-top grande
 mt-5                           → margin-top molto grande
+
+mt-md-0                        → da schermi medi in poi margin-top 0
 
 
 /* =========================
@@ -137,6 +154,8 @@ p-3                            → padding medio su tutti i lati
 p-4                            → padding grande su tutti i lati
 p-5                            → padding molto grande su tutti i lati
 
+p-md-5                         → da schermi medi in poi padding molto grande su tutti i lati
+
 
 /* =========================
    PADDING TOP / BOTTOM
@@ -187,6 +206,8 @@ px-3                           → padding orizzontale medio
 px-4                           → padding orizzontale grande
 px-5                           → padding orizzontale molto grande
 
+px-lg-5                        → padding orizzontale molto grande da schermi large in poi
+
 py-0                           → padding verticale 0
 py-1                           → padding verticale piccolo
 py-2                           → padding verticale medio-piccolo
@@ -202,6 +223,9 @@ py-5                           → padding verticale molto grande
 text-start                     → testo a sinistra
 text-center                    → testo centrato
 text-end                       → testo a destra
+
+text-md-start                  → da schermi medi in poi testo a sinistra
+text-md-end                    → da schermi medi in poi testo a destra
 
 
 /* =========================
@@ -259,7 +283,7 @@ text-capitalize                → iniziali maiuscole
 
 
 /* =========================
-   FONT SIZE
+   FONT SIZE / TITOLI
    ========================= */
 
 fs-1                           → testo molto grande
@@ -271,6 +295,13 @@ fs-6                           → testo piccolo
 
 small                          → testo più piccolo del normale
 lead                           → testo introduttivo più grande e leggibile
+
+display-4                      → titolo molto grande, usato spesso nelle sezioni hero
+display-6                      → titolo grande, ma più piccolo di display-4
+
+h3                             → applica stile grafico simile a un titolo h3
+h4                             → applica stile grafico simile a un titolo h4
+h5                             → applica stile grafico simile a un titolo h5
 
 
 /* =========================
@@ -314,6 +345,9 @@ rounded-5                      → molto molto arrotondato
 rounded-circle                 → forma circolare
 rounded-pill                   → forma a pillola
 
+rounded-start-pill             → forma a pillola solo sul lato sinistro
+rounded-end-pill               → forma a pillola solo sul lato destro
+
 
 /* =========================
    SHADOW
@@ -343,6 +377,8 @@ h-auto                         → altezza automatica
 
 mw-100                         → max-width 100%
 mh-100                         → max-height 100%
+
+min-vh-100                     → altezza minima pari al 100% dell’altezza dello schermo
 
 
 /* =========================
@@ -386,6 +422,7 @@ container                      → contenitore centrato con larghezza massima
 container-fluid                → contenitore largo tutta la pagina
 row                            → riga della griglia Bootstrap
 col                            → colonna automatica
+
 col-1                          → 1 colonna su 12
 col-2                          → 2 colonne su 12
 col-3                          → 3 colonne su 12
@@ -405,8 +442,22 @@ col-12                         → 12 colonne su 12, larghezza piena
    ========================= */
 
 col-sm-6                       → 6 colonne da schermi small in su
-col-md-6                       → 6 colonne da schermi medium in su
-col-lg-6                       → 6 colonne da schermi large in su
+
+col-md-5                       → 5 colonne su 12 da schermi medium in su
+col-md-6                       → 6 colonne su 12 da schermi medium in su
+col-md-7                       → 7 colonne su 12 da schermi medium in su
+col-md-10                      → 10 colonne su 12 da schermi medium in su
+col-md-12                      → 12 colonne su 12 da schermi medium in su
+
+col-lg-2                       → 2 colonne su 12 da schermi large in su
+col-lg-3                       → 3 colonne su 12 da schermi large in su
+col-lg-4                       → 4 colonne su 12 da schermi large in su
+col-lg-5                       → 5 colonne su 12 da schermi large in su
+col-lg-6                       → 6 colonne su 12 da schermi large in su
+col-lg-7                       → 7 colonne su 12 da schermi large in su
+col-lg-8                       → 8 colonne su 12 da schermi large in su
+col-lg-10                      → 10 colonne su 12 da schermi large in su
+
 col-xl-6                       → 6 colonne da schermi extra large in su
 col-xxl-6                      → 6 colonne da schermi extra extra large in su
 
@@ -461,6 +512,8 @@ btn-outline-info               → bottone con bordo azzurro
 btn-outline-light              → bottone con bordo chiaro
 btn-outline-dark               → bottone con bordo scuro
 
+btn-check                      → input checkbox/radio nascosto, usato spesso con label stile bottone
+
 btn-sm                         → bottone piccolo
 btn-lg                         → bottone grande
 
@@ -499,10 +552,19 @@ alert-info                     → alert azzurro
    ========================= */
 
 form-control                   → input Bootstrap
+form-control-sm                → input/textarea Bootstrap più piccolo
+
 form-select                    → select Bootstrap
+form-select-sm                 → select Bootstrap più piccola
+
+form-label                     → label Bootstrap per i campi del form
+
 form-check                     → contenitore checkbox/radio
-form-check-input               → checkbox/radio
+form-check-input               → checkbox/radio Bootstrap
 form-check-label               → testo checkbox/radio
+
+form-floating                  → contenitore Bootstrap per input con label flottante; la label appare dentro l’input e si sposta sopra quando scrivi
+
 input-group                    → gruppo input + bottone
 input-group-text               → testo/icona dentro input group
 
@@ -530,7 +592,10 @@ navbar-nav                     → lista link navbar
 nav-item                       → elemento navbar
 nav-link                       → link navbar
 navbar-toggler                 → bottone hamburger
+navbar-toggler-icon            → icona del bottone hamburger
 navbar-collapse                → contenitore collassabile navbar
+
+sticky-top                     → tiene la navbar attaccata in alto durante lo scroll
 
 
 /* =========================
@@ -594,6 +659,13 @@ lh-lg                          → line-height grande
 
 
 /* =========================
+   LISTS
+   ========================= */
+
+list-unstyled                  → rimuove pallini e stile base dalla lista
+
+
+/* =========================
    IMAGES / RATIOS
    ========================= */
 
@@ -621,7 +693,9 @@ fixed-bottom                   → fissato in basso
    ========================= */
 
 d-none d-md-block              → nascosto su mobile, visibile da md in su
+d-none d-md-flex               → nascosto su mobile, visibile come flex da md in su
 d-block d-md-none              → visibile su mobile, nascosto da md in su
 text-center text-lg-start      → testo centrato su mobile, sinistra su desktop
 flex-column flex-lg-row        → colonna su mobile, riga su desktop
+flex-column flex-md-row        → colonna su mobile, riga da md in su
 w-100 w-md-auto                → largo 100% su mobile, automatico da md in su

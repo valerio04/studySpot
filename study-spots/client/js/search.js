@@ -1,3 +1,5 @@
+/*gestisce i suggerimenti automatici nella barra di ricerca e la selezione di un risultato per popolare l'input e salvare le coordinate globali per map.js*/
+
 const API_URL = 'https://nominatim.openstreetmap.org/search';
 
 const searchInput = document.getElementById('search-input');
@@ -8,9 +10,10 @@ const tableBody = document.getElementById('results-body');
 searchInput.addEventListener('input', handleInput);
 searchInput.addEventListener('focus', toggleClearButton);
 
-let debounceTimeout;
+let debounceTimeout; 
 let abortController; // Serve per annullare le richieste di rete obsolete
 
+// Funzione chiamata ad ogni input dell'utente, con debounce e gestione delle richieste HTTP
 function handleInput() {
     toggleClearButton(); // Controlla la X ad ogni carattere inserito
 
@@ -20,6 +23,7 @@ function handleInput() {
     }, 500); // Ritardo di 500ms
 }
 
+// Funzione principale per ottenere i risultati dalla API
 async function fetchResults(query) {
     if (query.length < 3) {
         updateResultsTable([]);
@@ -52,20 +56,21 @@ async function fetchFromAPI(query, signal) {
     return response.json();
 }
 
+// Crea una riga della tabella per ogni risultato, con un listener per popolare l'input e salvare le coordinate globali
 function createTableRow(result) {
     const row = document.createElement('tr');
     
-    // Aggiungiamo la classe 'pointer' per far capire che è cliccabile (definita nel CSS precedente)
+    // Aggiungiamo la classe 'pointer' per far capire che è cliccabile 
     row.style.cursor = 'pointer';
     
     row.innerHTML = `<td class="py-2 px-3">${result.display_name}</td>`;
     
     row.addEventListener('mousedown', function(event) {
         event.preventDefault();
-        // 1. Popola l'input con il nome scelto
+        // Popola l'input con il nome scelto
         searchInput.value = result.display_name;
         
-        // 2. Salva le coordinate globali per map.js
+        // Salva le coordinate globali per map.js
         window.selectedLatitude = parseFloat(result.lat);
         window.selectedLongitude = parseFloat(result.lon);
         
@@ -74,6 +79,7 @@ function createTableRow(result) {
     return row;
 }
 
+// Aggiorna la tabella dei risultati
 function updateResultsTable(results) {
     tableBody.innerHTML = '';
     
@@ -125,14 +131,14 @@ searchInput.addEventListener('focus', () => {
 // Controllo iniziale (es. se la pagina viene ricaricata mantenendo i vecchi dati nel form)
 toggleClearButton();
 
-// 1. Intercetta tutti gli errori standard di JavaScript (es. variabili inesistenti, crash improvvisi)
+// Intercetta tutti gli errori standard di JavaScript (es. variabili inesistenti, crash improvvisi)
 window.addEventListener('error', function (event) {
-    // Evita che l'errore standard blocchi tutto o appaia brutto, e usa il tuo popup!
+    // Evita che l'errore standard blocchi tutto o appaia brutto, e usa il pupup personalizzato
     showSystemError(event.message);
     
 });
 
-// 2. Intercetta gli errori delle Promise/Chiamate asincrone non gestite (es. fetch che falliscono senza catch)
+// intercetta gli errori delle Promise/Chiamate asincrone non gestite (es. fetch che falliscono senza catch)
 window.addEventListener('unhandledrejection', function (event) {
     // event.reason contiene l'oggetto Errore lanciato dentro la Promise
     const messaggio = event.reason.message || "Si è verificato un errore asincrono.";

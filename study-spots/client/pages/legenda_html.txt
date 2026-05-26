@@ -1,0 +1,219 @@
+/* =========================
+   TAG HTML BASE
+   ========================= */
+
+<!DOCTYPE html>                 → indica al browser che il documento usa HTML5
+
+html                            → contenitore principale di tutta la pagina
+lang="it"                       → indica che la lingua della pagina è italiano
+
+head                            → contiene informazioni tecniche della pagina, non visibili direttamente
+
+body                            → contiene tutto ciò che viene mostrato nella pagina
+
+title                           → titolo della pagina nella scheda del browser
+
+meta                            → informazioni tecniche per browser e dispositivi
+charset="UTF-8"                 → permette caratteri speciali, accenti ed emoji
+viewport                        → rende la pagina adattabile a schermi piccoli e telefoni
+
+
+/* =========================
+   COLLEGAMENTI A RISORSE
+   ========================= */
+
+link                            → collega risorse esterne alla pagina, soprattutto file CSS
+
+rel="stylesheet"                → indica che il link carica un foglio di stile CSS
+rel="preconnect"                → prepara prima la connessione a un server esterno per velocizzare il caricamento
+
+href                            → percorso o indirizzo della risorsa collegata
+
+script                          → carica o contiene codice JavaScript
+
+src                             → percorso del file da caricare, usato per immagini e script
+
+
+/* =========================
+   STRUTTURA SEMANTICA
+   ========================= */
+
+nav                             → sezione di navigazione del sito, di solito la barra in alto
+
+main                            → contenuto principale della pagina
+
+section                         → sezione autonoma della pagina, per esempio hero, ricerca o area filtri
+
+footer                          → parte finale della pagina, con link, info, copyright e contatti
+
+hr                              → linea orizzontale divisoria
+
+
+/* =========================
+   CONTENITORI
+   ========================= */
+
+div                             → contenitore generico a blocco, usato per layout e raggruppamenti
+
+span                            → contenitore inline, usato per piccole parti di testo o elementi dentro una riga
+
+
+/* =========================
+   TESTI E TITOLI
+   ========================= */
+
+h1                              → titolo principale della pagina o della sezione più importante
+
+h2                              → titolo di secondo livello
+
+h3                              → titolo di terzo livello
+
+h4                              → titolo di quarto livello
+
+h5                              → titolo di quinto livello
+
+p                               → paragrafo di testo
+
+
+/* =========================
+   LINK E IMMAGINI
+   ========================= */
+
+a                               → link cliccabile per andare a un'altra pagina o sezione
+
+href                            → destinazione del link
+
+img                             → mostra un'immagine
+
+src                             → percorso dell'immagine
+
+alt                             → testo alternativo dell'immagine, utile per accessibilità e se l'immagine non carica
+
+height                          → altezza dell'immagine
+
+
+/* =========================
+   LISTE
+   ========================= */
+
+ul                              → lista non ordinata
+
+li                              → elemento singolo di una lista
+
+
+/* =========================
+   FORM E INPUT
+   ========================= */
+
+form                            → modulo che raccoglie dati dell'utente
+
+input                           → campo di input
+
+type="text"                     → input per testo breve
+
+type="checkbox"                 → input selezionabile vero/falso
+
+button                          → bottone cliccabile
+
+type="button"                   → bottone normale, non invia il form
+
+type="submit"                   → bottone che invia il form
+
+select                          → menu a tendina
+
+option                          → singola scelta dentro una select
+
+textarea                        → campo di testo lungo multi-riga
+
+label                           → testo associato a un input
+
+for                             → collega una label a un input tramite id
+
+placeholder                     → testo di esempio mostrato dentro input o textarea
+
+required                        → rende un campo obbligatorio
+
+checked                         → rende una checkbox già selezionata all'apertura della pagina
+
+/* =========================
+   TABELLE
+   ========================= */
+
+table                           → tabella
+
+tbody                           → corpo della tabella, dove vengono inserite le righe dei risultati
+
+tr                              → riga della tabella
+
+td                              → cella della tabella, cioè un singolo campo dentro una riga
+
+/* =========================
+   ICONE
+   ========================= */
+
+i                               → tag usato da Font Awesome per mostrare icone
+
+fa-solid                        → classe Font Awesome per icone solide
+
+fa-brands                       → classe Font Awesome per icone di brand/social
+
+fa-mug-hot                      → icona tazza/bar
+
+fa-book                         → icona libro/biblioteca
+
+fa-laptop                       → icona laptop/coworking
+
+fa-pencil                       → icona matita/aula studio
+
+fa-sliders                      → icona filtri
+
+fa-location-crosshairs          → icona posizione/vicino a me
+
+fa-xmark                        → icona X/cancella
+
+fa-plus                         → icona più/aggiungi
+
+fa-circle-user                  → icona profilo utente
+
+fa-code                         → icona codice/sviluppatore
+
+fa-flag                         → icona segnalazione
+
+fa-paper-plane                  → icona invio
+
+fa-instagram                    → icona Instagram
+
+fa-facebook                     → icona Facebook
+
+fa-linkedin                     → icona LinkedIn
+
+
+/* =========================
+   ATTRIBUTI COMUNI
+   ========================= */
+
+id                              → identificatore unico di un elemento, usato spesso da JavaScript
+
+class                           → assegna una o più classi CSS/Bootstrap a un elemento
+
+style                           → CSS scritto direttamente sull'elemento
+
+tabindex                        → controlla se un elemento può ricevere il focus da tastiera
+
+aria-label                      → descrizione accessibile per screen reader
+
+aria-expanded                   → indica se un elemento espandibile è aperto o chiuso
+
+aria-controls                   → indica quale elemento viene controllato da un bottone
+
+
+/* =========================
+   ATTRIBUTI BOOTSTRAP DATA
+   ========================= */
+
+data-bs-toggle="collapse"       → dice a Bootstrap che il bottone apre/chiude un elemento collapse
+
+data-bs-target="#id"            → indica quale elemento deve essere aperto/chiuso
+
+data-bs-toggle="collapse"
++ data-bs-target="#pannello"    → insieme permettono di creare sezioni espandibili senza scrivere JavaScript manuale

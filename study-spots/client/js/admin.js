@@ -48,7 +48,7 @@ async function loadReports() {
         userReportsTrack.innerHTML = '';
         spotReportsTrack.innerHTML = '';
 
-        // **LOGICA DI SMISTAMENTO CORRETTA E ROBUSTA**
+        // **LOGICA DI SMISTAMENTO **
         const isEmptyRelation = (val) => !val || (Array.isArray(val) && val.length === 0);
         const hasRelation = (val) => !isEmptyRelation(val);
 
@@ -91,11 +91,8 @@ async function loadReports() {
     }
 }
 
-/**
- * Crea e appende una card per una singola segnalazione
- * @param {object} report - L'oggetto della segnalazione
- * @param {HTMLElement} container - Il contenitore dove appendere la card
- */
+//Crea e appende una card per una singola segnalazione
+ 
 function renderReportCard(report, container) {
     const card = document.createElement('div');
     card.className = 'card shadow-sm flex-shrink-0 border-start border-4 border-warning';
@@ -136,11 +133,8 @@ function renderReportCard(report, container) {
     container.appendChild(card);
 }
 
-/**
- * Aggiorna lo stato di una segnalazione (risolto/rifiutato)
- * @param {number} reportId - L'ID della segnalazione
- * @param {string} status - Il nuovo stato
- */
+// Aggiorna lo stato di una segnalazione (risolto/rifiutato)
+
 async function updateReportStatus(reportId, status) {
     try {
         const response = await fetch(`/api/admin/reports/${reportId}`, {
@@ -252,10 +246,8 @@ async function cercaSpotPerID() {
     }
 }
 
-/**
- * Esegue direttamente la cancellazione massiva degli spot di un utente.
- * CHIAMATA DIRETTAMENTE DAL PULSANTE, SENZA MODALE.
- */
+//Esegue direttamente la cancellazione massiva degli spot di un utente.
+ 
 async function rimuoviTuttiSpot() {
     const username = document.getElementById('target-username-delete').value;
     if (!username) {
@@ -304,14 +296,14 @@ function normalizzaSpotPerCard(spot) {
     };
 }
 
-// 1. Intercetta tutti gli errori standard di JavaScript (es. variabili inesistenti, crash improvvisi)
+//  Intercetta tutti gli errori standard di JavaScript (es. variabili inesistenti, crash improvvisi)
 window.addEventListener('error', function (event) {
     // Evita che l'errore standard blocchi tutto o appaia brutto, e usa il tuo popup!
     showSystemError(event.message);
     
 });
 
-// 2. Intercetta gli errori delle Promise/Chiamate asincrone non gestite (es. fetch che falliscono senza catch)
+//  Intercetta gli errori delle Promise/Chiamate asincrone non gestite (es. fetch che falliscono senza catch)
 window.addEventListener('unhandledrejection', function (event) {
     // event.reason contiene l'oggetto Errore lanciato dentro la Promise
     const messaggio = event.reason.message || "Si è verificato un errore asincrono.";

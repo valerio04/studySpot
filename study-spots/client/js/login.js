@@ -1,12 +1,10 @@
+/*permette di gestire il login dell'utente, con validazione dei dati
+ e gestione degli errori */
+
+
+
 const form = document.getElementById("login")
 
-// Funzione per mostrare messaggi di errore o successo
-let message = document.getElementById('login-message');
-if (!message) {
-    message = document.createElement('div');
-    message.id = 'login-message';
-    form.insertBefore(message, form.firstChild);
-}
 
 // Assegna la funzione gestisciSubmit all'evento submit del form
 form.addEventListener("submit", gestisciSubmit);
@@ -61,14 +59,14 @@ function raccogliDatiUtente(form) {
     };
 }
 
-// 1. Intercetta tutti gli errori standard di JavaScript (es. variabili inesistenti, crash improvvisi)
+// Intercetta tutti gli errori standard di JavaScript (es. variabili inesistenti, crash improvvisi)
 window.addEventListener('error', function (event) {
     // Evita che l'errore standard blocchi tutto o appaia brutto, e usa il tuo popup!
     showSystemError(event.message);
     
 });
 
-// 2. Intercetta gli errori delle Promise/Chiamate asincrone non gestite (es. fetch che falliscono senza catch)
+//  Intercetta gli errori delle Promise/Chiamate asincrone non gestite (es. fetch che falliscono senza catch)
 window.addEventListener('unhandledrejection', function (event) {
     // event.reason contiene l'oggetto Errore lanciato dentro la Promise
     const messaggio = event.reason.message || "Si è verificato un errore asincrono.";

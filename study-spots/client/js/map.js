@@ -1,12 +1,22 @@
+/*
+funzioni principale del file.js:
+crea la mappa;
+gestisce ricerca luogo / posizione utente;
+carica e filtra gli spot;
+disegna marker, popup e card risultati
+*/
+
+
 // Inizializza la mappa
+//L sta per Leaftet la libreria js utlizza per la mappa, map è la variabile che contiene l'istanza della mappa, 'map' è l'id dell'elemento HTML dove viene disegnata la mappa, scrollWheelZoom: false disabilita lo zoom con la rotella del mouse
 const map = L.map('map',{ scrollWheelZoom: false}).setView([41.9028, 12.4964], 13); // Roma di default
 
-// Layer di base
+// Layer di base per popolare un minimo la mappa (OpenStreetMap)
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
-// Gruppo per i marker degli spot (per poterli pulire facilmente)
+// Gruppo per i marker degli spot (per poterli pulire facilmente),Crea un gruppo speciale per i marker degli spot.
 const spotsLayer = L.markerClusterGroup({
     showCoverageOnHover: false,
     spiderfyOnMaxZoom: true,
@@ -16,15 +26,22 @@ const spotsLayer = L.markerClusterGroup({
     disableClusteringAtZoom: 16  //17 è massimo zoom, puoi andare da 5 a 17, 5 è livello nazionale
 });
 
+// Aggiungi il gruppo alla mappa
 map.addLayer(spotsLayer);
+
+// Variabile per tenere traccia del marker della posizione cercata (per rimuoverlo quando si cerca un nuovo luogo)
 let currentMarker = null; // Marker della posizione cercata
 
+// Riferimenti agli elementi HTML
 const searchHereButton = document.getElementById('search-here-button');
 const mapResultsList = document.getElementById('map-results-list');
 const mapResultsCount = document.getElementById('map-results-count');
 const filterCheckboxes = document.querySelectorAll('.form-check-input, .btn-check');
 
+// Mappa per tenere traccia dell'ultimo centro di ricerca e decidere quando mostrare il pulsante "cerca qui"
 let lastSearchCenter = map.getCenter();
+
+// Mappa per convertire gli ID dei checkbox in tag effettivi da filtrare negli spot, gli stessi tag salvati nel db
 const tagFilterMap = {
     'tag-price-1': '$',
     'tag-price-2': '$$',
@@ -38,6 +55,7 @@ const tagFilterMap = {
     'tag-crowd-high': 'molto affollato'
 };
 
+// Al caricamento della pagina, se c'è un luogo salvato in sessionStorage, lo inserisce nell'input di ricerca e lo cerca automaticamente
 window.addEventListener('DOMContentLoaded', () => {
     const salvato = sessionStorage.getItem('ultimoSpot');
     if (salvato) {
@@ -45,7 +63,9 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 })
 
-// Event Listeners dei bottoni HTML
+// Event Listeners dei bottoni HTML:
+
+// Al click su "Cerca", cerca il luogo, visualizza gli spot e scende alla mappa
 document.getElementById('search-button').addEventListener('click', async () => {
     const locationFound = await searchLocation();
 
@@ -53,19 +73,20 @@ document.getElementById('search-button').addEventListener('click', async () => {
 
     await visualizeSpotOnMap();
     scrollToMap();
-});
+}); 
 
+// Al click su "vicino ame", cerca la posizione dell'utente, visualizza gli spot e scende alla mappa
 document.getElementById('near-me-button').addEventListener('click', async () => {
     const locationFound = await getUserLocation();
 
-    if (!locationFound) return;
-
-    scrollToMap();
+    //if (!locationFound) return;
+    //scrollToMap();
 });
 
-// Aggiorna gli spot quando cambiano i filtri (con debounce per evitare troppe richieste)
+// Serve a evitare troppe chiamate mentre cambi filtri.
 let filterUpdateTimer = null;
 
+// Al cambio di qualsiasi filtro, aspetta 250ms e poi aggiorna la visualizzazione degli spot (se è stata selezionata una posizione)
 const scheduleFilterUpdate = () => {
     if (!window.selectedLatitude || !window.selectedLongitude) return;
     clearTimeout(filterUpdateTimer);
@@ -74,10 +95,13 @@ const scheduleFilterUpdate = () => {
     }, 250);
 };
 
+// Aggiunge l'evento di cambio a tutti i checkbox dei filtri
 filterCheckboxes.forEach((checkbox) => {
     checkbox.addEventListener('change', scheduleFilterUpdate);
 });
 
+
+// cliccando su "cerca qui" aggiorna la posizione centrale di ricerca, nasconde il pulsante e aggiorna gli spot visualizzati
 if (searchHereButton) {
     searchHereButton.addEventListener('click', () => {
         const center = map.getCenter();
@@ -89,9 +113,14 @@ if (searchHereButton) {
     });
 }
 
-// --- FUNZIONI DI GEOLOCALIZZAZIONE ---
 
+
+
+//  FUNZIONI DI GEOLOCALIZZAZIONE E RICERCA LUOGO
+
+// Usa l'API di geolocalizzazione del browser per ottenere la posizione dell'utente, centrare la mappa, aggiungere un marker e visualizzare gli spot
 function getUserLocation() {
+    //navigator.geolocation è un API supportata da quasi tutti i browser 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             function (position) {
@@ -114,8 +143,12 @@ function getUserLocation() {
     }
 }
 
+
+// Usa l'API di Nominatim (OpenStreetMap) per cercare un luogo in base alla stringa inserita, centrare la mappa, aggiungere un marker e visualizzare gli spot
 async function searchLocation() {
     const searchInput = document.getElementById('search-input').value.trim();
+    
+    // Salva l'ultimo luogo cercato in sessionStorage, così da poterlo riproporre all'utente al prossimo caricamento della pagina
     sessionStorage.setItem('ultimoSpot', searchInput);
 
     if (!searchInput) {
@@ -147,8 +180,11 @@ async function searchLocation() {
         return false;
     }
 }
-// ---  VISUALIZZAZIONE SPOT ---
 
+
+//  VISUALIZZAZIONE SPOT SULLA MAPPA
+
+// Funzione principale che recupera gli spot in zona, li filtra in base ai tipi e tag selezionati, e li visualizza sulla mappa con marker e popup avanzati
 async function visualizeSpotOnMap() {
     const lat = window.selectedLatitude;
     const lng = window.selectedLongitude;
@@ -158,11 +194,14 @@ async function visualizeSpotOnMap() {
         return;
     }
 
-    // 1. Recupera tutti i tipi selezionati dai checkbox
+    // Recupera tutti i tipi selezionati dai checkbox
     const checkedBoxes = document.querySelectorAll('.form-check-input:checked');
     
-    const selectedTypes = Array.from(checkedBoxes)
-    .map(cb => cb.closest('.filter-item')?.querySelector('.filter-label')?.innerText.trim())
+    // Mappa i checkbox selezionati ai loro rispettivi nomi di tipo (es. "Bar", "Biblioteca") usando la struttura HTML dei filtri
+    
+     // closest trova il genitore con classe filter-item, poi prende il testo della label al suo interno, querySelector è un metodo per cercare un elemento all'interno del genitore, e innerText prende il testo visibile, trim rimuove spazi bianchi
+    const selectedTypes = Array.from(checkedBoxes)  
+    .map(cb => cb.closest('.filter-item')?.querySelector('.filter-label')?.innerText.trim()) 
     .filter(Boolean);
 
     if (selectedTypes.length === 0) {
@@ -174,14 +213,26 @@ async function visualizeSpotOnMap() {
     // Puliamo la mappa dai vecchi spot
     spotsLayer.clearLayers();
 
+    // Recupera tutti i tag selezionati e li organizza in gruppi (prezzo, ambiente, servizi, affollamento) per applicare la logica AND tra gruppi e OR all'interno di ogni gruppo
+    
+    // Object.keys(tagFilterMap) prende tutti gli ID dei checkbox dei tag, filter(id => document.getElementById(id)?.checked) filtra solo quelli che sono effettivamente selezionati, e map(id => tagFilterMap[id]) converte gli ID in tag reali da confrontare con quelli degli spot
     const selectedTagIds = Object.keys(tagFilterMap).filter(id => document.getElementById(id)?.checked);
+    //prende array id appena creato e trasforma in array di tag reali usando la mappa tagFilterMap
     const selectedTags = selectedTagIds.map(id => tagFilterMap[id]);
+    
+    // i tag sono organizzati in gruppi, e la logica di filtro è: se è stato selezionato almeno un tag di un gruppo, lo spot deve avere almeno uno di quei tag (OR), ma se sono stati selezionati tag in gruppi diversi, lo spot deve soddisfare tutti i gruppi (AND)
+    //es:selectedTagIds = ['tag-price-1', 'tag-price-2', 'tag-outdoor']  ---> priceTags = ['$', '$$']
     const priceTags = selectedTagIds.filter(id => id.startsWith('tag-price-')).map(id => tagFilterMap[id]);
     const environmentTags = selectedTagIds.filter(id => id === 'tag-outdoor' || id === 'tag-indoor').map(id => tagFilterMap[id]);
     const serviceTags = selectedTagIds.filter(id => id === 'tag-outlets' || id === 'tag-quiet').map(id => tagFilterMap[id]);
     const crowdTags = selectedTagIds.filter(id => id.startsWith('tag-crowd-')).map(id => tagFilterMap[id]);
 
+    // Funzione che verifica se un array di tag di uno spot soddisfa i criteri di filtro basati sui gruppi di tag selezionati
+    //es:tags = ['$$', 'outdoor', 'outlets', 'abbastanza affollato']
+    // priceTags = ['$', '$$'] e tags = ['$$', 'outdoor']  va bene
+    // priceTags = ['$', '$$', '$$$'] tags = ['$$$$', 'outdoor'] non va bene
     const matchesTagGroups = (tags) => {
+        // Se sono stati selezionati tag di prezzo, lo spot deve avere almeno uno di quei tag
         if (priceTags.length > 0 && !priceTags.some(tag => tags.includes(tag))) return false;
         if (environmentTags.length > 0 && !environmentTags.some(tag => tags.includes(tag))) return false;
         if (serviceTags.length > 0 && !serviceTags.some(tag => tags.includes(tag))) return false;
@@ -196,17 +247,20 @@ async function visualizeSpotOnMap() {
         'Aula Studio': 'au'
     };
 
+    // Mappa i tipi selezionati ai rispettivi nomi usati nell'API 
     const selectedApiTypes = selectedTypes.map(type => typeLabelMap[type] || type.toLowerCase());
 
-    // 2. Eseguiamo una sola chiamata API per tutti gli spot in zona
+    // Eseguiamo una sola chiamata API per tutti gli spot in zona
     try {
         const url = `/api/spots_search_all?latitude=${lat}&longitude=${lng}`;
         const response = await fetch(url);
         const spots = await response.json();
 
+        // Applichiamo il primo filtro sui tipi, così da ridurre subito il numero di spot da processare per i tag
         let spotsToRender = (spots || []).filter(spot => selectedApiTypes.includes(spot.type));
 
         if (selectedTags.length > 0) {
+            // promisse.all per caricare in parallelo i dettagli di ogni spot filtrato per tipo
             const spotInfos = await Promise.all(spotsToRender.map(async (spot) => {
                 try {
                     const response = await fetch(`/api/info-spot/${spot.id}`);
@@ -224,7 +278,7 @@ async function visualizeSpotOnMap() {
             spotsToRender = spotInfos.filter(Boolean);
         }
 
-        // 3. Aggiungi i marker per ogni spot trovato
+        // Aggiungi i marker per ogni spot trovato
         (spotsToRender || []).forEach((item) => {
             const spot = item.spot || item;
             const info = item.info;
@@ -282,7 +336,7 @@ async function visualizeSpotOnMap() {
     }
 }
 
-// --- UTILS ---
+// ========UTILS =========
 function createUserIcon() {
     return L.divIcon({
         className: '',
@@ -294,6 +348,7 @@ function createUserIcon() {
 
 function createSpotIcon(type) {
 
+    
     const icons = {
         bar: 'fa-mug-hot',
         biblio: 'fa-book',
@@ -434,6 +489,7 @@ function createPopupContent(info) {
     `;
 }
 
+// Funzione che prende una lista di spot (con o senza info dettagliate) e li rende in una lista HTML sotto la mappa, usando le card di SpotCard se disponibili, altrimenti una semplice lista testuale
 function renderMapResults(items) {
     if (!mapResultsList) return;
 
@@ -468,14 +524,14 @@ function renderMapResults(items) {
     }
 }
 
-// 1. Intercetta tutti gli errori standard di JavaScript (es. variabili inesistenti, crash improvvisi)
+// Intercetta tutti gli errori standard di JavaScript (es. variabili inesistenti, crash improvvisi)
 window.addEventListener('error', function (event) {
     // Evita che l'errore standard blocchi tutto o appaia brutto, e usa il tuo popup!
     showSystemError(event.message);
     
 });
 
-// 2. Intercetta gli errori delle Promise/Chiamate asincrone non gestite (es. fetch che falliscono senza catch)
+//  Intercetta gli errori delle Promise/Chiamate asincrone non gestite (es. fetch che falliscono senza catch)
 window.addEventListener('unhandledrejection', function (event) {
     // event.reason contiene l'oggetto Errore lanciato dentro la Promise
     const messaggio = event.reason.message || "Si è verificato un errore asincrono.";

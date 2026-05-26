@@ -1,14 +1,11 @@
+/*permette di gestire la registrazione dell'utente, con validazione dei dati
+ e gestione degli errori */
+
+
 const form = document.getElementById('register');
 form.addEventListener('submit',registrazione);
 
-// per mostraere i messaggi di errore o successo
-let message = document.getElementById('register-message');
-if (!message) {
-    message = document.createElement('div');
-    message.id = 'register-message';
-    // Inserisce il messaggio sopra il form
-    form.insertBefore(message, form.firstChild);
-} 
+
 
 // FUNZIONE CHE SI OCCUPA DELLA REGISTRAZIONE
 async function registrazione(event) {
@@ -70,14 +67,14 @@ function raccogliDatiUtente(form) {
     };
 }
 
-// 1. Intercetta tutti gli errori standard di JavaScript (es. variabili inesistenti, crash improvvisi)
+//  Intercetta tutti gli errori standard di JavaScript (es. variabili inesistenti, crash improvvisi)
 window.addEventListener('error', function (event) {
     // Evita che l'errore standard blocchi tutto o appaia brutto, e usa il tuo popup!
     showSystemError(event.message);
     
 });
 
-// 2. Intercetta gli errori delle Promise/Chiamate asincrone non gestite (es. fetch che falliscono senza catch)
+//  Intercetta gli errori delle Promise/Chiamate asincrone non gestite (es. fetch che falliscono senza catch)
 window.addEventListener('unhandledrejection', function (event) {
     // event.reason contiene l'oggetto Errore lanciato dentro la Promise
     const messaggio = event.reason.message || "Si è verificato un errore asincrono.";
