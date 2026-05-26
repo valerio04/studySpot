@@ -819,6 +819,7 @@ h1, h2, h3, h4, .nome-logo {
     gap: 12px;
     height: 450px; /* Aumentata leggermente l'altezza */
     margin-bottom: 30px;
+    overflow: hidden;
 }
 
 /* Foto Principale (Sinistra) */
@@ -842,6 +843,7 @@ h1, h2, h3, h4, .nome-logo {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     gap: 12px;
+    overflow: hidden;
 }
 
 .gallery-grid img {
