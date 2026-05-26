@@ -6,7 +6,7 @@ const tableBody = document.getElementById('results-body');
 
 // Aggiungi un listener per l'input di ricerca e uno per la x per cancellare il contenuto
 searchInput.addEventListener('input', handleInput);
-searchInput.addEventListener('input', toggleClearButton);
+searchInput.addEventListener('focus', toggleClearButton);
 
 let debounceTimeout;
 let abortController; // Serve per annullare le richieste di rete obsolete

@@ -1,5 +1,3 @@
-// notifier.js
-
 function _ensureToastExists() {
     if (!document.getElementById('custom-toast')) {
         const toastDiv = document.createElement('div');

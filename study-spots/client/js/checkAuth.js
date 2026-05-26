@@ -6,6 +6,8 @@ const usernameSpan = document.getElementById('username');
 const adminMenuItem = document.getElementById('admin-menu-item');
 // Su alcune pagine il link profilo potrebbe non avere id="btn-profile".
 const profileBtn = document.getElementById('btn-profile');
+
+// permette di capire quali pulsanti devono essere visualizzati a seconda che l'utente sia o meno loggato
 async function checkAuth() {
     try {
         // Chiamiamo l'endpoint che abbiamo creato prima
@@ -42,6 +44,7 @@ async function checkAuth() {
 
 checkAuth();
 
+// listener per la gestione del logout
 if (btnLogout) {
     btnLogout.addEventListener('click', async () => {
         const response = await fetch('/api/logout', { method: 'POST' });
