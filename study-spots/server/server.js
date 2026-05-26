@@ -316,7 +316,7 @@ app.get('/api/ranking', async (req, res) => {
       return res.status(200).json({ success: true, data: [] });
     }
     
-    // 3. Formattiamo i dati trasformando la struttura nidificata
+    //  Formattiamo i dati trasformando la struttura nidificata
     // se vuoi capire meglio vedi funzionamento di .map() in JS
 
     const formattedData = data.map(profile => ({
@@ -438,7 +438,7 @@ app.get('/api/profile',async (req,res)=>{
             .eq('user_id', userId)
             .single();
 
-        // 3. Gestione degli errori lato database
+        //  Gestione degli errori lato database
         if (error) {
             console.error("Errore Supabase:", error.message);
             // Restituisco uno status 500 (Internal Server Error) e un JSON con l'errore
@@ -599,7 +599,7 @@ app.post('/api/add-comment', async (req, res) => {
 
     const supabaseClient = getSupabase(req, res);
     
-    // 1. Recupera l'utente autenticato
+    //  Recupera l'utente autenticato
     const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
 
     if (userError || !user) {
@@ -614,7 +614,7 @@ app.post('/api/add-comment', async (req, res) => {
     }
 
     try {
-        // 2. Prepariamo i dati per la tabella 'comments'
+        //  Prepariamo i dati per la tabella 'comments'
         const insertData = {
             star: rating,
             user_id: user.id,
@@ -722,7 +722,7 @@ app.post('/api/add-spot', upload.array('photos', 5), async (req, res) =>{
         
         spotId = spot.id;
 
-        // 3. INSERIMENTO FOTO (Tabella spot_photos)
+        //  INSERIMENTO FOTO (Tabella spot_photos)
         if (req.files && req.files.length > 0) {
             const photosToInsert = req.files.map((file, index) => ({
                 spot_id: spotId,
@@ -753,7 +753,7 @@ app.post('/api/add-spot', upload.array('photos', 5), async (req, res) =>{
                     .single();
 
                 if (!tError && tagRow) {
-                    // 2. Associamo il tag allo spot
+                    //  Associamo il tag allo spot
                     await supabaseClient
                         .from('spot_tags')
                         .insert({ spot_id: spotId, tag_id: tagRow.id });
@@ -893,7 +893,7 @@ app.get('/api/spots/top-activ', async (req, res) => {
     const limit = Math.min(parseInt(req.query.limit, 10) || 10, 100);
 
     try {
-        // 1. Recuperiamo i dati (senza ordinamento SQL perché ci serve la somma di due colonne)
+        //  Recuperiamo i dati (senza ordinamento SQL perché ci serve la somma di due colonne)
         const { data, error } = await supabase
             .from('spots')
             .select(`
@@ -913,7 +913,7 @@ app.get('/api/spots/top-activ', async (req, res) => {
             return res.status(500).json({ error: 'Errore durante il recupero degli spot' });
         }
 
-        // 2. Calcoliamo l'attività totale e ordiniamo
+        //  Calcoliamo l'attività totale e ordiniamo
         const sortedSpots = (data || [])
             .map(spot => ({
                 ...spot,
@@ -1057,7 +1057,7 @@ app.get('/api/spots/economici', async (req, res) => {
     const limit = Math.min(parseInt(req.query.limit, 10) || 10, 100);
 
     try {
-        // 1. Recuperiamo i dati (senza ordinamento SQL perché ci serve la somma di due colonne)
+        //  Recuperiamo i dati (senza ordinamento SQL perché ci serve la somma di due colonne)
         const { data, error } = await supabase
             .from('spots')
             .select(`
@@ -1085,7 +1085,7 @@ app.get('/api/spots/economici', async (req, res) => {
             spot_photos: undefined,
         }));
 
-        // 2. Filtriamo gli spot usando la logica dell'if/ciclo for
+        //  Filtriamo gli spot usando la logica dell'if/ciclo for
         const spotEconomici = spots.filter(spot => {
             let haTagDollaro = false;
 
@@ -1102,7 +1102,7 @@ app.get('/api/spots/economici', async (req, res) => {
             return haTagDollaro; 
         });
 
-        // 3. Applichiamo il limite richiesto dall'utente (visto che filtriamo lato codice)
+        // Applichiamo il limite richiesto dall'utente (visto che filtriamo lato codice)
         const risultatiLimitati = spotEconomici.slice(0, limit);
 
         return res.json(risultatiLimitati);
@@ -1425,7 +1425,7 @@ app.get('/api/salvati', async (req, res) => {
     res.json(spots);
 });
 
-
+// =================API: ottieni lista degli spot aggiunti (per la pagina del profilo) ===============
 app.get('/api/aggiunti', async (req, res) => {
     console.log('GET /api/aggiunti');
 
@@ -1467,6 +1467,7 @@ app.get('/api/aggiunti', async (req, res) => {
     res.json(spots);
 });
 
+// =================API: ottieni lista dei commenti aggiunti (per la pagina del profilo) ===============
 app.get('/api/commenti-aggiunti', async (req, res) => {
     console.log('GET /api/commenti-aggiunti');
 
@@ -1500,6 +1501,7 @@ app.get('/api/commenti-aggiunti', async (req, res) => {
     res.json(commenti_aggiunti)
 });
 
+//================== API: ricerca spot per tipo e posizione (per la home) ===============
 app.get('/api/spots_search', async (req, res) => {
     console.log('GET /api/spots_search');
     
@@ -1509,7 +1511,7 @@ app.get('/api/spots_search', async (req, res) => {
 
     const supabaseClient = getSupabase(req, res);
 
-    // 1. Convertiamo i parametri da stringhe a numeri
+    //  Convertiamo i parametri da stringhe a numeri
     const type = req.query.type;
     const latitude = parseFloat(req.query.latitude);
     const longitude = parseFloat(req.query.longitude);
@@ -1675,7 +1677,7 @@ app.post('/api/reports', async (req, res) => {
 app.get('/api/admin/reports', async (req, res) => {
     const supabaseClient = getSupabase(req, res);
 
-    // 1. Verifica autenticazione e ruolo admin (in un'unica fase o sequenziale)
+    //  Verifica autenticazione e ruolo admin (in un'unica fase o sequenziale)
     const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
     if (authError || !user) {
         return res.status(401).json({ error: "Effettua il login per accedere" });
@@ -1715,7 +1717,7 @@ app.get('/api/admin/reports', async (req, res) => {
 app.patch('/api/admin/reports/:id', async (req, res) => {
     const supabaseClient = getSupabase(req, res);
 
-    // 1. Verifica autenticazione e ruolo admin
+    //  Verifica autenticazione e ruolo admin
     const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
     if (authError || !user) {
         return res.status(401).json({ error: "Effettua il login per accedere" });
@@ -1738,7 +1740,7 @@ app.patch('/api/admin/reports/:id', async (req, res) => {
         return res.status(400).json({ error: "Stato non specificato" });
     }
 
-    // 2. Aggiornamento dello status
+    //  Aggiornamento dello status
     const { data: updatedData, error } = await supabaseClient
         .from('reports')
         .update({ 
@@ -1767,7 +1769,7 @@ app.get('/api/admin/search-user-spots', async (req, res) => {
 
     if (!query) return res.status(400).json({ error: "Query mancante" });
 
-    // 1. Verifica autenticazione e ruolo admin
+    //  Verifica autenticazione e ruolo admin
     const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
     if (authError || !user) return res.status(401).json({ error: "Non autorizzato" });
 
@@ -1781,7 +1783,7 @@ app.get('/api/admin/search-user-spots', async (req, res) => {
         return res.status(403).json({ error: "Accesso negato" });
     }
 
-    // 2. Trova l'utente target (solo per username)
+    //  Trova l'utente target (solo per username)
     const { data: targetProfile, error: pError } = await supabaseClient
         .from('profiles')
         .select('user_id, username')
@@ -1790,7 +1792,7 @@ app.get('/api/admin/search-user-spots', async (req, res) => {
 
     if (pError || !targetProfile) return res.status(404).json({ error: "Utente non trovato" });
 
-    // 3. Prendi gli spot creati da lui tramite la tabella 'aggiunti'
+    //  Prendi gli spot creati da lui tramite la tabella 'aggiunti'
     const { data: spots, error: sError } = await supabaseClient
         .from('aggiunti')
         .select(`spots(
@@ -1818,7 +1820,7 @@ app.delete('/api/admin/delete-all-user-spots', async (req, res) => {
 
     if (!username) return res.status(400).json({ error: "Username mancante" });
 
-    // 1. Verifica autenticazione e ruolo admin
+    //  Verifica autenticazione e ruolo admin
     const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
     if (authError || !user) return res.status(401).json({ error: "Non autorizzato" });
 
@@ -1832,7 +1834,7 @@ app.delete('/api/admin/delete-all-user-spots', async (req, res) => {
         return res.status(403).json({ error: "Accesso negato" });
     }
     
-    // 2. Trova l'ID dell'utente target
+    //  Trova l'ID dell'utente target
     const { data: targetProfile } = await supabaseClient
         .from('profiles')
         .select('user_id')
@@ -1841,7 +1843,7 @@ app.delete('/api/admin/delete-all-user-spots', async (req, res) => {
 
     if (!targetProfile) return res.status(404).json({ error: "Utente non trovato" });
 
-    // 3. Ottieni gli ID degli spot da cancellare
+    //  Ottieni gli ID degli spot da cancellare
     const { data: userSpots } = await supabaseClient
         .from('aggiunti')
         .select('spot_id')
@@ -2000,50 +2002,28 @@ function formattaTagPerAI(tags) {
             return tag;
         });
 }
-/*   
-PRENDERE LATITUDINE E LONGITUDINE TRAMITE API DI OPENSTREETMAP. L'UTENTE DEVE INSERIRE SOLO L'INDIRZZO.
-*/
 
 
 
 
-/*
-//ESEMPIO DI POST
-//il metodo post fa la stessa cosa del metodo get, ma solo per chiamate POST
-// i due punti (:id) servono a indicare un parametro variabile (utile per passare dati)
-app.post('/api/ordina-frullato/:id', async (req, res) => {
-    const idFrullato = req.params.id; //usiamo req per recuperare il codice del frullato (il parametro variabile di cui parlavamo)
-
-    const idOrdineCasuale = Math.floor(Math.random() * 9000) + 1000; //un numero casuale come id dell'ordine 
 
 
-    if (!SUPABASE_URL || !SUPABASE_KEY) {
-    return res.status(503).json({ error: 'Database non configurato in questo ambiente' });
-    }
-    const { data, error } = await supabase
-        .from('ordini')
-        .insert([
-            { 
-                id: idOrdineCasuale, 
-                frullato: idFrullato 
-            }
-        ])
-        .select(); //select serve a ritornare la riga inserita nel database
-        //anche qui usiamo await per aspettare che la query abbia finito
 
-    if (error) {
-        console.error(error);
-        return res.status(500).json({ error: "Errore durante l'ordine" });
-    }
 
-    //201 è un codice di successo
-    //mandiamo anche un JSON contente un messaggio testuale di successo e la riga inserita nel DB
-    res.status(201).json({ 
-        message: "Ordine effettuato con successo!", 
-        ordine: data[0] 
-    });
-});
-*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2071,8 +2051,6 @@ process.on('SIGINT', () => {
         process.exit(1);
     }, 10000);
 });
-
-// VEDI SE RIESCI A USARE ANCHE LOCALSTORAGE
 
 
 
