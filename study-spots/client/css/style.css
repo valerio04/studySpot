@@ -863,9 +863,7 @@ h1, h2, h3, h4, .nome-logo {
 .gallery-grid img:nth-child(4) { border-bottom-right-radius: 20px; }
 
 /* Se c'è solo una foto principale e la griglia è vuota */
-.spot-gallery:has(.gallery-grid:empty) {
-    grid-template-columns: 1fr;
-}
+
 .spot-gallery:has(.gallery-grid:empty) .gallery-main {
     border-radius: 20px;
 }
