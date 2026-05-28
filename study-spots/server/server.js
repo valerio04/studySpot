@@ -151,28 +151,6 @@ const getSupabase = (req, res) => {
   )
 }
 
-/*
-// Funzione helper per creare il client Supabase per ogni richiesta
-const getSupabase = (req, res) => {
-  return createServerClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_KEY,
-    {
-      cookies: {
-        getAll() {
-          return parseCookieHeader(req.headers.cookie ?? '')
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            res.appendHeader('Set-Cookie', serializeCookieHeader(name, value, options))
-          )
-        },
-      },
-    }
-  )
-}
-*/
-
 // ==========API: ME (Ottieni i dati dell'utente corrente)===========
 app.get('/api/me', async (req, res) => {
 
@@ -241,9 +219,6 @@ app.post('/api/register', async (req, res) => {
                 }
             }
         });
-
-    // Se vuoi, puoi stampare `data.user?.id` per tracciare gli utenti creati.
-    // console.log('Supabase signUp userId:', data?.user?.id);
 
         if (error) {
             console.error('Errore registrazione Supabase:', error.message);
@@ -316,8 +291,7 @@ app.get('/api/ranking', async (req, res) => {
       return res.status(200).json({ success: true, data: [] });
     }
     
-    //  Formattiamo i dati trasformando la struttura nidificata
-    // se vuoi capire meglio vedi funzionamento di .map() in JS
+    // Formattiamo i dati trasformando la struttura nidificata
 
     const formattedData = data.map(profile => ({
         username: profile.username,
@@ -445,7 +419,7 @@ app.get('/api/profile',async (req,res)=>{
             return res.status(500).json({ error: "Errore durante il recupero dei dati dal database." });
         }
 
-        // 4. Controllo se l'utente esiste effettivamente
+        // Controllo se l'utente esiste effettivamente
         if (!profile) {
             return res.status(404).json({ error: "Profilo non trovato." });
         }
@@ -458,7 +432,7 @@ app.get('/api/profile',async (req,res)=>{
             commenti_count: profile.comments?.length || 0,
             salvati_count: profile.salvati?.length || 0
         };
-        // 5. Tutto è andato bene: restituisco l'oggetto JSON completo al frontend
+        // Tutto è andato bene: restituisco l'oggetto JSON completo al frontend
         res.status(200).json(completeProfile);
 
     } catch (err) {
@@ -467,70 +441,6 @@ app.get('/api/profile',async (req,res)=>{
         res.status(500).json({ error: "Errore interno del server." });
     }
 });
-
-// FORMATO CON IL QUALE VENGONO RESTITUITI I DATI DELL'UTENTE LOGGATO NELL'ENDPOINT /api/profile
-/*
-{
-  "username": "MarioRossi99",
-  "name": "Mario",
-  "surname": "Rossi",
-  "points": 1250,
-  "salvati": [
-    {
-      "data": "2026-05-01T10:00:00.000Z",
-      "spots": {
-        "id": 14,
-        "name": "Biblioteca Centrale",
-        "address": "Via Roma 10",
-        "type": "library"
-      }
-    },
-    {
-      "data": "2026-04-28T15:30:00.000Z",
-      "spots": {
-        "id": 8,
-        "name": "Caffè Letterario",
-        "address": "Piazza Dante 2",
-        "type": "cafe"
-      }
-    }
-  ],
-  "aggiunti": [
-    {
-      "data": "2026-04-20T09:00:00.000Z",
-      "spots": {
-        "id": 3,
-        "name": "Parco della Musica",
-        "address": "Viale della Musica 20",
-        "type": "park"
-      }
-    }
-  ],
-  "comments": [
-    {
-      "comment": "Ottimo posto per studiare, molto silenzioso!",
-      "star": 5,
-      "data": "2026-05-02T09:15:00.000Z",
-      "spots": {
-        "id": 14,
-        "name": "Biblioteca Centrale"
-      }
-    },
-    {
-      "comment": "Troppo rumoroso.",
-      "star": 2,
-      "data": "2026-04-30T16:00:00.000Z",
-      "spots": {
-        "id": 8,
-        "name": "Caffè Letterario"
-      }
-    }
-  ],
-  "salvati_count": 2,
-  "comments_count": 2,
-  "aggiunti_count": 1
-}
-*/
 
 //=================API: modifica profilo ================
 
@@ -638,7 +548,7 @@ app.post('/api/add-comment', async (req, res) => {
         
         
 
-        // 4. Risposta al client
+        // Risposta al client
         return res.status(201).json({ 
             message: 'Valutazione aggiunta con successo!',
             data: { spotId, rating, comment } 
@@ -827,9 +737,6 @@ app.post('/api/add-spot', upload.array('photos', 5), async (req, res) =>{
             }
         }
 
-
-        
-        // NUOVA LOGICA: Inserisce la valutazione (e il commento se c'è)
         
         if (rating) { 
             // Costruiamo dinamicamente l'oggetto da inserire, proprio come in add-comment
@@ -850,8 +757,6 @@ app.post('/api/add-spot', upload.array('photos', 5), async (req, res) =>{
 
             if (commentError) {
                 console.error('Errore durante l\'inserimento del commento iniziale:', commentError);
-                // Nota: potresti decidere di non restituire errore 500 qui. 
-                // Lo spot è stato creato con successo, è fallito solo il commento.
             }
         }
 
@@ -920,7 +825,7 @@ app.get('/api/spots/top-activ', async (req, res) => {
                 copertina: spot.spot_photos?.[0]?.link_foto || null,
                 // Rimuoviamo l'oggetto originale se non ci serve più
                 spot_photos: undefined,
-                // Assicuriamoci che siano numeri per evitare errori (es. null + null)
+                // Assicuriamoci che siano numeri per evitare errori 
                 total_activity: (Number(spot.star_count) || 0) + (Number(spot.comment_count) || 0)
             }))
             .sort((a, b) => b.total_activity - a.total_activity) // Ordina per attività decrescente
@@ -974,11 +879,7 @@ app.get('/api/spots/top-rated', async (req, res) => {
             star_avg: Number(spot.star_avg) || 0,
             star_count: Number(spot.star_count) || 0
         }));
-        /* attivare se vuoi piu precisone ma  un po pesante per il db
-        const totalVotes = spots.reduce((sum, spot) => sum + spot.star_count, 0);
-        const totalStars = spots.reduce((sum, spot) => sum + (spot.star_avg * spot.star_count), 0);
-        const globalAvg = totalVotes > 0 ? totalStars / totalVotes : 0;
-        */
+
         const globalAvg = 3.5; // Valore di riferimento fisso per non appesantire troppo il db
 
         //aggiunge il calcolo del punteggio pesato a ogni spot, usando la formula di Bayes: weighted_score = (v / (v + m)) * R + (m / (v + m)) * globalAvg
@@ -1014,39 +915,8 @@ app.get('/api/spots/top-rated', async (req, res) => {
     }
 });
 
-/*esempio di risposta di /api/spots/top-rated
-[
-  {
-    "id": 12,
-    "name": "Biblioteca Centrale",
-    "address": "Via Università 1",
-    "type": "Biblioteca",
-    "star_avg": 4.8,
-    "star_count": 45,
-    "weighted_score": 4.67    <---punteggio su cui si basa ordine
-  },
-  {
-    "id": 5,
-    "name": "Cafè dello Studente",
-    "address": "Piazza delle Erbe 3",
-    "type": "Aula Studio",
-    "star_avg": 5.0,
-    "star_count": 2,
-    "weighted_score": 3.929
-  },
-  {
-    "id": 8,
-    "name": "Parco Ducale (Zona Wi-Fi)",
-    "address": "Viale del Parco",
-    "type": "All'aperto",
-    "star_avg": 3.2,
-    "star_count": 12,
-    "weighted_score": 3.288
-  }
-]*/
 
 //============== API: ottieni spot piu attivi==============
-//(spot con piu voti indipendentemnte dal voto )
 app.get('/api/spots/economici', async (req, res) => {
     console.log('GET /api/spots/economici');
 
@@ -1182,10 +1052,6 @@ app.get('/api/info-spot/:id', async (req, res) =>{
     // Recupera l'utente autenticato
     const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
     const userId = user?.id || null;
-    //dovrebbero essere accessibili a tutti anche ai non leggati
-    /*if (userError || !user) {
-        return res.status(401).json({ error: "Utente non autenticato" });
-    }*/
 
     const idSpot = req.params.id; // Recupera l'id dello spot dai parametri dell'URL
 
@@ -1855,7 +1721,7 @@ app.delete('/api/admin/delete-all-user-spots', async (req, res) => {
 
     const spotIds = userSpots.map(s => s.spot_id);
 
-    // 4. Cancella gli spot (il CASCADE si occupa del resto)
+    // Cancella gli spot (il CASCADE si occupa del resto)
     const { error: delError } = await supabaseClient
         .from('spots')
         .delete()
