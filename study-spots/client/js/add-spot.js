@@ -85,6 +85,7 @@ function renderPreview(file, index) {
         const div = document.createElement('div');
         div.className = "position-relative";
         div.style.width = "80px";
+        div.style.overflow = "hidden";
         div.innerHTML = `
             <img src="${e.target.result}" class="rounded border" style="height:80px; object-fit:cover;">
             <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 rounded-circle p-0" 
