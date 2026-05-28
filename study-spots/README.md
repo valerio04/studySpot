@@ -19,3 +19,7 @@ Questo comando apre automaticamente il browser all'indirizzo `http://localhost:3
 ## Note aggiuntive
 - Assicurarsi che tutte le dipendenze siano installate eseguendo `npm install` nella directory `server` prima di avviare il progetto.
 - Utilizzare `Ctrl+C` per fermare il server quando è in esecuzione.
+
+
+per avviare connessione online: ngrok http 3004
+
