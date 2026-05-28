@@ -23,7 +23,7 @@ const spotsLayer = L.markerClusterGroup({
     zoomToBoundsOnClick: true,
     animate: true,
     animateAddingMarkers: true,
-    disableClusteringAtZoom: 16  //17 è massimo zoom, puoi andare da 5 a 17, 5 è livello nazionale
+    disableClusteringAtZoom: 16  
 });
 
 // Aggiungi il gruppo alla mappa
@@ -75,7 +75,7 @@ document.getElementById('search-button').addEventListener('click', async () => {
     scrollToMap();
 }); 
 
-// Al click su "vicino ame", cerca la posizione dell'utente, visualizza gli spot e scende alla mappa
+// Al click su "vicino a me", cerca la posizione dell'utente, visualizza gli spot e scende alla mappa
 document.getElementById('near-me-button').addEventListener('click', async () => {
     const locationFound = await getUserLocation();
 
@@ -526,7 +526,7 @@ function renderMapResults(items) {
 
 // Intercetta tutti gli errori standard di JavaScript (es. variabili inesistenti, crash improvvisi)
 window.addEventListener('error', function (event) {
-    // Evita che l'errore standard blocchi tutto o appaia brutto, e usa il tuo popup!
+    // Evita che l'errore standard blocchi tutto o appaia brutto
     showSystemError(event.message);
     
 });

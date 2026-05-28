@@ -1026,7 +1026,7 @@ h1, h2, h3, h4, .nome-logo {
     transform: translateY(-1px);
 }
 
-/* Pulsante Mostra Tutte le Recensioni Abbellito */
+/* Pulsante Mostra Tutte le Recensioni */
 .btn-show-all-reviews {
     display: block;
     width: 100%;
@@ -1075,7 +1075,7 @@ h1, h2, h3, h4, .nome-logo {
     filter: brightness(0) invert(1);
 }
 
-/* Effetto hover quando è già salvato (leggermente più scuro) */
+/* Effetto hover quando è già salvato */
 .btn-save.saved:hover {
     background-color: var(--orange-accent-dark) !important;
     opacity: 0.9;

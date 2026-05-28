@@ -52,7 +52,7 @@ function raccogliDatiUtente(form) {
         throw new Error("Tutti i campi sono obbligatori.");
     }
 
-    // Se è tutto ok, restituiamo l'oggetto (ora lo scope è corretto)
+    // Se è tutto ok, restituiamo l'oggetto
     return {
         email: email.trim(),
         password: password
@@ -61,7 +61,7 @@ function raccogliDatiUtente(form) {
 
 // Intercetta tutti gli errori standard di JavaScript (es. variabili inesistenti, crash improvvisi)
 window.addEventListener('error', function (event) {
-    // Evita che l'errore standard blocchi tutto o appaia brutto, e usa il tuo popup!
+    // Evita che l'errore standard blocchi tutto o appaia brutto
     showSystemError(event.message);
     
 });

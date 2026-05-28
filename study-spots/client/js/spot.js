@@ -113,7 +113,7 @@ async function caricaDatiSpot() {
  * Distribuisce i dati dell'oggetto spot nei vari elementi della pagina
  */
 async function popolaPagina(spot) {
-    // 1. Intestazione e Info Base
+    // Intestazione e Info Base
     const response = await fetch(`/api/me`, {
             credentials: 'include'
         });
@@ -137,7 +137,6 @@ async function popolaPagina(spot) {
     
     // Gestione Foto
     const photos = spot.spot_photos || [];
-    //const fallbackImg = 'https://via.placeholder.com/800x450?text=Nessuna+Foto';
 
     // Foto Principale
     fotoPrincipaleContainer.innerHTML = `<img src="${photos[0]?.link_foto || ""}" alt="${spot.name}" style="width:100%; height:100%; object-fit:cover;">`;
@@ -157,7 +156,7 @@ async function popolaPagina(spot) {
     // Aggiorna le stelle in base alla media
     popolaStelle(spot.star_avg || 0);
 
-    // 2. Tag (Pillole)
+    // Tag (Pillole)
     if (tagsContainer) {
         tagsContainer.innerHTML = '';
         spot.tags.forEach(tag => {
@@ -168,16 +167,16 @@ async function popolaPagina(spot) {
         });
     }
 
-    // 3. Link Google Maps
+    // Frame Google Maps
     
     if (googleMapFrame && spot.address) {
         googleMapFrame.src = `https://www.google.com/maps?q=${encodeURIComponent(spot.address)}&output=embed`;
     }
    
-    // 4. Orari di Apertura
+    // Orari di Apertura
     popolaOrari(spot.hours);
 
-    // 5. Recensioni
+    // Recensioni
     popolaRecensioni(spot.recensioni);
 
     const response_vicini = await fetch(`/api/spots_search_all?latitude=${spot.latitude}&longitude=${spot.longitude}`);
@@ -214,8 +213,7 @@ function renderSpotCards(trackElement, spots, options = {}) {
             emptyMessage: options.emptyMessage || 'Nessuno spot nelle vicinanze'
         });
     } else {
-        // Fallback manuale se il componente non è ancora pronto
-        console.warn("Componente SpotCard non trovato, uso fallback manuale");
+        console.warn("Componente SpotCard non trovato");
         trackElement.innerHTML = spots.map(spot => `
             <div class="spot-card-modern" onclick="window.location.href='/pages/spot.html?id=${spot.id}'">
                 <h3>${spot.name}</h3>
@@ -226,10 +224,7 @@ function renderSpotCards(trackElement, spots, options = {}) {
 }
 //================= Funzioni di Popolamento Specifiche =================
 
-/**
- * Popola l'elemento con classe 'stars' con le stelle colorate
- * @param {number} starAvg - Media delle stelle (es. 3.5)
- */
+//Popola l'elemento con classe 'stars' con le stelle colorate
 function popolaStelle(starAvg) {
     const starsElement = document.querySelector('.stars');
     if (!starsElement) return;
@@ -310,10 +305,9 @@ function popolaRecensioni(recensioni) {
         return;
     }
 
-    // Store all reviews for show more functionality
     allReviews = recensioni;
     
-    // Show only first 3 reviews
+    // Mostra solo le prime 3 recensioni
     const mostrareRecensioni = recensioni.slice(0, 3);
     
     mostrareRecensioni.forEach(rec => {
@@ -334,7 +328,7 @@ function popolaRecensioni(recensioni) {
         reviewList.appendChild(reviewItem);
     });
 
-    // If more than 3 reviews, add a "show more" button
+    // se ce ne sono di più mostra pulsante mostra tutte le recensioni
     if (recensioni.length > 3) {
         const btnShowMore = document.querySelector('.btn-show-all-reviews');
         if (btnShowMore) {
@@ -372,7 +366,7 @@ function mostraReviewsAggiuntive() {
         reviewList.appendChild(reviewItem);
     });
 
-    // Hide the show more button
+    // Nascondi il pulsante mostra tutte le recensioni
     const btnShowMore = document.querySelector('.btn-show-all-reviews');
     if (btnShowMore) {
         btnShowMore.style.display = 'none';
@@ -442,9 +436,7 @@ async function gestisciSalvataggio() {
     }
 }
 
-/**
- * Helper per cambiare l'aspetto del tasto
- */
+// Helper per cambiare l'aspetto del tasto
 
 function applicaStatoSalvato(salvato) {
     if (salvato) {
@@ -503,7 +495,7 @@ async function gestisciCancellazione() {
 
     try {
         const response = await fetch(`/api/remove-spot/${currentSpotId}`, {
-            method: 'DELETE', // O 'POST' se la tua API non accetta DELETE
+            method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include'
         });
@@ -608,14 +600,14 @@ function mostraRisultatoAI(message, type) {
 
 
  
-// 1. Intercetta tutti gli errori standard di JavaScript (es. variabili inesistenti, crash improvvisi)
+// Intercetta tutti gli errori standard di JavaScript (es. variabili inesistenti, crash improvvisi)
 window.addEventListener('error', function (event) {
-    // Evita che l'errore standard blocchi tutto o appaia brutto, e usa il tuo popup!
+    // Evita che l'errore standard blocchi tutto o appaia brutto
     showSystemError(event.message);
     
 });
 
-// 2. Intercetta gli errori delle Promise/Chiamate asincrone non gestite (es. fetch che falliscono senza catch)
+// Intercetta gli errori delle Promise/Chiamate asincrone non gestite (es. fetch che falliscono senza catch)
 window.addEventListener('unhandledrejection', function (event) {
     // event.reason contiene l'oggetto Errore lanciato dentro la Promise
     const messaggio = event.reason.message || "Si è verificato un errore asincrono.";

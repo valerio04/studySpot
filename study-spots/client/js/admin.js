@@ -255,7 +255,7 @@ async function rimuoviTuttiSpot() {
         return;
     }
 
-    // Chiediamo una conferma testuale per sicurezza, dato che non c'è più il modale
+    // Chiediamo una conferma testuale per sicurezza
     if (!confirm(`Sei assolutamente sicuro di voler eliminare tutti gli spot creati da "${username}"? L'azione è irreversibile.`)) {
         return; // L'utente ha annullato
     }
@@ -298,7 +298,7 @@ function normalizzaSpotPerCard(spot) {
 
 //  Intercetta tutti gli errori standard di JavaScript (es. variabili inesistenti, crash improvvisi)
 window.addEventListener('error', function (event) {
-    // Evita che l'errore standard blocchi tutto o appaia brutto, e usa il tuo popup!
+    // Evita che l'errore standard blocchi tutto o appaia brutto
     showSystemError(event.message);
     
 });
