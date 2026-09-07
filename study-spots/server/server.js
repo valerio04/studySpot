@@ -203,6 +203,21 @@ app.post('/api/register', async (req, res) => {
     const supabaseClient = getSupabase(req, res);
     console.log('POST /register ricevuto:', { email, password, username, name, surname, points });
 
+    const esiti = {
+        lunghezza: password.length >= 8,
+        maiuscola: /[A-Z]/.test(password),
+        numero: /\d/.test(password),
+        carattereSpeciale: /[^a-zA-Z0-9]/.test(password)
+    };
+
+    // La password è valida solo se tutte le proprietà sono true
+    const eValida = Object.values(esiti).every(Boolean);
+
+    if (!eValida) {
+        return res.status(422).json({ error: "Unprocessable Entity", message: "La password non verifica i requisiti (lunghezza minima di 8 caratteri, almeno un carattere maiuscolo, uno speciale e un numero."});
+    }
+
+
     try {
         const { data, error } = await supabaseClient.auth.signUp({
             email,
@@ -307,7 +322,7 @@ app.get('/api/ranking', async (req, res) => {
 
 // ======== API: RANKING (posizione dell'utente loggato) ========
 
-app.get('/api/ranking_user' , async (req, res) => {
+app.get('/api/ranking_user', async (req, res) => {
     console.log('GET /api/ranking_user');
 
     if (!SUPABASE_URL || !SUPABASE_KEY) {
@@ -316,37 +331,32 @@ app.get('/api/ranking_user' , async (req, res) => {
 
     const supabaseClient = getSupabase(req, res);
     const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
-    
+
     if (authError || !user) {
         return res.status(401).json({ error: "Non sei loggato" });
     }
 
-    // Recupera il profilo dell'utente loggato per ottenere i punti
-    const { data: profile, error: profileError } = await supabaseClient
-        .from('profiles')
-        .select('points')
-        .eq('user_id', user.id)
-        .single();
+    // Esegue la funzione SQL "get_user_rank" direttamente su PostgreSQL
+    const { data, error: rankError } = await supabaseClient
+        .rpc('get_user_rank', { p_user_id: user.id });
 
-    if (profileError || !profile) {
-        console.error('Errore durante il recupero del profilo:', profileError);
-        return res.status(500).json({ error: 'Errore durante il recupero del profilo utente' });
-    }
-
-    const userPoints = profile.points;
-
-    // Conta gli utenti con un punteggio maggiore
-    const { count, error: countError } = await supabaseClient
-        .from('profiles')
-        .select('points', { count: 'exact', head: true })
-        .gt('points', userPoints);
-
-    if (countError) {
-        console.error('Errore durante il recupero della classifica:', countError);
+    if (rankError) {
+        console.error('Errore durante il recupero della posizione:', rankError);
         return res.status(500).json({ error: 'Errore durante il recupero della classifica' });
     }
 
-    res.json({ rank: count + 1, points: userPoints , user_id: user.id }); // +1 perché il conteggio è zero-based
+    if (!data || data.length === 0) {
+        return res.status(404).json({ error: 'Profilo utente non trovato' });
+    }
+
+    // data è un array contenente il risultato della CTE ({ rank, points })
+    const userRankInfo = data[0];
+
+    res.json({ 
+        rank: parseInt(userRankInfo.rank, 10), 
+        points: userRankInfo.points, 
+        user_id: user.id 
+    });
 });
 
 

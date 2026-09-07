@@ -387,10 +387,30 @@ AFTER DELETE ON public.aggiunti
 FOR EACH ROW
 EXECUTE FUNCTION public.trg_points_on_spot_delete();
 
+CREATE OR REPLACE FUNCTION public.get_user_rank(p_user_id UUID)
+RETURNS TABLE (
+  rank BIGINT,
+  points INT
+) 
+LANGUAGE sql STABLE AS $$
+  WITH ranked_profiles AS (
+    SELECT 
+      user_id, 
+      points, 
+      RANK() OVER (ORDER BY points DESC, username ASC) as pos
+    FROM public.profiles
+  )
+  SELECT pos AS rank, points 
+  FROM ranked_profiles 
+  WHERE user_id = p_user_id;
+$$;
+
 --==============================================================================================
 
 
-update public.profiles set role='admin' where user_id='34189002-e36a-492a-81dd-35f889b4ddef'; vv, v@gmail.com
+UPDATE public.profiles 
+SET role = 'admin' 
+WHERE user_id = '34189002-e36a-492a-81dd-35f889b4ddef';
 
 /*
 QUERY PER CLASSIFICA
