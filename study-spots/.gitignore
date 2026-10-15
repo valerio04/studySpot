@@ -85,3 +85,10 @@ ehthumbs.db
 # Misc
 coverage/
 *.log
+
+
+# Secret environment files
+**/key.env
+**/.env
+**/.env.*
+!.env.example
